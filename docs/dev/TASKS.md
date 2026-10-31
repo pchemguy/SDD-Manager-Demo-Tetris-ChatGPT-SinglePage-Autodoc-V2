@@ -14,7 +14,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 1 — Classic playable baseline
     - [ ] Milestone 1.1 — Playable core
-        - [ ] T-001 — Establish the board geometry and startable Canvas game
+        - [x] T-001 — Establish the board geometry and startable Canvas game
             Scope: tetris.html core/markup/controller; tests/test_core.py and tests/test_browser.py; development harness/dependencies.
             Depends on: none. Contracts: G1, G2, U1, A1.
             Evidence: Start creates a correctly colored board/piece; masks, legal spawn and actual Canvas rasterization agree. Establish isolated Chromium/Firefox runner capability through repeated contexts and teardown before dependent browser checks.
