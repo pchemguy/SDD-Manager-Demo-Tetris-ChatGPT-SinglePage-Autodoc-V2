@@ -54,3 +54,5 @@ Persistent configuration increment: each of the six settings resolves independen
 Phase 4 delivered: Added independent URL/cookie/default configuration resolution for all six settings, explicit-default saving and canonical updates. Invalid or repeated sources report diagnostics; recoverable browser-write failures roll back without applying live changes.
 
 Published and verified: [v0.4.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.4.0).
+
+Session leaderboard: completed games receive one cryptographically generated UUIDv4 and UTC completion timestamp. The ten best scores rank by score descending, time ascending and ID ascending. Restarting an unfinished game adds nothing; reloading clears results while retaining configured settings.

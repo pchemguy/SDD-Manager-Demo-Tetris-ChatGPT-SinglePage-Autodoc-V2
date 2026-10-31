@@ -251,6 +251,7 @@
         }
       }
       [hidden] {display:none !important;} #settings label {display:block;font-size:12px;color:var(--muted);margin:12px 0;} select {display:block;width:100%;margin-top:5px;padding:8px;background:#142338;color:var(--ink);border:1px solid #41506b;border-radius:6px;} .right {display:flex;flex-direction:column;gap:16px;}
+      #results {padding-left:22px;font-size:13px;} #results li {padding:8px 0;} #results small {display:block;color:var(--muted);font-size:10px;margin-top:4px;}
     </style>
   </head>
   <body>
@@ -265,6 +266,7 @@
     <div id="message" role="status"></div>
     <main class="layout">
       <div class="left">
+        <section id="leaderboard" class="panel"><h2>Session top ten</h2><ol id="results"></ol><p class="hint">Completed games only. This history lasts until page reload.</p></section>
         <section id="info" class="panel" aria-label="Game info and controls">
           <h2>Game info</h2>
           <div class="status" id="status">Ready</div>
@@ -707,6 +709,8 @@
           const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
           preview("held",this.game.held); preview("next",this.game.peek());
           $("held").parentElement.hidden=!this.game.settings.hold; $("next").parentElement.hidden=!this.game.settings.nextPreview;
+          const rows=app.results.map(row=>{const li=document.createElement("li");const score=document.createElement("strong");score.textContent=row.score.toLocaleString();const time=document.createElement("small");time.textContent=new Date(row.timestamp).toLocaleString();li.append(score,time);return li;});
+          $("results").replaceChildren(...rows);
           $("status").textContent = {
             ready: "Ready",
             running: "Running",

@@ -165,7 +165,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 5 — Portable session results
 
 - [ ] Phase 5 — Portable session results
-    - [ ] Milestone 5.1 — Session leaderboard
+    - [x] Milestone 5.1 — Session leaderboard
         - [x] T-028 — Create stable completed-game records exactly once
             Scope: tetris.html C3/C6/C8; tests/test_core.py and test_persistence.py.
             Depends on: T-027. Contracts: G2 completion, F1, A5.
@@ -174,7 +174,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C5/C6; tests/test_persistence.py.
             Depends on: T-028. Contracts: F1, A5.
             Evidence: Score/time/ID tie ordering, zero-score entries, truncation, stable identity and empty replacement are correct; no result history uses cookies/local storage.
-        - [ ] T-030 — Render and integrate the session leaderboard
+        - [x] T-030 — Render and integrate the session leaderboard
             Scope: tetris.html C6-C8/markup; browser checks; README.md.
             Depends on: T-028, T-029. Contracts: F1, U1 leaderboard subset, A5.
             Evidence: Displayed ranks match records after several games/restarts; page reload empties results while configured settings remain; use text-only result rendering.

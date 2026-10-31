@@ -18,3 +18,15 @@ def test_results_rank_and_truncate(core):
 
 def test_result_time_ties_and_input_stability(core):
     assert core('(()=>{const rows=[{id:"b",score:0,timestamp:"2026-02-01"},{id:"c",score:1,timestamp:"2026-03-01"},{id:"a",score:0,timestamp:"2026-01-01"}];const before=JSON.stringify(rows);return [TetrisCore.rankResults(rows).map(r=>r.id),before===JSON.stringify(rows)];})()')==[['c','a','b'],True]
+
+def test_rendered_session_results_reload_empty(page):
+    for score in [0,30,10]:
+        page.locator('#start').click()
+        page.evaluate('(score)=>{app.game.score=score;app.game.end();app.render()}',score)
+    assert page.locator('#results strong').all_text_contents()==['30','10','0']
+    page.locator('[data-setting=hold]').select_option('0')
+    page.locator('#start').click()
+    assert page.locator('#results li').count()==3
+    page.reload()
+    assert page.locator('#results li').count()==0
+    assert page.evaluate('app.game.settings.hold') is False
