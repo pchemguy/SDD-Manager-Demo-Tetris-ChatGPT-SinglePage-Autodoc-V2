@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-006 Package and verify the single HTML baseline.
+Checkpoint: T-007 Review test and report phase 1.
 
-Build the versioned-source 0.1.0 browser candidate with stable HTML/ZIP/checksum names, exact archive inventory, install/license documents, direct/CI naming gates, build-only release verification workflow and hosted-download verification tooling. Complete milestone 1.2 local delivery readiness.
+Completed the phase 1 independent QC, repaired pause-key restart behavior and semantic HTML version parsing, and prepared version 0.1.0 notes and stable browser assets. Formatting improves the single-file source readability.
 
 ## Scope and owners
 
@@ -14,8 +14,8 @@ Working branch `phase/1-classic-baseline`; creation parent/integration target `m
 
 ## Evidence and next action
 
-RED: the artifact contract failed because no producer existed. GREEN: all 31 core/browser/artifact checks passed in 41.87s, including actual packaged HTML in Chromium and Firefox, inventory/checksum byte comparisons and rejection of a deliberately versioned raw HTML filename. Rebuilt/rechecked after the install-doc update; both focused artifact checks passed. Both packaging commands and Python compilation passed. Workflow trigger/input/checkout/permission/naming-gate wiring inspected; live CI and hosted release checks are pending publication.
+38 pytest checks passed in 48.91s across deterministic core, Chromium headless shell, managed Firefox and actual packaged HTML. The original pause-key defect failed both browsers before repair; semantic metadata serialization regressions also failed before the parser repair.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: The 0.1.0 candidate is locally verified but not yet released. Live CI, release commit/tag/publication and actual hosted/latest downloads follow phase review/integration. Native OS focus delivery remains unverified; Firefox local tests use the diagnosed override.
+Limitations: Lifecycle events and stale clocks are modeled in real browsers; native OS focus delivery/headed browsers and live CI are not claimed. Firefox uses the documented process-local sandbox override. Integration and hosted publication follow this task.

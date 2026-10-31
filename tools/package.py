@@ -16,8 +16,16 @@ def expected_assets():
     return BASE_ASSETS | ({'tetris-save.schema.json'} if (ROOT / 'schemas/tetris-save.schema.json').is_file() else set())
 
 class Dependencies(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.version = None
+
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        if tag == 'meta' and values.get('name') == 'application-version':
+            if self.version is not None:
+                raise ValueError('Duplicate application-version metadata')
+            self.version = values.get('content')
         url = values.get('src')
         if tag == 'link':
             url = values.get('href')
@@ -29,10 +37,10 @@ def source_version():
     if not re.fullmatch(r'\d+\.\d+\.\d+', version):
         raise ValueError('Invalid release version')
     html = (ROOT / 'tetris.html').read_text()
-    match = re.search(r'<meta name="application-version" content="([^"]+)">', html)
-    if not match or match.group(1) != version:
+    document = Dependencies()
+    document.feed(html)
+    if document.version != version:
         raise ValueError('HTML and VERSION differ')
-    Dependencies().feed(html)
     return version
 
 def verify(output):

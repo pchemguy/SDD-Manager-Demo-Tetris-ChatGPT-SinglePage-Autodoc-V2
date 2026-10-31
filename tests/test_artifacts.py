@@ -1,9 +1,11 @@
 """Inspect actual deployable bytes against the independent release contract."""
 import hashlib
+import importlib.util
 from pathlib import Path
 import subprocess
 import sys
 import zipfile
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -54,3 +56,20 @@ def test_packaged_html_runs(browser, base_url):
     assert page.locator('#status').inner_text() == 'Paused'
     assert page.locator('#board').screenshot()
     context.close()
+
+@pytest.mark.parametrize('meta', [
+    '<meta name="application-version" content="0.1.0">',
+    '<meta name="application-version" content="0.1.0" />',
+    "<meta content='0.1.0' name='application-version'>",
+])
+def test_version_metadata_is_semantic_html(tmp_path, monkeypatch, meta):
+    spec = importlib.util.spec_from_file_location('tetris_package', ROOT / 'tools/package.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(module, 'ROOT', tmp_path)
+    (tmp_path / 'VERSION').write_text('0.1.0\n')
+    (tmp_path / 'tetris.html').write_text('<!doctype html><html><head>' + meta + '</head><body></body></html>')
+    assert module.source_version() == '0.1.0'
+    (tmp_path / 'VERSION').write_text('0.2.0\n')
+    with pytest.raises(ValueError, match='VERSION'):
+        module.source_version()

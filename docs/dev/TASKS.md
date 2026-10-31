@@ -12,7 +12,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 1 — Classic playable baseline
 
-- [ ] Phase 1 — Classic playable baseline
+- [x] Phase 1 — Classic playable baseline
     - [x] Milestone 1.1 — Playable core
         - [x] T-001 — Establish the board geometry and startable Canvas game
             Scope: tetris.html core/markup/controller; tests/test_core.py and tests/test_browser.py; development harness/dependencies.
@@ -43,8 +43,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Build a clean version-consistent single-HTML browser ZIP and stable named/checksummed assets; exercise packaged HTML in both browsers and establish direct/CI artifact-name checks. Do not publish the phase release before review/integration.
             Milestone exit: perform the complete 1.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/1/1.2.md`.
-    - [ ] Milestone 1.3 — Phase review
-        - [ ] T-007 — Review test and report phase 1
+    - [x] Milestone 1.3 — Phase review
+        - [x] T-007 — Review test and report phase 1
             Scope: all phase 1 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-003, T-006 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

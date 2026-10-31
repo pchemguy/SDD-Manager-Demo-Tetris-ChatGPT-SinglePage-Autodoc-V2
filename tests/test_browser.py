@@ -77,3 +77,28 @@ def test_canvas_device_pixel_ratio(browser, base_url):
     page.wait_for_function('Math.abs(document.querySelector("#board").width-document.querySelector("#board").getBoundingClientRect().width*devicePixelRatio)<2')
     assert page.locator('#board').screenshot()
     context.close()
+
+def test_pause_shortcuts_preserve_idle_and_finished_game(page):
+    page.locator('#game').focus()
+    page.keyboard.press('Escape')
+    assert page.evaluate('app.game.status') == 'ready'
+    page.locator('#start').click()
+    page.keyboard.press('ArrowDown')
+    page.evaluate('app.game.end();app.render()')
+    before = page.evaluate('JSON.stringify([app.game.board,app.game.score,app.game.completion])')
+    for key in ['Escape', 'KeyP']:
+        page.keyboard.press(key)
+        assert page.evaluate('app.game.status') == 'over'
+        assert page.evaluate('JSON.stringify([app.game.board,app.game.score,app.game.completion])') == before
+
+def test_hidden_page_pauses_and_resume_does_not_catch_up(page):
+    page.locator('#start').click()
+    page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>true});document.dispatchEvent(new Event("visibilitychange"))')
+    assert page.evaluate('app.game.status') == 'paused'
+    before = page.evaluate('JSON.stringify(app.game.active)')
+    page.evaluate('app.game.advance(60000)')
+    assert page.evaluate('JSON.stringify(app.game.active)') == before
+    page.evaluate('Object.defineProperty(document,"hidden",{configurable:true,get:()=>false});document.dispatchEvent(new Event("visibilitychange"))')
+    assert page.evaluate('app.game.status') == 'paused'
+    after = page.evaluate('(()=>{lastFrame=performance.now()-60000;app.togglePause();const schedule=window.requestAnimationFrame;window.requestAnimationFrame=()=>0;try{frame(performance.now());return JSON.stringify(app.game.active);}finally{window.requestAnimationFrame=schedule;}})()')
+    assert after == before
