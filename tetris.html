@@ -798,6 +798,29 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
+      // Only this pinned third-party library is fetched; the worker bootstrap and domain are embedded.
+      const SQLITE_URL="https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/sql-asm.js";
+      const SQLITE_INTEGRITY="sha256-yDvqwWeunBrwdUSVVbHbaLJLUoDQ/GXB96xNHNEDRZ0=";
+      function sqliteWorker() {
+        self.onmessage=async(event)=>{
+          let db=null;
+          try { const SQL=await initSqlJs(); const data=event.data;
+            if(data.action==="probe"){self.postMessage({ok:true,value:"SQLite ready"});return;}
+            throw Error("Unsupported SQLite operation");
+          } catch(error) {self.postMessage({ok:false,error:"SQLite: "+error.message});}
+          finally {if(db)db.close();}
+        };
+      }
+      app.sqlite=(action,value)=>new Promise((resolve,reject)=>{
+        if(app.workerActive){reject(Error("A SQLite operation is already running"));return;}
+        const abort=new AbortController();let worker=null,url=null,finished=false;
+        const finish=(error,result)=>{if(finished)return;finished=true;clearTimeout(timer);abort.abort();if(worker)worker.terminate();if(url)URL.revokeObjectURL(url);app.workerActive=false;app.cancelCodec=null;error?reject(error):resolve(result);};
+        const timer=setTimeout(()=>finish(Error("SQLite exceeded the ten-second deadline")),10000);
+        app.workerActive=true;app.cancelCodec=()=>finish(Error("SQLite operation canceled"));
+        (async()=>{try{const response=await fetch(SQLITE_URL,{signal:abort.signal,integrity:SQLITE_INTEGRITY});if(!response.ok)throw Error("SQLite library unavailable");const bytes=await response.arrayBuffer();if(finished)return;
+          const library=new TextDecoder("utf-8",{fatal:true}).decode(bytes);url=URL.createObjectURL(new Blob(["(function(){var module;\n",library,"\n;globalThis.initSqlJs=initSqlJs;})();\n(function(){\n",$("tetris-core").textContent,"\n})();\n(",sqliteWorker.toString(),")();"],{type:"text/javascript"}));worker=new Worker(url);worker.onmessage=event=>{const reply=event.data;reply.ok?finish(null,reply.value):finish(Error(reply.error));};worker.onerror=()=>finish(Error("SQLite worker failed"));worker.postMessage({action,value});
+        }catch(error){finish(Error("SQLite unavailable: "+error.message));}})();
+      });
       app.busy=false;app.operation=0;
       app.setBusy=(busy)=>{app.busy=busy;document.querySelectorAll("[data-setting],#save,#restore,#format").forEach(node=>node.disabled=busy);};
       app.snapshot=()=>TetrisCore.validateSnapshot({formatVersion:1,results:app.results,settings:app.game.settings});

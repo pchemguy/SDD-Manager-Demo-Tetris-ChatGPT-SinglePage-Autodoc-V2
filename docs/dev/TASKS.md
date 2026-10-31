@@ -206,7 +206,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 6 — SQLite snapshots
     - [ ] Milestone 6.1 — SQLite snapshot transfer
-        - [ ] T-035 — Establish the pinned isolated SQLite worker runtime
+        - [x] T-035 — Establish the pinned isolated SQLite worker runtime
             Scope: tetris.html embedded worker/C10/C11; tests/test_persistence.py and test_artifacts.py.
             Depends on: T-034. Contracts: U3 external boundary, F4 worker limits.
             Evidence: Verify pinned sql.js 1.13.0 asm.js CDN bytes/integrity and worker initialization; keep all app bootstrap inline, enforce operation ownership/deadline/termination and show optional-library failure without breaking JSON/gameplay.

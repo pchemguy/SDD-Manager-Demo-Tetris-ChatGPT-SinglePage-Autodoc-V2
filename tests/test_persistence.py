@@ -167,3 +167,32 @@ def test_leaderboard_readable_at_supported_widths(page):
 def test_unchanged_frames_preserve_leaderboard_dom(page):
     page.evaluate('(value)=>app.applySnapshot(value)',snapshot())
     assert page.evaluate('(()=>{const row=$("results").firstChild;app.render();app.render();return row===$("results").firstChild;})()')
+
+SQLITE_URL='https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/sql-asm.js'
+SQLITE_HASH='c83beac167ae9c1af075449555b1db68b24b5280d0fc65c1f7ac4d1cd103459d'
+
+def sql_library():
+    import hashlib,urllib.request
+    path=ROOT/'.dev/sql-asm-1.13.0.js'
+    if not path.exists():
+        with urllib.request.urlopen(SQLITE_URL,timeout=30) as response:data=response.read(8*1024*1024)
+        path.parent.mkdir(exist_ok=True);path.write_bytes(data)
+    data=path.read_bytes()
+    assert hashlib.sha256(data).hexdigest()==SQLITE_HASH
+    return data
+
+def route_sql(page):
+    page.route(SQLITE_URL,lambda route:route.fulfill(status=200,content_type='application/javascript',body=sql_library(),headers={'access-control-allow-origin':'*'}))
+
+def test_pinned_sqlite_worker_probe_and_cleanup(page):
+    route_sql(page)
+    assert page.evaluate('app.sqlite("probe",null)')=='SQLite ready'
+    assert page.evaluate('app.workerActive') is False
+
+def test_sqlite_network_failure_preserves_gameplay(page):
+    page.route(SQLITE_URL,lambda route:route.abort())
+    assert page.evaluate('app.sqlite("probe",null).then(()=>false,error=>error.message.includes("SQLite"))')
+    assert page.evaluate('app.workerActive') is False
+    page.locator('#start').click()
+    page.keyboard.press('ArrowDown')
+    assert page.evaluate('app.game.score')>0
