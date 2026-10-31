@@ -1,6 +1,6 @@
 # Project handoff
 
-Checkpoint: main autodoc/onepass DOCS-008 stop, full project document pass complete; package QC and implementation pending.
+Checkpoint: DOCS-009 package QC passes; full implementation T-001 through T-043 is authorized. Preparation publication/integration and milestone closure are pending confirmation.
 
 Outcome: PROJECT was explicitly approved; ARCHITECTURE, DECOMPOSITION, SPEC with three children, PLAN, layout and TASKS were prepared under scoped autodoc preapproval. SPEC, combined PLAN/layout and TASKS have current focused Ready reviews. The seven-phase plan contains 43 unchecked implementation tasks. No application, product test environment, release or package has been delivered.
 
@@ -35,3 +35,7 @@ Outcome: PROJECT was explicitly approved; ARCHITECTURE, DECOMPOSITION, SPEC with
 - On a user instruction advancing beyond this stop, perform whole-package QC/repairs through DOCS-009, publish/read back and close its issue, explicitly merge/verify/publish preparation into actual default `main`, then close/read back the preparation milestone.
 - Only with an authorized implementation range and that published baseline may phase 1 be activated and its execution branch created. Preserve per-task commits/publication and phase-by-phase verified releases under PLAN.
 - Recover later effects from these owners, Git and GitHub before replay. Runtime/browser/CDN/package behavior remains future verification, not a proven capability.
+
+## Current execution direction
+
+The user explicitly advanced the prior stop with `Do QC and full implement`. DOCS-QC-REPORT.md records passing package QC. Publish/close DOCS-009, explicitly integrate/verify/publish main and close milestone 1 before phase 1 activation. Continue through all seven phases and releases without further approval pauses; earlier snapshot stop text is superseded by this grant and DOCS_PREPARATION.

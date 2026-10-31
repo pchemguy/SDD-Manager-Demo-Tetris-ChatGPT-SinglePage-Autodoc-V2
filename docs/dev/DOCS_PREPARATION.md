@@ -9,7 +9,7 @@ Current control and evidence for the full project. [DOCS_TASKS](DOCS_TASKS.md) o
 - Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. The user's subsequent `k` approved the published PROJECT proposal at `c52e30a33cac17d1015053a2820f853eeb750e79` on 2026-10-31; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
 - Tracking: enabled for documentation and implementation by root AGENTS.md. GitHub milestone 1 (`sdd-docs-main`) and DOCS-001 through DOCS-009 issues #1 through #9 were created and read back with exact bundled content and associations before target writes.
 - Publication: every owned commit must be pushed and read back before advancement.
-- Next boundary: publish/read back DOCS-008 and close/read back issue #8; then stop before DOCS-009 package QC, preparation integration or implementation.
+- Next boundary: publish package QC, close DOCS-009, integrate/publish preparation, close milestone 1, then implement all seven phases and verify each release.
 - Reporting: Standard, with concise progress updates.
 
 ## Scope source
@@ -54,7 +54,7 @@ The design owner selected a pure inline game domain, controller-owned live state
 | DOCS-006 | PLAN SHA-256 `3d4d746042c1f9a461858fc7700c2a2fad9ee35d0de8ff330f3d4e1bb5a5e492` accepted under autodoc preapproval. PLAN-REVIEW-REPORT.md records complete coverage and seven bounded releases, explicitly assesses 1-2 milestone groups, and is Ready for layout authoring only; combined placement readiness is pending. |
 | DOCS-007 | layout SHA-256 `294e2ef9d7c295230c84aadfe53cef4ca06d3624889d3955b37c2b7976e9166d` accepted under autodoc preapproval. PLAN-REVIEW-REPORT Revision 1 verifies combined strategy/physical ownership and is Ready for TASKS; unchanged upstream identities retained. Root AGENTS navigation now points only to present governing documents; setup commands remain explicitly unvalidated. |
 | DOCS-008 | TASKS SHA-256 `24e80ca4b55a9df936b71390c2bf106867a4b3bed6db3092b40de35578d2418f` accepted under autodoc preapproval. TASKS-REVIEW-REPORT.md records exact source identities, all 43 unique unchecked tasks, 35 delivery/one milestone-review/seven phase-review counts, PLAN/contract/path coverage and a preceding-ID dependency DAG. Gate Ready as a breakdown; implementation/package QC are not claimed. HANDOFF is refreshed for the DOCS-008 stop. |
-| DOCS-009 | Package QC not selected; remains beyond the autodoc stop. |
+| DOCS-009 | DOCS-QC-REPORT.md passes whole-package QC against c7ff98dddcb4bc1f9160728f54b798e77526bbb6. User explicitly selected QC and all T-001 through T-043 with integrations/releases; no remaining human checkpoint in that scope. |
 
 ## Initialization
 
@@ -69,3 +69,7 @@ The design owner selected a pure inline game domain, controller-owned live state
 ## Pending transitions
 
 DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) is closed as completed and read back. DOCS-006 (#6) is closed as completed and read back. DOCS-007 (#7) is closed as completed and read back. DOCS-008 (#8) closure is pending this TASKS publication; DOCS-009 (#9) and milestone 1 remain open; reconcile later effects before replay.
+
+## Full execution grant
+
+On 2026-10-31 the user instructed `Do QC and full implement`: package QC, repairs, preparation integration, all T-001 through T-043, phase reviews/integrations, versioning and all seven releases are authorized. This supersedes the earlier DOCS-008 stop. Required checks/tracking/publication remain active.
