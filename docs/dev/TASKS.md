@@ -54,7 +54,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 2 — Modern rules
     - [ ] Milestone 2.1 — Bag hold and preview
-        - [ ] T-008 — Implement seven-bag generation and the shared queue
+        - [x] T-008 — Implement seven-bag generation and the shared queue
             Scope: tetris.html C2/C3; tests/test_core.py.
             Depends on: T-007. Contracts: G4, A2.
             Evidence: Deterministic shuffles contain every type once per bag; consume complete bags and reset correctly without a second RNG path.

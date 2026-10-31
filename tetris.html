@@ -405,12 +405,26 @@
           this.completion = null;
           this.elapsed = 0;
           this.status = "running";
+          this.queue = [];
+          this.fillQueue();
           this.spawn();
         }
+        fillQueue() {
+          while (this.queue.length < 1) {
+            const bag = Object.keys(SHAPES);
+            for (let i=0;i<bag.length-1;i++) {
+              const j=i+Math.min(bag.length-i-1,Math.floor(this.random()*(bag.length-i)));
+              [bag[i],bag[j]]=[bag[j],bag[i]];
+            }
+            this.queue.push(...bag);
+          }
+        }
+        peek() { return this.queue?.[0] ?? null; }
         spawn() {
-          const types = Object.keys(SHAPES);
+          const type = this.queue.shift();
+          this.fillQueue();
           this.active = {
-            type: types[Math.min(6, Math.floor(this.random() * 7))],
+            type,
             x: 3,
             y: -1,
             rotation: 0,

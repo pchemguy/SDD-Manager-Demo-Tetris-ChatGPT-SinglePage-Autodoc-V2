@@ -35,3 +35,8 @@ def test_failed_down_locks_and_soft_drop_scores(core):
 
 def test_pause_preserves_remaining_gravity_time(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.advance(500);g.pause();g.advance(10000);const paused=g.active.y;g.resume();g.advance(499);const before=g.active.y;g.advance(1);return [paused,before,g.active.y]})()') == [-1,-1,0]
+
+def test_bags_and_peek_do_not_consume(core):
+    value=core('(()=>{let calls=0;const g=new TetrisCore.Game(()=>{calls++;return .47});g.start();const seq=[g.active.type];for(let i=0;i<20;i++){const p=g.peek();if(p!==g.peek())throw Error("consumed");g.spawn();seq.push(g.active.type);}return [seq,calls]})()')
+    assert all(sorted(value[0][i:i+7])==sorted('IJLOSTZ') for i in [0,7,14])
+    assert value[1] == 24
