@@ -60,3 +60,5 @@ The Firefox override is limited to this trusted local execution host after norma
 Release assets have stable version-free names. Each phase is verified and explicitly integrated before its release; publication verifies source/tag/body identity and actual downloaded bytes, checksums and latest links. See [tasks](docs/dev/TASKS.md), [phase reports](docs/dev/reports/phases), [handoff](docs/dev/HANDOFF.md), [specification](docs/dev/SPEC.md) and [architecture](docs/dev/ARCHITECTURE.md).
 
 Development follows [SDD Manager](SDD-MANAGER.md). See the [AI-assisted development disclosure](AI_DISCLOSURE.md).
+
+Published and verified: [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v1.0.0).
