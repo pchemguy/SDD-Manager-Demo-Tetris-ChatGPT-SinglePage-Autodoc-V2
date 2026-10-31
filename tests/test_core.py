@@ -40,3 +40,9 @@ def test_bags_and_peek_do_not_consume(core):
     value=core('(()=>{let calls=0;const g=new TetrisCore.Game(()=>{calls++;return .47});g.start();const seq=[g.active.type];for(let i=0;i<20;i++){const p=g.peek();if(p!==g.peek())throw Error("consumed");g.spawn();seq.push(g.active.type);}return [seq,calls]})()')
     assert all(sorted(value[0][i:i+7])==sorted('IJLOSTZ') for i in [0,7,14])
     assert value[1] == 24
+
+def test_hold_empty_swap_restriction_and_reset(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();const a=g.holdPiece();const b=g.holdPiece();g.spawn();g.active.rotation=2;g.active.y=5;const c=g.holdPiece();return [a,b,c,g.held,g.active.type,g.active.rotation,g.active.y,g.holdUsed]})()')==[True,False,True,'L','I',0,-1,True]
+
+def test_hold_spawn_loss(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[0][3]="red";g.holdPiece();return g.status})()')=='over'

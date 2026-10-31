@@ -58,7 +58,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C2/C3; tests/test_core.py.
             Depends on: T-007. Contracts: G4, A2.
             Evidence: Deterministic shuffles contain every type once per bag; consume complete bags and reset correctly without a second RNG path.
-        - [ ] T-009 — Implement one-hold-per-piece and spawn transitions
+        - [x] T-009 — Implement one-hold-per-piece and spawn transitions
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-008. Contracts: G4, A2.
             Evidence: Empty/swap hold, used restriction, fresh spawn timing, reset and hold-induced spawn loss agree with G4; expose hold through keyboard only.

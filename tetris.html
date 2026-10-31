@@ -310,6 +310,7 @@
             <dd>Rotate clockwise</dd>
             <dt>Z</dt>
             <dd>Rotate back</dd>
+            <dt>C</dt><dd>Hold piece</dd>
             <dt>P / Esc</dt>
             <dd>Pause or resume</dd>
             <dt>R</dt>
@@ -405,6 +406,8 @@
           this.completion = null;
           this.elapsed = 0;
           this.status = "running";
+          this.held = null;
+          this.holdUsed = false;
           this.queue = [];
           this.fillQueue();
           this.spawn();
@@ -420,9 +423,9 @@
           }
         }
         peek() { return this.queue?.[0] ?? null; }
-        spawn() {
-          const type = this.queue.shift();
-          this.fillQueue();
+        spawn(type = null, fromHold = false) {
+          if (type === null) { type=this.queue.shift(); this.fillQueue(); }
+          if (!fromHold) this.holdUsed=false;
           this.active = {
             type,
             x: 3,
@@ -431,6 +434,14 @@
           };
           this.elapsed = 0;
           if (!this.valid(this.active)) this.end();
+        }
+        holdPiece() {
+          if (this.status !== "running" || this.holdUsed) return false;
+          const incoming=this.held, outgoing=this.active.type;
+          this.held=outgoing;
+          this.spawn(incoming,true);
+          this.holdUsed=true;
+          return true;
         }
         valid(piece) {
           return cells(piece).every(
@@ -640,6 +651,9 @@
           case "Space":
           case "KeyX":
             if (!event.repeat) app.game.rotate(1);
+            break;
+          case "KeyC":
+            if (!event.repeat) app.game.holdPiece();
             break;
           case "KeyZ":
             if (!event.repeat) app.game.rotate(-1);
