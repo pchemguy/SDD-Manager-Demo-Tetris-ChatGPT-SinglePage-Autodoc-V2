@@ -62,3 +62,5 @@ JSON snapshots: Save downloads one tetris-save.json with formatVersion1, the cur
 Phase 5 delivered: Added the session top-ten leaderboard and manual JSON Save/Restore. Stable IDs, safe integer scores and canonical UTC completion times are preserved. Complete strict validation, duplicate-key detection, a companion JSON Schema and transactional settings updates protect failed restores.
 
 Published and verified: [v0.5.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.5.0).
+
+SQLite runtime compatibility: the production sql.js1.14.2 loader is pinned to jsDelivr and verified with Fetch integrity. Its matching binary is embedded in tetris.html; no separate binary request is required. The upstream MIT notice is retained in the HTML. The initial asm prototype was replaced after minimal Chromium SQL execution failed; see the phase6 runtime amendment.

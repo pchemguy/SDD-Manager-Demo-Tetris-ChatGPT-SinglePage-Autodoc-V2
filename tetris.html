@@ -342,6 +342,53 @@
       </div>
     </main>
     <footer>FIND YOUR RHYTHM &nbsp; / &nbsp; ONE PIECE AT A TIME</footer>
+    <!--
+Embedded sql.js1.14.2 runtime binary; upstream license retained verbatim.
+MIT license
+===========
+
+Copyright (c) 2017 sql.js authors (see AUTHORS)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+# Some portions of the Makefile taken from:
+Copyright 2017 Ryusei Yamaguchi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    -->
     <script id="sqlite-wasm" type="application/octet-stream" data-version="1.14.2" data-sha256="38c14f6e379210bc942bdc4ebca44e7bfdb4318ecc1c72ca666a28fdce96670a">
 AGFzbQEAAAABnwRFYAJ/fwF/YAF/AX9gA39/fwBgA39/fwF/YAF/AGACf38AYAR/f39/AX9gBX9/f39/AX9gBH9/f38AYAR/f39+
 AX9gBn9/f39/fwF/YAAAYAJ/fgF/YAV/f39/fwBgBn9/f39/fwBgB39/f39/f38Bf2AAAX9gAXwBfGABfgF/YAJ/fgBgBH9+f38B
@@ -9594,6 +9641,28 @@ AQBBnMAECyqoAQAAqQEAAKoBAAAAAAAAsgEAAKwBAACtAQAArgEAAK8BAACwAQAAsQEAQfjABAsDsCVR
               for(const key of Object.keys(TetrisCore.DEFAULTS))db.run("INSERT INTO settings VALUES(?,?)",[key,TetrisCore.encodeSetting(key,snapshot.settings[key])]);
               const bytes=db.export();self.postMessage({ok:true,value:bytes},[bytes.buffer]);return;
             }
+            if(data.action==="restore") {
+              db=new SQL.Database(new Uint8Array(data.value));
+              const query=sql=>{const statement=db.prepare(sql);try{const rows=[];while(statement.step()){rows.push(statement.get());if(rows.length>100)throw Error("SQLite row limit exceeded");}return rows;}finally{statement.free();}};
+              if(query("PRAGMA integrity_check").length!==1 || query("PRAGMA integrity_check")[0][0]!=="ok")throw Error("Database integrity failed");
+              if(query("PRAGMA user_version")[0][0]!==1 || query("PRAGMA application_id")[0][0]!==1414812243)throw Error("Unsupported database metadata");
+              const objects=query("SELECT type,name,tbl_name,sql FROM sqlite_schema ORDER BY name");
+              const tables=objects.filter(row=>row[0]==="table");
+              if(tables.length!==2 || tables.map(row=>row[1]).sort().join()!=="high_scores,settings" || objects.some(row=>row[0]!=="table" && !(row[0]==="index"&&row[1].startsWith("sqlite_autoindex_")&&row[3]===null&&["high_scores","settings"].includes(row[2]))))throw Error("Unexpected database schema objects");
+              for(const [table,expected] of [["high_scores",[["id","TEXT",1,1],["score","INTEGER",1,0],["timestamp","TEXT",1,0]]],["settings",[["key","TEXT",1,1],["value","TEXT",1,0]]]]) {
+                const indexes=query("PRAGMA index_list("+table+")");
+                if(indexes.length>1 || indexes.some(row=>row[2]!==1||row[3]!=="pk"||row[4]!==0))throw Error("Unexpected database index: "+table);
+                const columns=query("PRAGMA table_xinfo("+table+")");
+                if(columns.length!==expected.length || columns.some((row,i)=>row[0]!==i||row[1]!==expected[i][0]||row[2].toUpperCase()!==expected[i][1]||row[3]!==expected[i][2]||row[5]!==expected[i][3]||row[6]!==0))throw Error("Unsupported database columns: "+table);
+              }
+              const scores=query("SELECT id,CAST(score AS TEXT),timestamp,typeof(id),typeof(score),typeof(timestamp) FROM high_scores LIMIT 11");
+              if(scores.length>10)throw Error("Too many scores");
+              const results=scores.map(row=>{if(row[3]!=="text"||row[4]!=="integer"||row[5]!=="text"||!/^(0|[1-9][0-9]*)$/.test(row[1])||BigInt(row[1])>9007199254740991n)throw Error("Invalid SQLite score storage");return {id:row[0],score:Number(row[1]),timestamp:row[2]};});
+              const rows=query("SELECT key,value,typeof(key),typeof(value) FROM settings LIMIT 7"), settings=Object.create(null);
+              if(rows.length!==6)throw Error("Exactly six settings required");
+              for(const row of rows){if(row[2]!=="text"||row[3]!=="text"||!Object.hasOwn(TetrisCore.DEFAULTS,row[0])||Object.hasOwn(settings,row[0]))throw Error("Invalid or duplicate SQLite setting");settings[row[0]]=TetrisCore.decodeSetting(row[0],row[1]);}
+              const candidate=TetrisCore.validateSnapshot({formatVersion:1,results,settings});self.postMessage({ok:true,value:candidate});return;
+            }
             throw Error("Unsupported SQLite operation");
           } catch(error) {self.postMessage({ok:false,error:"SQLite: "+error.message});}
           finally {if(db)db.close();}
@@ -9618,7 +9687,7 @@ AQBBnMAECyqoAQAAqQEAAKoBAAAAAAAAsgEAAKwBAACtAQAArgEAAK8BAACwAQAAsQEAQfjABAsDsCVR
       app.download=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));try {const anchor=document.createElement("a");anchor.href=url;anchor.download=name;document.body.append(anchor);try{anchor.click();}finally{anchor.remove();}}finally{setTimeout(()=>URL.revokeObjectURL(url),1000);}};
       $("save").onclick=async()=>{if(app.busy)return;let operation;try {operation=app.beginFile();const snapshot=app.snapshot();if($("format").value==="sqlite") {const bytes=await app.sqlite("save",snapshot);if(operation!==app.operation)return;app.download(bytes,"tetris-save.sqlite","application/vnd.sqlite3");}else app.download(JSON.stringify(snapshot,null,2)+"\n","tetris-save.json","application/json");$("message").textContent="Snapshot saved. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Save failed: "+error.message;}finally{app.endFile(operation);}};
       app.applySnapshot=(candidate)=>{const value=TetrisCore.validateSnapshot(candidate);app.writeSettings(value.settings);app.game.applySettings(value.settings);app.results=value.results;app.syncSettings();app.render();};
-      app.decodeFile=async(file)=>{if(file.size>1048576)throw Error("File exceeds the 1 MiB limit");const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>1048576)throw Error("File exceeds the 1 MiB limit");if(bytes[0]===239&&bytes[1]===187&&bytes[2]===191)throw Error("JSON BOM is not supported");const text=new TextDecoder("utf-8",{fatal:true}).decode(bytes);return TetrisCore.validateSnapshot(TetrisCore.parseJSON(text));};
+      app.decodeFile=async(file)=>{if(file.size>1048576)throw Error("File exceeds the 1 MiB limit");const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>1048576)throw Error("File exceeds the 1 MiB limit");if(new TextDecoder().decode(bytes.slice(0,16))==="SQLite format 3\0")return await app.sqlite("restore",bytes);if(bytes[0]===239&&bytes[1]===187&&bytes[2]===191)throw Error("JSON BOM is not supported");const text=new TextDecoder("utf-8",{fatal:true}).decode(bytes);return TetrisCore.validateSnapshot(TetrisCore.parseJSON(text));};
       $("restore").onclick=()=>{if(app.busy)return;try{app.restoreOperation=app.beginFile();$("restore-file").value="";$("restore-file").click();}catch(error){app.setBusy(false);$("message").textContent="Restore failed: "+error.message;}};
       $("restore-file").addEventListener("cancel",()=>{if(app.busy&&app.restoreOperation===app.operation)app.cancelFile();});
       $("restore-file").addEventListener("change",async()=>{const operation=app.restoreOperation;if(!app.busy||operation!==app.operation)return;try{const file=$("restore-file").files[0];if(!file){$("message").textContent="Restore canceled";return;}const candidate=await app.decodeFile(file);if(operation!==app.operation||!app.busy)return;app.applySnapshot(candidate);$("message").textContent="Snapshot restored. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Restore failed: "+error.message;}finally{if(operation===app.operation){app.endFile(operation);$("restore-file").value="";}}});

@@ -215,3 +215,27 @@ def test_sqlite_save_real_database_independent_inspection(page,tmp_path):
         assert db.execute('SELECT id,score,timestamp FROM high_scores').fetchall()==[tuple(snapshot()['results'][0].values())]
         assert dict(db.execute('SELECT key,value FROM settings'))=={'ghost':'visible','hardDrop':'1','nextPreview':'1','hardDropLock':'general','lockPolicy':'interval','hold':'1'}
     assert not page.evaluate('app.busy || app.workerActive')
+
+def database_bytes(tmp_path,change=None):
+    import sqlite3
+    path=tmp_path/'fixture.sqlite'
+    if path.exists():path.unlink()
+    with sqlite3.connect(path) as db:
+        db.executescript('PRAGMA user_version=1;PRAGMA application_id=1414812243;CREATE TABLE high_scores(id TEXT PRIMARY KEY NOT NULL,score INTEGER NOT NULL CHECK(score >= 0 AND score <= 9007199254740991),timestamp TEXT NOT NULL);CREATE TABLE settings(key TEXT PRIMARY KEY NOT NULL,value TEXT NOT NULL);')
+        row=snapshot()['results'][0];db.execute('INSERT INTO high_scores VALUES(?,?,?)',tuple(row.values()))
+        for key,value in SETTINGS.items():db.execute('INSERT INTO settings VALUES(?,?)',(key,str(int(value)) if isinstance(value,bool) else value))
+        if change:change(db)
+    return path.read_bytes()
+
+def test_sqlite_restore_equivalence_and_invalid_atomicity(page,tmp_path):
+    route_sql(page)
+    upload(page,database_bytes(tmp_path),name='unknown.bin')
+    assert page.evaluate('app.results')==snapshot()['results']
+    assert page.evaluate('app.game.settings')==SETTINGS
+    before=page.evaluate('[app.results,app.game.settings,document.cookie,location.href]')
+    mutations=[lambda db:db.execute('PRAGMA user_version=2'),lambda db:db.execute('CREATE TABLE extra(x)'),lambda db:db.execute('CREATE VIEW extra AS SELECT * FROM high_scores'),lambda db:db.execute('CREATE TRIGGER extra AFTER INSERT ON settings BEGIN DELETE FROM settings; END'),lambda db:db.execute("DELETE FROM settings WHERE key='hold'"),lambda db:db.execute("UPDATE high_scores SET timestamp='2026-02-30T00:00:00.000Z'"),lambda db:db.execute("UPDATE settings SET value='invalid' WHERE key='ghost'"),lambda db:db.executescript("PRAGMA ignore_check_constraints=ON;UPDATE high_scores SET score=9007199254740993;"),lambda db:db.executescript("PRAGMA ignore_check_constraints=ON;UPDATE high_scores SET score=1.5;"),lambda db:db.executescript("ALTER TABLE high_scores RENAME TO old_scores;CREATE TABLE high_scores(id TEXT PRIMARY KEY NOT NULL,score INTEGER NOT NULL UNIQUE,timestamp TEXT NOT NULL);INSERT INTO high_scores SELECT * FROM old_scores;DROP TABLE old_scores;")]
+    for change in mutations:
+        upload(page,database_bytes(tmp_path,change))
+        assert 'failed' in page.locator('#message').inner_text().lower()
+        assert page.evaluate('[app.results,app.game.settings,document.cookie,location.href]')==before
+        assert not page.evaluate('app.workerActive || app.busy')

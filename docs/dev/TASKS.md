@@ -215,7 +215,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Depends on: T-035. Contracts: F3 export, F4 Save, CFG1 encodings, A5.
             Compatibility amendment: use pinned production sql.js1.14.2 JavaScript loader plus its embedded binary; the T035 asm initialization prototype failed Chromium SQL execution. See DOCS_PREPARATION and ARCHITECTURE.
             Evidence: Create exact tables/types/metadata and all six unique textual settings rows, preserve record IDs/UTC/scores and download one actual tetris-save.sqlite; expose both Save formats.
-        - [ ] T-037 — Validate SQLite imports through the shared restore transaction
+        - [x] T-037 — Validate SQLite imports through the shared restore transaction
             Scope: tetris.html C5/C8/C10; persistence/browser checks.
             Depends on: T-036. Contracts: F3 decode, F4 restore, CFG3, A5-A6.
             Evidence: Detect bytes rather than extension; inspect schema/integrity/storage types/metadata/limits without file SQL execution, decode exact scores and reject invalid rows before applying the shared candidate.
