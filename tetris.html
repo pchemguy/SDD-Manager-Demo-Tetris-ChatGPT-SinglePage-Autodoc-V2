@@ -311,6 +311,7 @@
           <label>Hard-drop locking<select data-setting="hardDropLock"><option value="general">General policy</option><option value="immediate">Immediate</option></select></label>
           <label>General locking<select data-setting="lockPolicy"><option value="interval">Full gravity interval</option><option value="failed">Failed downward attempt</option></select></label>
           <label>Hold piece<select data-setting="hold"><option value="1">On</option><option value="0">Off</option></select></label>
+          <div id="file-controls"><label>Save format<select id="format"><option value="json">JSON</option></select></label><div class="buttons"><button id="save">Save</button><button id="restore">Restore</button></div><input id="restore-file" type="file" accept=".json,.sqlite,application/json,application/vnd.sqlite3" hidden /></div>
         </section>
         <section id="help" class="panel">
           <h2>Controls / help</h2>
@@ -790,6 +791,14 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
+      app.busy=false;app.operation=0;
+      app.setBusy=(busy)=>{app.busy=busy;document.querySelectorAll("[data-setting],#save,#restore,#format").forEach(node=>node.disabled=busy);};
+      app.snapshot=()=>TetrisCore.validateSnapshot({formatVersion:1,results:app.results,settings:app.game.settings});
+      app.beginFile=()=>{if(app.busy)throw Error("A file operation is already running");app.settleTime();app.game.pause();app.render();app.setBusy(true);$("message").textContent="File operation in progress. Gameplay is paused.";return ++app.operation;};
+      app.endFile=(operation)=>{if(operation===app.operation)app.setBusy(false);};
+      app.cancelFile=()=>{app.operation++;if(app.cancelCodec)app.cancelCodec();app.setBusy(false);$("message").textContent="Restore canceled. Resume when ready.";};
+      app.download=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));try {const anchor=document.createElement("a");anchor.href=url;anchor.download=name;document.body.append(anchor);try{anchor.click();}finally{anchor.remove();}}finally{setTimeout(()=>URL.revokeObjectURL(url),1000);}};
+      $("save").onclick=async()=>{if(app.busy)return;let operation;try {operation=app.beginFile();const snapshot=app.snapshot();app.download(JSON.stringify(snapshot,null,2)+"\n","tetris-save.json","application/json");$("message").textContent="JSON snapshot saved. Resume when ready.";}catch(error){$("message").textContent="Save failed: "+error.message;}finally{app.endFile(operation);}};
       app.writeSettings=(value,keys=Object.keys(TetrisCore.DEFAULTS))=>{
         const next=TetrisCore.validateSettings(value), previousURL=location.href, oldCookies={};
         const readCookie=key=>document.cookie.split(";").map(x=>x.trim()).filter(x=>x.startsWith("tetris_"+key+"=")).map(x=>x.slice(("tetris_"+key+"=").length));

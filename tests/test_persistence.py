@@ -73,3 +73,15 @@ def test_json_numeric_tokens_reject_lossy_or_fractional_values(core,token):
 def test_json_exact_integer_decimal_tokens(core,token,score):
     raw=json.dumps(snapshot()).replace('"score": 0','"score": '+token)
     assert core('TetrisCore.validateSnapshot(TetrisCore.parseJSON('+json.dumps(raw)+')).results[0].score')==score
+
+def test_actual_json_save(page,tmp_path):
+    import json
+    page.locator('#start').click()
+    before=page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')
+    with page.expect_download() as event:page.locator('#save').click()
+    download=event.value
+    assert download.suggested_filename=='tetris-save.json'
+    path=tmp_path/'save.json';download.save_as(path)
+    assert json.loads(path.read_text())=={'formatVersion':1,'results':before[0],'settings':before[1]}
+    assert page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')==before
+    assert page.evaluate('app.game.status')=='paused'

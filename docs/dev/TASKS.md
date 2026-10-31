@@ -185,7 +185,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C4/C5/embedded schema, tools/export_schema.py, schemas/tetris-save.schema.json, tests/test_persistence.py.
             Depends on: T-030. Contracts: F1-F2, CFG1, A5-A6.
             Evidence: Validate exact root/record/settings keys, version, UUIDs, duplicate IDs/JSON keys, safe integers and real canonical UTC timestamps; schema companion parity and structural/semantic rejection cases pass.
-        - [ ] T-032 — Download one complete JSON snapshot through Save
+        - [x] T-032 — Download one complete JSON snapshot through Save
             Scope: tetris.html C10/C11/C7; browser persistence checks.
             Depends on: T-031. Contracts: F2/F4 JSON save, U1 Save location, A5.
             Evidence: Save captures current top ten/all settings, downloads exactly one tetris-save.json and changes no results/settings/cookies/URL; pause/cancellation/resource handling is correct.
