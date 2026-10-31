@@ -34,6 +34,10 @@ All decisions in this section were proposed in chat and accepted by the user's `
 
 No material product decision is currently unresolved for brief review. Detailed defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
 
+## Detailed specification decisions
+
+The specification owner selected deterministic fixed-order rotation kicks, explicit keyboard bindings, modern scoring/gravity values, canonical six-key settings/defaults and a version-1 strict snapshot format with UUID/UTC/safe-integer validation. The file limit is 1 MiB and SQLite deadline ten seconds. These details implement the accepted project direction; their exact contracts live in SPEC and children. Penetrator valid-landing enforcement was explained in progress commentary before implementation.
+
 ## Structural design decisions
 
 The design owner selected a pure inline game domain, controller-owned live state, a shared candidate-snapshot validator and an isolated SQLite codec worker. SQLite uses the pinned sql.js 1.13.0 asm.js build from jsDelivr, whose upstream versioned README confirms single-JavaScript distribution. This preserves the one-HTML application constraint and isolates optional CDN failures. Actual CDN bytes/browser integration remain implementation verification, not observed product capability. The decomposition enforces the accepted valid-lock guarantee by sharing the lowest valid landing across penetrator gravity, ghost and hard drop; proposed moves without any valid eventual landing are rejected. This is a design-owner enforcement detail within the accepted penetrator contract.
@@ -46,7 +50,7 @@ The design owner selected a pure inline game domain, controller-owned live state
 | DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval supplied by the subsequent `k`; exact presented bytes retained unchanged. DOCS-002 closes with this approval evidence and its owning checkbox. |
 | DOCS-003 | ARCHITECTURE SHA-256 `3a1d73f814f63075beb344e1971699277e72a4479256da74c7a8fe61f0f2cd2e`; accepted under autodoc scoped preapproval after PROJECT approval. Owner reviewed all brief responsibilities, state ownership, dependency direction, shared landing/validation and browser error boundaries. No material design blocker remains; DECOMPOSITION is next. |
 | DOCS-004 | DECOMPOSITION SHA-256 `c23cfeac552a33b96349e9d64105becab0c6e1c788830671e92b449abc6962d5`; accepted under autodoc preapproval. Reviewed C1-C11 for single state owners, directed dependencies, reproducible time/randomness seams, legal penetrator locks and controller-only restore commits; consistent with ARCHITECTURE. |
-| DOCS-005 | SPEC and its QC not yet authored. |
+| DOCS-005 | SPEC root SHA-256 `c2d5834706a573a664f45501619b73f11749547a7b5fb258bdd62f03ab0ace00` and three focused children are accepted under autodoc preapproval. Exact root/child/governing hashes and G/CFG/F/U coverage are in SPEC-REVIEW-REPORT.md; current gate Ready for PLAN, no confirmed unresolved finding. No product execution or package QC is claimed. |
 | DOCS-006 | PLAN and strategy QC not yet authored. |
 | DOCS-007 | layout and combined PLAN/layout QC not yet authored. |
 | DOCS-008 | TASKS and task-list QC not yet authored. |
@@ -64,4 +68,4 @@ The design owner selected a pure inline game domain, controller-owned live state
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) closure is pending this decomposition publication; later issues and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) closure is pending this SPEC publication; later issues and milestone 1 remain open; reconcile later effects before replay.
