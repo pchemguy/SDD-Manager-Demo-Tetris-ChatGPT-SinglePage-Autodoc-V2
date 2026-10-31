@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-015 Review landing and timing integration.
+Checkpoint: T-016 Review test and report phase 2.
 
-Completed independent landing/timing review and added the missing kick, deadline, grounded spawn/hold, Canvas ghost and preview-mask acceptance checks.
+Completed independent phase2 QC and prepared version0.2.0 notes/package; made the stale-clock browser regression deterministic under host scheduling.
 
 ## Scope and owners
 
@@ -15,8 +15,8 @@ Working branch `phase/2-modern-rules`; creation parent/integration target `main`
 ## Evidence and next action
 
 ..........................................................               [100%]
-58 passed in 22.56s; actual inline application source and selected browser/package paths exercised.
+58 passed in 22.86s; actual inline application source and selected browser/package paths exercised.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
 Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.

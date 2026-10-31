@@ -52,7 +52,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 2 — Modern rules
 
-- [ ] Phase 2 — Modern rules
+- [x] Phase 2 — Modern rules
     - [x] Milestone 2.1 — Bag hold and preview
         - [x] T-008 — Implement seven-bag generation and the shared queue
             Scope: tetris.html C2/C3; tests/test_core.py.
@@ -90,8 +90,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Depends on: T-011, T-012, T-013, T-014. Contracts: G1/G3/G5, A2 and PLAN 2.2 exits.
             Evidence: capability-wide code review separate from test execution, deterministic timing/landing regressions, blocker repairs and retained TODO disposition; include milestone report and HANDOFF with completion.
             Report: `docs/dev/reports/phases/2/2.2.md`.
-    - [ ] Milestone 2.3 — Phase review
-        - [ ] T-016 — Review test and report phase 2
+    - [x] Milestone 2.3 — Phase review
+        - [x] T-016 — Review test and report phase 2
             Scope: all phase 2 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-010, T-015 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

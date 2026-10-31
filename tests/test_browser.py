@@ -115,7 +115,7 @@ def test_hold_and_preview_browser(page):
     assert page.locator('#held i').count()==16
 
 def test_hold_incoming_has_fresh_browser_clock(page):
-    assert page.evaluate('(()=>{requestAnimationFrame=()=>0;app.game=new TetrisCore.Game(()=>0);app.game.start();const now=performance.now();lastFrame=now-900;$("game").dispatchEvent(new KeyboardEvent("keydown",{code:"KeyC",bubbles:true}));const heldClock=performance.now();frame(heldClock+101);return [app.game.active.type,app.game.active.y,app.game.elapsed>=100 && app.game.elapsed<110]})()')==['J',-1,True]
+    assert page.evaluate('(()=>{requestAnimationFrame=()=>0;Object.defineProperty(performance,"now",{value:()=>10000,configurable:true});app.game=new TetrisCore.Game(()=>0);app.game.start();const now=performance.now();lastFrame=now-900;$("game").dispatchEvent(new KeyboardEvent("keydown",{code:"KeyC",bubbles:true}));const heldClock=performance.now();frame(heldClock+101);return [app.game.active.type,app.game.active.y,app.game.elapsed>=100 && app.game.elapsed<110]})()')==['J',-1,True]
 
 def test_ghost_canvas_projection_and_drop_coincidence(page):
     assert page.evaluate('(()=>{requestAnimationFrame=()=>0;app.game=new TetrisCore.Game(()=>0);app.game.start();app.render();const canvas=$("board"),ctx=canvas.getContext("2d"),s=canvas.width/10;const pixel=(x,y)=>Array.from(ctx.getImageData(Math.floor((x+.5)*s),Math.floor((y+.5)*s),1,1).data).slice(0,3);const ghost=pixel(3,19),empty=pixel(3,18);app.game.hardDrop();app.render();return [ghost.some((v,i)=>v!==empty[i]),pixel(3,19),app.game.active.y,app.game.landing().y];})()')==[True,[65,215,232],18,18]

@@ -36,3 +36,5 @@ Both commands and the packaged HTML were verified locally. The ZIP contains `tet
 Published and verified: [v0.1.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.1.0).
 
 Modern increment: a seven-bag queue, once-per-piece keyboard hold (C), and next/held shape previews are implemented.
+
+Phase 2 delivered: Added seven-bag randomization, once-per-piece hold and shape previews, ordered wall kicks, ghost projection, keyboard hard drop and a full gravity interval of grounded lock delay. Keyboard event timing preserves fresh incoming pieces and processes elapsed time chronologically.
