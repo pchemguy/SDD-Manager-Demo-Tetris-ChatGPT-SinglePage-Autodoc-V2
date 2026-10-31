@@ -235,7 +235,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 7 — Centered panel layout
 
 - [ ] Phase 7 — Centered panel layout
-    - [ ] Milestone 7.1 — Centered optional panels
+    - [x] Milestone 7.1 — Centered optional panels
         - [x] T-040 — Arrange five panels around a fixed board center
             Scope: tetris.html markup/style/C7; tests/test_browser.py.
             Depends on: T-039. Contracts: U1 panel order/geometry, A7.
@@ -244,7 +244,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C7/C8; browser checks.
             Depends on: T-040. Contracts: U1 toggles/file buttons, U2 focus, A7.
             Evidence: Three toggles sit above the exact gameplay row; all eight combinations preserve state/centering, Settings hides its only Save/Restore pair, and focus/keyboard remain usable after hiding a focused panel.
-        - [ ] T-042 — Verify responsive accessible layout and final packaging
+        - [x] T-042 — Verify responsive accessible layout and final packaging
             Scope: tetris.html C7 as needed; tests/test_browser.py and test_artifacts.py; README.md and docs/INSTALL.md.
             Depends on: T-040, T-041. Contracts: U1-U3, A7/A8.
             Evidence: Inspect screenshots/Canvas/labels/focus and geometry at all specified widths/device pixel ratios and visibility combinations; package actual final HTML/schema and show accurate full-scope installation/help.

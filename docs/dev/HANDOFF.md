@@ -1,30 +1,21 @@
 # Project handoff
 
-Checkpoint: T-039 Review test and report phase 6.
+Checkpoint: T-042 Verify responsive accessible layout and final packaging.
 
-Completed independent phase6 QC and prepared version0.6.0 for both JSON and SQLite snapshot transfer.
+Completed responsive/accessibility/presentation QC, final user/development guidance, readable single-file formatting and exact browser package checks. Retained twelve real high-DPI screenshots.
 
 ## Scope and owners
 
-Full T-001 through T-043 implementation and all seven phase releases remain user-authorized. Current executable owner: [TASKS](TASKS.md); requirements [SPEC](SPEC.md), strategy [PLAN](PLAN.md). Task/boundary evidence is under `reports/phases/6/`. Preparation QC passed and was integrated at main 1811ff44fcf8b822f94104158241dd21ef7d4d46; documentation milestone 1 closed.
+Full T-001 through T-043 implementation and all seven phase releases remain user-authorized. Current executable owner: [TASKS](TASKS.md); requirements [SPEC](SPEC.md), strategy [PLAN](PLAN.md). Task/boundary evidence is under `reports/phases/7/`. Preparation QC passed and was integrated at main 1811ff44fcf8b822f94104158241dd21ef7d4d46; documentation milestone 1 closed.
 
 ## Branch and return
 
-Working branch `phase/6-sqlite-snapshots`; creation parent/integration target `main`; branch-off `8df8cda7e219317ca69185f36a0bde6cd6614160`. No suspended campaign. Preserve all valid task commits and recover later effects from Git/hosted readback.
+Working branch `phase/7-centered-panel-layout`; creation parent/integration target `main`; branch-off `ed11c5efd729d43b28a7cdfa4c5b90a60497f711`. No suspended campaign. Preserve all valid task commits and recover later effects from Git/hosted readback.
 
 ## Evidence and next action
 
-........................................................................ [ 41%]
-........................................................................ [ 82%]
-..............................                                           [100%]
-174 passed in 92.70s (0:01:32); actual inline application source and selected browser/package paths exercised.
+186 full-suite checks passed in111.73s. Both browsers cover all8 visibility combinations at480/640/800/1024/1440/1920 with DPR1 and2, fixed board centering, visible information, correct file-control hiding, no page horizontal overflow and unchanged game state. Four focused panning/focus/button checks also passed in6.48s. Source/package/schema/embedded binary integrity and actual browser downloads/restores passed. All twelve screenshots are retained under screenshots/.
 
-Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.
-
-## Phase integration
-
-Phase 6 integrated with two parents into main; merged regression and package checks passed. Publish/readback and exact-source release publication are the next required operations before successor activation.
-
-Release v0.6.0 published and downloaded-byte/latest-link verified. Continue the next eligible phase in the authorized full T-001..T-043 range.
+Limitations: Native OS focus delivery/headed browsers remain outside the required matrix. Local Firefox uses the documented diagnosed override; CI does not. SQLite tests use verified upstream bytes through controlled transport and reject external binary requests; live CDN availability is network-dependent. Current task establishes source/package readiness; final project report, integration and release follow.
