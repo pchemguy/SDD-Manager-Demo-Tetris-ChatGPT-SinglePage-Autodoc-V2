@@ -29,8 +29,9 @@ def test_keyboard_moves_and_rotates(page):
 
 def test_play_complete_game_and_restart(page):
     page.locator('#start').click()
-    for _ in range(300):
-        page.keyboard.press('ArrowDown')
+    for _ in range(80):
+        page.keyboard.press('Enter')
+        page.evaluate('app.game.advance(app.game.interval());app.render()')
         if page.evaluate('app.game.status') == 'over':
             break
     assert page.locator('#status').inner_text() == 'Game over'

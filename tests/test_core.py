@@ -31,7 +31,7 @@ def test_above_top_and_spawn_loss_complete_once(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[0][3]="red";g.spawn();return g.status})()') == 'over'
 
 def test_failed_down_locks_and_soft_drop_scores(core):
-    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.down(true);const points=g.score;g.active={type:"I",x:3,y:18,rotation:0};g.down(true);return [points,g.score,g.board.flat().filter(Boolean).length,g.active.y]})()') == [1, 1, 4, -1]
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.setLockPolicy("failed");g.down(true);const points=g.score;g.active={type:"I",x:3,y:18,rotation:0};g.down(true);return [points,g.score,g.board.flat().filter(Boolean).length,g.active.y]})()') == [1, 1, 4, -1]
 
 def test_pause_preserves_remaining_gravity_time(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.advance(500);g.pause();g.advance(10000);const paused=g.active.y;g.resume();g.advance(499);const before=g.active.y;g.advance(1);return [paused,before,g.active.y]})()') == [-1,-1,0]
@@ -55,3 +55,10 @@ def test_landing_stops_at_first_obstruction_without_mutation(core):
 
 def test_hard_drop_shared_landing_score_and_immediate(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();const y=g.landing().y;g.hardDrop();const points=g.score;g.hardDrop();const same=g.score===points;const count=g.board.flat().filter(Boolean).length;g.hardDrop(true);return [g.active.y,points,same,count,g.board.flat().filter(Boolean).length,y]})()')==[-1,38,True,0,4,18]
+
+def test_grounded_full_interval_nonreset_pause_and_lift(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.advance(900);g.hardDrop();g.advance(999);const a=g.board.flat().filter(Boolean).length;g.move(-1,0);g.pause();g.advance(5000);g.resume();g.advance(1);return [a,g.board.flat().filter(Boolean).length,g.active.y,g.elapsed]})()')==[0,4,-1,0]
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.hardDrop();g.advance(800);g.move(0,-1);const cleared=g.groundedTime;g.down();g.advance(999);const count=g.board.flat().filter(Boolean).length;g.advance(1);return [cleared,count,g.board.flat().filter(Boolean).length]})()')==[None,0,4]
+
+def test_policy_change_resets_grounded_time(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.hardDrop();g.advance(800);g.setLockPolicy("failed");g.setLockPolicy("interval");g.advance(999);const a=g.board.flat().filter(Boolean).length;g.advance(1);return [a,g.board.flat().filter(Boolean).length]})()')==[0,4]
