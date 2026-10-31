@@ -5,16 +5,16 @@ Current control and evidence for the full project. [DOCS_TASKS](DOCS_TASKS.md) o
 ## Current control
 
 - Mode: autodoc/onepass, selected by the user's project-development request.
-- Scope: the complete single-page HTML Tetris target; one documentation pass with bounded implementation phases to be planned later.
+- Scope: the complete single-page HTML Tetris target; one documentation pass; PLAN defines seven bounded implementation phases.
 - Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. The user's subsequent `k` approved the published PROJECT proposal at `c52e30a33cac17d1015053a2820f853eeb750e79` on 2026-10-31; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
 - Tracking: enabled for documentation and implementation by root AGENTS.md. GitHub milestone 1 (`sdd-docs-main`) and DOCS-001 through DOCS-009 issues #1 through #9 were created and read back with exact bundled content and associations before target writes.
 - Publication: every owned commit must be pushed and read back before advancement.
-- Next boundary: prepare through DOCS-008; PROJECT approval publication and issue #2 closure/readback are verified and stop before DOCS-009 package QC or implementation.
+- Next boundary: publish/read back DOCS-008 and close/read back issue #8; then stop before DOCS-009 package QC, preparation integration or implementation.
 - Reporting: Standard, with concise progress updates.
 
 ## Scope source
 
-The user's complete target comprises the classic playable baseline, modern rules, conditional ghost, penetrator, all six session-only settings followed by cookie/URL persistence, session top-ten leaderboard, JSON/SQLite manual Save/Restore, and the prescribed centered five-panel layout. The accepted PROJECT owns principal product scope; SPEC will own exact contracts. No later documentation passes are selected.
+The user's complete target comprises the classic playable baseline, modern rules, conditional ghost, penetrator, all six session-only settings followed by cookie/URL persistence, session top-ten leaderboard, JSON/SQLite manual Save/Restore, and the prescribed centered five-panel layout. The accepted PROJECT owns principal product scope; SPEC owns exact contracts. No later documentation passes are selected.
 
 ## Accepted clarification decisions
 
@@ -32,7 +32,7 @@ All decisions in this section were proposed in chat and accepted by the user's `
 | Live settings | Apply immediately; changing locking policy while grounded starts timing afresh. |
 | Cookie verification | Verify cookies and URL persistence over HTTP(S); direct file opening may limit cookies. |
 
-No material product decision is currently unresolved for brief review. Detailed defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
+No material product decision is currently unresolved for document derivation. Detailed defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
 
 ## Detailed specification decisions
 
@@ -48,12 +48,12 @@ The design owner selected a pure inline game domain, controller-owned live state
 | --- | --- |
 | DOCS-001 | All four existing root files retained unchanged against initial commit `89d088c799d0556603bc0c49b3ac0934d9bacbcc`; no copies needed. Task list instantiated from the bundled template with only DOCS-001 checked. This control record and HANDOFF complete initialization metadata. Initialization commit `bca8bec2c7eca063a4daa21a6d5d15de859ead04` was pushed with exact ref readback and confirmed process cleanup. Issue #1 was closed as completed and read back before PROJECT authoring. |
 | DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval supplied by the subsequent `k`; exact presented bytes retained unchanged. DOCS-002 closes with this approval evidence and its owning checkbox. |
-| DOCS-003 | ARCHITECTURE SHA-256 `3a1d73f814f63075beb344e1971699277e72a4479256da74c7a8fe61f0f2cd2e`; accepted under autodoc scoped preapproval after PROJECT approval. Owner reviewed all brief responsibilities, state ownership, dependency direction, shared landing/validation and browser error boundaries. No material design blocker remains; DECOMPOSITION is next. |
+| DOCS-003 | ARCHITECTURE SHA-256 `3a1d73f814f63075beb344e1971699277e72a4479256da74c7a8fe61f0f2cd2e`; accepted under autodoc scoped preapproval after PROJECT approval. Owner reviewed all brief responsibilities, state ownership, dependency direction, shared landing/validation and browser error boundaries. The reviewed ownership supports downstream decomposition and contracts. |
 | DOCS-004 | DECOMPOSITION SHA-256 `c23cfeac552a33b96349e9d64105becab0c6e1c788830671e92b449abc6962d5`; accepted under autodoc preapproval. Reviewed C1-C11 for single state owners, directed dependencies, reproducible time/randomness seams, legal penetrator locks and controller-only restore commits; consistent with ARCHITECTURE. |
 | DOCS-005 | SPEC root SHA-256 `c2d5834706a573a664f45501619b73f11749547a7b5fb258bdd62f03ab0ace00` and three focused children are accepted under autodoc preapproval. Exact root/child/governing hashes and G/CFG/F/U coverage are in SPEC-REVIEW-REPORT.md; current gate Ready for PLAN, no confirmed unresolved finding. No product execution or package QC is claimed. |
 | DOCS-006 | PLAN SHA-256 `3d4d746042c1f9a461858fc7700c2a2fad9ee35d0de8ff330f3d4e1bb5a5e492` accepted under autodoc preapproval. PLAN-REVIEW-REPORT.md records complete coverage and seven bounded releases, explicitly assesses 1-2 milestone groups, and is Ready for layout authoring only; combined placement readiness is pending. |
 | DOCS-007 | layout SHA-256 `294e2ef9d7c295230c84aadfe53cef4ca06d3624889d3955b37c2b7976e9166d` accepted under autodoc preapproval. PLAN-REVIEW-REPORT Revision 1 verifies combined strategy/physical ownership and is Ready for TASKS; unchanged upstream identities retained. Root AGENTS navigation now points only to present governing documents; setup commands remain explicitly unvalidated. |
-| DOCS-008 | TASKS and task-list QC not yet authored. |
+| DOCS-008 | TASKS SHA-256 `24e80ca4b55a9df936b71390c2bf106867a4b3bed6db3092b40de35578d2418f` accepted under autodoc preapproval. TASKS-REVIEW-REPORT.md records exact source identities, all 43 unique unchecked tasks, 35 delivery/one milestone-review/seven phase-review counts, PLAN/contract/path coverage and a preceding-ID dependency DAG. Gate Ready as a breakdown; implementation/package QC are not claimed. HANDOFF is refreshed for the DOCS-008 stop. |
 | DOCS-009 | Package QC not selected; remains beyond the autodoc stop. |
 
 ## Initialization
@@ -68,4 +68,4 @@ The design owner selected a pure inline game domain, controller-owned live state
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) is closed as completed and read back. DOCS-006 (#6) is closed as completed and read back. DOCS-007 (#7) closure is pending this layout publication; DOCS-008, DOCS-009 and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) is closed as completed and read back. DOCS-006 (#6) is closed as completed and read back. DOCS-007 (#7) is closed as completed and read back. DOCS-008 (#8) closure is pending this TASKS publication; DOCS-009 (#9) and milestone 1 remain open; reconcile later effects before replay.
