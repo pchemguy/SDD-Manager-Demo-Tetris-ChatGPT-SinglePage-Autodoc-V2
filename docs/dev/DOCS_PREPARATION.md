@@ -36,7 +36,7 @@ No material product decision is currently unresolved for brief review. Detailed 
 
 ## Structural design decisions
 
-The design owner selected a pure inline game domain, controller-owned live state, a shared candidate-snapshot validator and an isolated SQLite codec worker. SQLite uses the pinned sql.js 1.13.0 asm.js build from jsDelivr, whose upstream versioned README confirms single-JavaScript distribution. This preserves the one-HTML application constraint and isolates optional CDN failures. Actual CDN bytes/browser integration remain implementation verification, not observed product capability.
+The design owner selected a pure inline game domain, controller-owned live state, a shared candidate-snapshot validator and an isolated SQLite codec worker. SQLite uses the pinned sql.js 1.13.0 asm.js build from jsDelivr, whose upstream versioned README confirms single-JavaScript distribution. This preserves the one-HTML application constraint and isolates optional CDN failures. Actual CDN bytes/browser integration remain implementation verification, not observed product capability. The decomposition enforces the accepted valid-lock guarantee by sharing the lowest valid landing across penetrator gravity, ghost and hard drop; proposed moves without any valid eventual landing are rejected. This is a design-owner enforcement detail within the accepted penetrator contract.
 
 ## Decisions and document evidence
 
@@ -45,7 +45,7 @@ The design owner selected a pure inline game domain, controller-owned live state
 | DOCS-001 | All four existing root files retained unchanged against initial commit `89d088c799d0556603bc0c49b3ac0934d9bacbcc`; no copies needed. Task list instantiated from the bundled template with only DOCS-001 checked. This control record and HANDOFF complete initialization metadata. Initialization commit `bca8bec2c7eca063a4daa21a6d5d15de859ead04` was pushed with exact ref readback and confirmed process cleanup. Issue #1 was closed as completed and read back before PROJECT authoring. |
 | DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval supplied by the subsequent `k`; exact presented bytes retained unchanged. DOCS-002 closes with this approval evidence and its owning checkbox. |
 | DOCS-003 | ARCHITECTURE SHA-256 `3a1d73f814f63075beb344e1971699277e72a4479256da74c7a8fe61f0f2cd2e`; accepted under autodoc scoped preapproval after PROJECT approval. Owner reviewed all brief responsibilities, state ownership, dependency direction, shared landing/validation and browser error boundaries. No material design blocker remains; DECOMPOSITION is next. |
-| DOCS-004 | DECOMPOSITION not yet authored; same scoped preapproval. |
+| DOCS-004 | DECOMPOSITION SHA-256 `c23cfeac552a33b96349e9d64105becab0c6e1c788830671e92b449abc6962d5`; accepted under autodoc preapproval. Reviewed C1-C11 for single state owners, directed dependencies, reproducible time/randomness seams, legal penetrator locks and controller-only restore commits; consistent with ARCHITECTURE. |
 | DOCS-005 | SPEC and its QC not yet authored. |
 | DOCS-006 | PLAN and strategy QC not yet authored. |
 | DOCS-007 | layout and combined PLAN/layout QC not yet authored. |
@@ -64,4 +64,4 @@ The design owner selected a pure inline game domain, controller-owned live state
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) closure is pending this architecture publication; later issues and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) closure is pending this decomposition publication; later issues and milestone 1 remain open; reconcile later effects before replay.
