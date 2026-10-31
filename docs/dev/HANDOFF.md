@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-038 Complete cross-format fault coverage and resource cleanup.
+Checkpoint: T-039 Review test and report phase 6.
 
-Completed both-format round trips, fault/resource coverage and embedded runtime artifact integrity. Fixed canceled delayed reads before they could launch stale codecs. Retained an actual independently inspected SQLite download.
+Completed independent phase6 QC and prepared version0.6.0 for both JSON and SQLite snapshot transfer.
 
 ## Scope and owners
 
@@ -14,8 +14,11 @@ Working branch `phase/6-sqlite-snapshots`; creation parent/integration target `m
 
 ## Evidence and next action
 
-174 full-suite pytest checks passed across both browsers. Tests include JSON/SQLite empty/top-ten/ties/default/nondefault settings and stable IDs/UTC, max-safe export inspected with sqlite3, exact unsafe integer rejection without a protective CHECK, schema/meta/index/storage corruption, header-bearing truncation, loader SRI failure, ten-second worker termination, network-independent JSON, busy/cancel/stale ownership and package integrity. Retained snapshot-demo.sqlite SHA-256 5320e4f326542637735b55d29cf3ad210b9dc5adc5ce4b4724fe863b70d2ab4d.
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+..............................                                           [100%]
+174 passed in 92.70s (0:01:32); actual inline application source and selected browser/package paths exercised.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Only the pinned JavaScript loader is fetched; matching binary, worker and app are embedded. Tests use controlled transport serving verified upstream loader bytes and reject external binary requests; live CDN reachability is network-dependent and failure leaves JSON/gameplay usable. Managed headless browser/local Firefox override and unverified native OS focus/headed limits remain.
+Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.

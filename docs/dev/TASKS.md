@@ -204,7 +204,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 6 — SQLite snapshots
 
-- [ ] Phase 6 — SQLite snapshots
+- [x] Phase 6 — SQLite snapshots
     - [x] Milestone 6.1 — SQLite snapshot transfer
         - [x] T-035 — Establish the pinned isolated SQLite worker runtime
             Scope: tetris.html embedded worker/C10/C11; tests/test_persistence.py and test_artifacts.py.
@@ -225,8 +225,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Independently inspect exports with Python sqlite3, cross-restore both formats, exercise corrupt/extra-schema/missing/duplicate/CDN/timeout/cancel/busy cases in both browsers, verify unchanged-state failures and worker/URL/database cleanup, and update install/package limits.
             Milestone exit: perform the complete 6.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/6/6.1.md`.
-    - [ ] Milestone 6.2 — Phase review
-        - [ ] T-039 — Review test and report phase 6
+    - [x] Milestone 6.2 — Phase review
+        - [x] T-039 — Review test and report phase 6
             Scope: all phase 6 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-038 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
