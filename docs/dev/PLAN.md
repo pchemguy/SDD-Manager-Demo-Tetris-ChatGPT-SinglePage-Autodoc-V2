@@ -49,7 +49,7 @@ Use deterministic domain/model checks with injected time/randomness/IDs, then th
 
 Establish representative repeated context/page/teardown and Canvas/input execution in Phase 1 before browser-dependent growth. Exercise actual file downloads, HTTP(S) cookie/URL reloads and screenshots where relevant. Browser cookie restrictions and optional CDN failure have explicit error cases. Full/headed-browser/native-window evidence is outside the required matrix; disclose policy-excluded behavior without claiming it passed. A failure of feasible required evidence blocks the affected boundary.
 
-Before SQLite implementation relies on a CDN artifact, verify the pinned single-JavaScript distribution, integrity and isolated worker startup. Bound file size/startup/decode time and inspect successful databases independently. Share validation between formats and compare pre/post results/settings/cookies/URL for rejection. Timing and penetration use deterministic edge fixtures so frame rate or random games do not conceal contract defects.
+Before SQLite implementation relies on a CDN artifact, verify the pinned JavaScript loader, embedded binary integrity and isolated worker startup. Bound file size/startup/decode time and inspect successful databases independently. Share validation between formats and compare pre/post results/settings/cookies/URL for rejection. Timing and penetration use deterministic edge fixtures so frame rate or random games do not conceal contract defects.
 
 ## Integration, versioning and releases
 

@@ -73,3 +73,7 @@ DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 
 ## Full execution grant
 
 On 2026-10-31 the user instructed `Do QC and full implement`: package QC, repairs, preparation integration, all T-001 through T-043, phase reviews/integrations, versioning and all seven releases are authorized. This supersedes the earlier DOCS-008 stop. Required checks/tracking/publication remain active.
+
+## Phase6 runtime compatibility amendment
+
+T036 supersedes the initial sql.js1.13.0 asm prototype: both 1.13.0 and1.14.2 asm builds reproduce Chromium native stack overflow in a minimal worker creating one table, independently of application code; Firefox succeeds. Use production sql.js1.14.2 loader from jsDelivr with the matching verified WebAssembly binary embedded in the single HTML. This preserves all accepted product/file contracts, no separate binary asset/request, and the ten-second isolated deadline. The full implementation/QC/autodoc grant covers this bounded compatibility repair. Architecture/PLAN and runtime/package tests own the effective choice; T035 remains a truthful historical prototype initialization record. Temporary diagnostic probes were removed after retaining their outcomes in task evidence.
