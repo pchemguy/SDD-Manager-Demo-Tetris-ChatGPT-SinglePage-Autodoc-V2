@@ -52,46 +52,46 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 2 — Modern rules
 
-- [ ] Phase 2 — Modern rules
-    - [ ] Milestone 2.1 — Bag hold and preview
-        - [ ] T-008 — Implement seven-bag generation and the shared queue
+- [x] Phase 2 — Modern rules
+    - [x] Milestone 2.1 — Bag hold and preview
+        - [x] T-008 — Implement seven-bag generation and the shared queue
             Scope: tetris.html C2/C3; tests/test_core.py.
             Depends on: T-007. Contracts: G4, A2.
             Evidence: Deterministic shuffles contain every type once per bag; consume complete bags and reset correctly without a second RNG path.
-        - [ ] T-009 — Implement one-hold-per-piece and spawn transitions
+        - [x] T-009 — Implement one-hold-per-piece and spawn transitions
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-008. Contracts: G4, A2.
             Evidence: Empty/swap hold, used restriction, fresh spawn timing, reset and hold-induced spawn loss agree with G4; expose hold through keyboard only.
-        - [ ] T-010 — Render next and held piece previews from queue state
+        - [x] T-010 — Render next and held piece previews from queue state
             Scope: tetris.html C3/C7; core/browser checks; README.md.
             Depends on: T-008, T-009. Contracts: G4, U1, A2.
             Evidence: Next reflects the next spawn without consumption; held type/orientation is correct; integrated bag/hold/preview remains deterministic and visibly readable.
             Milestone exit: perform the complete 2.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/2/2.1.md`.
-    - [ ] Milestone 2.2 — Landing and grounded timing
-        - [ ] T-011 — Implement the documented ordered wall kicks
+    - [x] Milestone 2.2 — Landing and grounded timing
+        - [x] T-011 — Implement the documented ordered wall kicks
             Scope: tetris.html C1; tests/test_core.py; browser checks.
             Depends on: T-010. Contracts: G1 kicks, A2.
             Evidence: Clockwise/counterclockwise, I/O behavior and fixed offset ordering pass wall/floor/stack fixtures; failed rotations preserve the original piece.
-        - [ ] T-012 — Share ordinary landing calculation with ghost rendering
+        - [x] T-012 — Share ordinary landing calculation with ghost rendering
             Scope: tetris.html C1/C3/C7; core/browser checks.
             Depends on: T-011. Contracts: G5 ordinary landing/ghost, A2.
             Evidence: Ghost is the last consecutively reachable valid row and never changes locked cells; omit coincident ghost and verify actual Canvas projection.
-        - [ ] T-013 — Implement keyboard hard drop and drop scoring
+        - [x] T-013 — Implement keyboard hard drop and drop scoring
             Scope: tetris.html C1/C3/C8; core/browser checks.
             Depends on: T-012. Contracts: G2 hard-drop points, G5, A2.
             Evidence: Enter reaches the shared landing, awards distance once and handles zero distance; domain checks cover general/immediate policy paths while the UI uses fixed defaults.
-        - [ ] T-014 — Implement full grounded interval and event ordering
+        - [x] T-014 — Implement full grounded interval and event ordering
             Scope: tetris.html C3; tests/test_core.py; browser integration checks.
             Depends on: T-013. Contracts: G3, G5 locking, A2.
             Evidence: Check before/at deadline, nonreset grounded moves, lift/re-ground, pause, policy changes and coincident gravity/lock; modern default is general interval locking, with no old event applied to a successor.
-        - [ ] T-015 — Review landing and timing integration
+        - [x] T-015 — Review landing and timing integration
             Scope: all 2.2 implementation, relevant queue/core consumers, tests and documentation.
             Depends on: T-011, T-012, T-013, T-014. Contracts: G1/G3/G5, A2 and PLAN 2.2 exits.
             Evidence: capability-wide code review separate from test execution, deterministic timing/landing regressions, blocker repairs and retained TODO disposition; include milestone report and HANDOFF with completion.
             Report: `docs/dev/reports/phases/2/2.2.md`.
-    - [ ] Milestone 2.3 — Phase review
-        - [ ] T-016 — Review test and report phase 2
+    - [x] Milestone 2.3 — Phase review
+        - [x] T-016 — Review test and report phase 2
             Scope: all phase 2 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-010, T-015 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

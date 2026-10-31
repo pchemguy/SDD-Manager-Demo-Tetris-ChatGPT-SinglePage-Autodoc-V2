@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="application-version" content="0.1.0" />
+    <meta name="application-version" content="0.2.0" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link
       rel="icon"
@@ -279,6 +279,7 @@
               <div class="stat-value" id="level">1</div>
             </div>
           </div>
+          <div class="stats" id="previews"><div><div class="label">Hold</div><div id="held" class="stat-value">—</div></div><div><div class="label">Next</div><div id="next" class="stat-value">—</div></div></div>
           <div class="buttons">
             <button id="start">Start</button><button id="pause">Start</button>
           </div>
@@ -310,6 +311,8 @@
             <dd>Rotate clockwise</dd>
             <dt>Z</dt>
             <dd>Rotate back</dd>
+            <dt>Enter</dt><dd>Hard drop</dd>
+            <dt>C</dt><dd>Hold piece</dd>
             <dt>P / Esc</dt>
             <dd>Pause or resume</dd>
             <dt>R</dt>
@@ -396,6 +399,7 @@
           this.active = null;
           this.status = "ready";
           this.score = 0;
+          this.lockPolicy="interval";
         }
         start() {
           this.board = Array.from({ length: 20 }, () => Array(10).fill(null));
@@ -405,18 +409,44 @@
           this.completion = null;
           this.elapsed = 0;
           this.status = "running";
+          this.held = null;
+          this.holdUsed = false;
+          this.queue = [];
+          this.fillQueue();
           this.spawn();
         }
-        spawn() {
-          const types = Object.keys(SHAPES);
+        fillQueue() {
+          while (this.queue.length < 1) {
+            const bag = Object.keys(SHAPES);
+            for (let i=0;i<bag.length-1;i++) {
+              const j=i+Math.min(bag.length-i-1,Math.floor(this.random()*(bag.length-i)));
+              [bag[i],bag[j]]=[bag[j],bag[i]];
+            }
+            this.queue.push(...bag);
+          }
+        }
+        peek() { return this.queue?.[0] ?? null; }
+        spawn(type = null, fromHold = false) {
+          if (type === null) { type=this.queue.shift(); this.fillQueue(); }
+          if (!fromHold) this.holdUsed=false;
           this.active = {
-            type: types[Math.min(6, Math.floor(this.random() * 7))],
+            type,
             x: 3,
             y: -1,
             rotation: 0,
           };
           this.elapsed = 0;
+          this.groundedTime=null;
           if (!this.valid(this.active)) this.end();
+          else this.syncGround();
+        }
+        holdPiece() {
+          if (this.status !== "running" || this.holdUsed) return false;
+          const incoming=this.held, outgoing=this.active.type;
+          this.held=outgoing;
+          this.spawn(incoming,true);
+          this.holdUsed=true;
+          return true;
         }
         valid(piece) {
           return cells(piece).every(
@@ -437,6 +467,7 @@
           };
           if (!this.valid(next)) return false;
           this.active = next;
+          this.syncGround();
           return true;
         }
         rotate(direction) {
@@ -445,8 +476,25 @@
             ...this.active,
             rotation: (this.active.rotation + direction + 4) % 4,
           };
-          if (!this.valid(next)) return false;
-          this.active = next;
+          for (const [dx,dy] of [[0,0],[-1,0],[1,0],[-2,0],[2,0],[0,-1],[0,-2]]) {
+            const kicked={...next,x:next.x+dx,y:next.y+dy};
+            if (this.valid(kicked)) { this.active=kicked; this.syncGround(); return true; }
+          }
+          return false;
+        }
+        landing(piece=this.active) {
+          if (!piece) return null;
+          let result={...piece};
+          while (this.valid({...result,y:result.y+1})) result.y++;
+          return result;
+        }
+        hardDrop(immediate=false) {
+          if (this.status!=="running") return false;
+          const target=this.landing(), distance=target.y-this.active.y;
+          this.active=target;
+          this.syncGround();
+          this.score=Math.min(Number.MAX_SAFE_INTEGER,this.score+distance*2);
+          if (immediate) this.lock();
           return true;
         }
         pause() {
@@ -471,7 +519,8 @@
               this.score = Math.min(Number.MAX_SAFE_INTEGER, this.score + 1);
             return true;
           }
-          this.lock();
+          if (this.lockPolicy==="failed") this.lock();
+          else this.syncGround();
           return false;
         }
         lock() {
@@ -497,18 +546,28 @@
           this.board = remaining;
           this.spawn();
         }
+        syncGround() {
+          if (!this.active) { this.groundedTime=null; return; }
+          const grounded=!this.valid({...this.active,y:this.active.y+1});
+          if (!grounded) this.groundedTime=null;
+          else if (this.groundedTime===null || this.groundedTime===undefined) this.groundedTime=0;
+        }
+        setLockPolicy(policy) {
+          if (!["failed","interval"].includes(policy)) throw Error("Invalid locking policy");
+          if (this.lockPolicy!==policy) { this.lockPolicy=policy; this.groundedTime=null; this.syncGround(); }
+        }
         advance(ms) {
-          if (!Number.isFinite(ms) || ms < 0)
-            throw Error("Invalid elapsed time");
-          while (ms > 0 && this.status === "running") {
-            const remaining = this.interval() - this.elapsed;
-            if (ms < remaining) {
-              this.elapsed += ms;
-              break;
-            }
-            ms -= remaining;
-            this.elapsed = 0;
-            this.down(false);
+          if (!Number.isFinite(ms) || ms<0) throw Error("Invalid elapsed time");
+          while (ms>0 && this.status==="running") {
+            this.syncGround();
+            const gravity=this.interval()-this.elapsed;
+            const lock=this.lockPolicy==="interval" && this.groundedTime!==null ? this.interval()-this.groundedTime : Infinity;
+            const step=Math.min(ms,gravity,lock);
+            this.elapsed+=step;
+            if (this.groundedTime!==null) this.groundedTime+=step;
+            ms-=step;
+            if (lock<=step) { this.lock(); continue; }
+            if (gravity<=step) { this.elapsed=0; this.down(false); }
           }
         }
       }
@@ -552,10 +611,14 @@
               if (c) tile(x, y, c);
             }),
           );
+          const ghost=this.game.landing();
+          if (ghost && ghost.y!==this.game.active.y) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
           if (this.game.active)
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, TetrisCore.COLORS[this.game.active.type]),
             );
+          const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
+          preview("held",this.game.held); preview("next",this.game.peek());
           $("status").textContent = {
             ready: "Ready",
             running: "Running",
@@ -589,7 +652,7 @@
           $("game").focus();
         },
         togglePause() {
-          if (this.game.status === "running") this.game.pause();
+          if (this.game.status === "running") {app.settleTime();this.game.pause();}
           else if (this.game.status === "paused") this.game.resume();
           else this.game.start();
           lastFrame = performance.now();
@@ -597,9 +660,13 @@
           $("game").focus();
         },
       };
+      app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
       $("start").onclick = () => app.start();
       $("pause").onclick = () => app.togglePause();
       $("game").addEventListener("keydown", (event) => {
+        const eventNow=performance.now();
+        app.game.advance(Math.max(0,eventNow-lastFrame));
+        lastFrame=Math.max(lastFrame,eventNow);
         let handled = true;
         switch (event.code) {
           case "KeyP":
@@ -627,6 +694,12 @@
           case "KeyX":
             if (!event.repeat) app.game.rotate(1);
             break;
+          case "Enter":
+            if (!event.repeat) app.game.hardDrop();
+            break;
+          case "KeyC":
+            if (!event.repeat) app.game.holdPiece();
+            break;
           case "KeyZ":
             if (!event.repeat) app.game.rotate(-1);
             break;
@@ -640,6 +713,7 @@
       });
       const autoPause = () => {
         if (app.game.status === "running") {
+          app.settleTime();
           app.game.pause();
           app.render();
         }

@@ -29,8 +29,9 @@ def test_keyboard_moves_and_rotates(page):
 
 def test_play_complete_game_and_restart(page):
     page.locator('#start').click()
-    for _ in range(300):
-        page.keyboard.press('ArrowDown')
+    for _ in range(80):
+        page.keyboard.press('Enter')
+        page.evaluate('app.game.advance(app.game.interval());app.render()')
         if page.evaluate('app.game.status') == 'over':
             break
     assert page.locator('#status').inner_text() == 'Game over'
@@ -102,3 +103,25 @@ def test_hidden_page_pauses_and_resume_does_not_catch_up(page):
     assert page.evaluate('app.game.status') == 'paused'
     after = page.evaluate('(()=>{lastFrame=performance.now()-60000;app.togglePause();const schedule=window.requestAnimationFrame;window.requestAnimationFrame=()=>0;try{frame(performance.now());return JSON.stringify(app.game.active);}finally{window.requestAnimationFrame=schedule;}})()')
     assert after == before
+
+def test_hold_and_preview_browser(page):
+    page.locator('#start').click()
+    incoming=page.evaluate('app.game.peek()')
+    assert page.locator('#next').get_attribute('aria-label')=='next piece '+incoming
+    outgoing=page.evaluate('app.game.active.type')
+    page.keyboard.press('KeyC')
+    assert page.locator('#held').get_attribute('aria-label')=='held piece '+outgoing
+    assert page.evaluate('app.game.active.type')==incoming
+    assert page.locator('#held i').count()==16
+
+def test_hold_incoming_has_fresh_browser_clock(page):
+    assert page.evaluate('(()=>{requestAnimationFrame=()=>0;Object.defineProperty(performance,"now",{value:()=>10000,configurable:true});app.game=new TetrisCore.Game(()=>0);app.game.start();const now=performance.now();lastFrame=now-900;$("game").dispatchEvent(new KeyboardEvent("keydown",{code:"KeyC",bubbles:true}));const heldClock=performance.now();frame(heldClock+101);return [app.game.active.type,app.game.active.y,app.game.elapsed>=100 && app.game.elapsed<110]})()')==['J',-1,True]
+
+def test_ghost_canvas_projection_and_drop_coincidence(page):
+    assert page.evaluate('(()=>{requestAnimationFrame=()=>0;app.game=new TetrisCore.Game(()=>0);app.game.start();app.render();const canvas=$("board"),ctx=canvas.getContext("2d"),s=canvas.width/10;const pixel=(x,y)=>Array.from(ctx.getImageData(Math.floor((x+.5)*s),Math.floor((y+.5)*s),1,1).data).slice(0,3);const ghost=pixel(3,19),empty=pixel(3,18);app.game.hardDrop();app.render();return [ghost.some((v,i)=>v!==empty[i]),pixel(3,19),app.game.active.y,app.game.landing().y];})()')==[True,[65,215,232],18,18]
+
+def test_preview_exact_colored_spawn_mask(page):
+    page.locator('#start').click()
+    expected=page.evaluate('TetrisCore.SHAPES[app.game.peek()].map(([x,y])=>y*4+x).sort((a,b)=>a-b)')
+    actual=page.locator('#next i').evaluate_all('(nodes)=>nodes.flatMap((n,i)=>n.style.background?[i]:[])')
+    assert actual==expected
