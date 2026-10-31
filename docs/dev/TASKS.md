@@ -69,7 +69,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Milestone exit: perform the complete 2.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/2/2.1.md`.
     - [ ] Milestone 2.2 — Landing and grounded timing
-        - [ ] T-011 — Implement the documented ordered wall kicks
+        - [x] T-011 — Implement the documented ordered wall kicks
             Scope: tetris.html C1; tests/test_core.py; browser checks.
             Depends on: T-010. Contracts: G1 kicks, A2.
             Evidence: Clockwise/counterclockwise, I/O behavior and fixed offset ordering pass wall/floor/stack fixtures; failed rotations preserve the original piece.

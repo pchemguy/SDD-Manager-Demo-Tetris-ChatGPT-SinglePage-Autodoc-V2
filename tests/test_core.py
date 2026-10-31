@@ -18,7 +18,7 @@ def test_gravity_uses_elapsed_intervals(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.advance(999);const a=g.active.y;g.advance(1);const b=g.active.y;g.advance(2000);return [a,b,g.active.y]})()') == [-1, 0, 2]
 
 def test_rotation_and_blocked_rotation(core):
-    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.rotate(1);const first=TetrisCore.cells(g.active);g.active={type:"I",x:3,y:18,rotation:0};return [first,g.rotate(1),g.active.rotation]})()') == [[[5,-1],[5,0],[5,1],[5,2]], False, 0]
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.rotate(1);const first=TetrisCore.cells(g.active);g.active={type:"I",x:3,y:18,rotation:0};return [first,g.rotate(1),g.active.rotation]})()') == [[[5,-1],[5,0],[5,1],[5,2]], True, 1]
 
 def test_line_clear_score_and_level(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.lines=9;g.board[19]=Array.from({length:10},(_,x)=>x>=3&&x<=6?null:"red");g.active={type:"I",x:3,y:18,rotation:0};g.lock();return [g.score,g.lines,g.level,g.interval(),g.board.flat().filter(Boolean).length]})()') == [100, 10, 2, 850, 0]
@@ -46,3 +46,6 @@ def test_hold_empty_swap_restriction_and_reset(core):
 
 def test_hold_spawn_loss(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[0][3]="red";g.holdPiece();return g.status})()')=='over'
+
+def test_ordered_kicks_floor_wall_and_blocked(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:18,rotation:0};const a=g.rotate(1);const first={...g.active};g.board=Array.from({length:20},()=>Array(10).fill("red"));const b=g.rotate(-1);return [a,first,b,g.active]})()')==[True,{'type':'I','x':3,'y':16,'rotation':1},False,{'type':'I','x':3,'y':16,'rotation':1}]

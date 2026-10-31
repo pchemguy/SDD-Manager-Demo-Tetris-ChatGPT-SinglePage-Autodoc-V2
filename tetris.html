@@ -471,9 +471,11 @@
             ...this.active,
             rotation: (this.active.rotation + direction + 4) % 4,
           };
-          if (!this.valid(next)) return false;
-          this.active = next;
-          return true;
+          for (const [dx,dy] of [[0,0],[-1,0],[1,0],[-2,0],[2,0],[0,-1],[0,-2]]) {
+            const kicked={...next,x:next.x+dx,y:next.y+dy};
+            if (this.valid(kicked)) { this.active=kicked; return true; }
+          }
+          return false;
         }
         pause() {
           if (this.status === "running") this.status = "paused";
