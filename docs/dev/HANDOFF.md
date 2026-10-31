@@ -1,43 +1,25 @@
 # Project handoff
 
-Checkpoint: DOCS-009 package QC passes; full implementation T-001 through T-043 is authorized. Preparation publication/integration and milestone closure are pending confirmation.
+Checkpoint: T-007 Review test and report phase 1.
 
-Outcome: PROJECT was explicitly approved; ARCHITECTURE, DECOMPOSITION, SPEC with three children, PLAN, layout and TASKS were prepared under scoped autodoc preapproval. SPEC, combined PLAN/layout and TASKS have current focused Ready reviews. The seven-phase plan contains 43 unchecked implementation tasks. No application, product test environment, release or package has been delivered.
+Completed the phase 1 independent QC, repaired pause-key restart behavior and semantic HTML version parsing, and prepared version 0.1.0 notes and stable browser assets. Formatting improves the single-file source readability.
 
-## Workflow and sources
+## Scope and owners
 
-- Workflow/stage/owner: main development, autodoc/onepass document preparation at DOCS-008, sdd-manage coordinating sdd-tasks.
-- Control and checkoffs: [DOCS_PREPARATION](DOCS_PREPARATION.md), [DOCS_TASKS](DOCS_TASKS.md).
-- Governing documents: [PROJECT](PROJECT.md), [ARCHITECTURE](ARCHITECTURE.md), [DECOMPOSITION](DECOMPOSITION.md), [SPEC](SPEC.md) and its linked children, [PLAN](PLAN.md), [layout](layout.md), [TASKS](TASKS.md).
-- Focused evidence: [SPEC review](SPEC-REVIEW-REPORT.md), [PLAN/layout review](PLAN-REVIEW-REPORT.md), [TASKS review](TASKS-REVIEW-REPORT.md). These do not substitute for DOCS-009 whole-package QC.
-- Required source: repository-bundled SDD Manager 0.16.0. Host observed Linux, Git, Node 24 and Python 3.12; no browser/dependency install was required for document preparation.
+Full T-001 through T-043 implementation and all seven phase releases remain user-authorized. Current executable owner: [TASKS](TASKS.md); requirements [SPEC](SPEC.md), strategy [PLAN](PLAN.md). Task/boundary evidence is under `reports/phases/1/`. Preparation QC passed and was integrated at main 1811ff44fcf8b822f94104158241dd21ef7d4d46; documentation milestone 1 closed.
 
-## Scope and human decisions
+## Branch and return
 
-- Objective: complete single-page HTML Tetris scope, from classic baseline through modern rules, configurable penetration, persistence/results and centered panels.
-- Approval: the user accepted clarification directions with `K`, then approved the published PROJECT proposal at c52e30a33cac17d1015053a2820f853eeb750e79 with `k`. Later document checkpoints through TASKS are preapproved by the requested autodoc mode; decision/content identities are retained in DOCS_PREPARATION.
-- Exact stopping boundary: after DOCS-008 publication and issue closure, before DOCS-009 package QC. No reset, extra pass, package QC, integration or implementation range is selected at this checkpoint.
-- Tracking: enabled for documentation and implementation by root AGENTS.md. Documentation milestone 1 and issues #1-#9 were projected/read back before workflow writes. No implementation phase objects were activated.
-- Reporting: Standard, concise progress and consequential decisions.
+Working branch `phase/1-classic-baseline`; creation parent/integration target `main`; branch-off `1811ff44fcf8b822f94104158241dd21ef7d4d46`. No suspended campaign. Preserve all valid task commits and recover later effects from Git/hosted readback.
 
-## Branches and return
+## Evidence and next action
 
-- Working branch: `design-docs/main`.
-- Creation parent / eventual integration target: `main`.
-- Branch-off commit: `e75c858e73168c77104e15ee97ce6b5dc3cf583c`.
-- Manual provenance seed: `49ae43a07081049d31e01982002c3dced12a7052` on retained `design-docs/ai-logs`, already integrated by the branch-off two-parent merge. No transcript was created.
-- Suspended parent: none. Keep preparation unmerged at this autodoc stop.
+38 pytest checks passed in 48.91s across deterministic core, Chromium headless shell, managed Firefox and actual packaged HTML. The original pause-key defect failed both browsers before repair; semantic metadata serialization regressions also failed before the parser repair.
 
-## Pending effects and next eligible action
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-- Publish/read back this DOCS-008 checkpoint and close/read back issue #8. Issues #1-#7 were verified closed before this snapshot; later readback is authoritative for #8.
-- DOCS-009 (#9) and `sdd-docs-main` milestone 1 remain open. No package report exists and the preparation branch is not integrated into default.
-- On a user instruction advancing beyond this stop, perform whole-package QC/repairs through DOCS-009, publish/read back and close its issue, explicitly merge/verify/publish preparation into actual default `main`, then close/read back the preparation milestone.
-- Only with an authorized implementation range and that published baseline may phase 1 be activated and its execution branch created. Preserve per-task commits/publication and phase-by-phase verified releases under PLAN.
-- Recover later effects from these owners, Git and GitHub before replay. Runtime/browser/CDN/package behavior remains future verification, not a proven capability.
+Limitations: Lifecycle events and stale clocks are modeled in real browsers; native OS focus delivery/headed browsers and live CI are not claimed. Firefox uses the documented process-local sandbox override. Integration and hosted publication follow this task.
 
-## Current execution direction
+## Phase integration
 
-The user explicitly advanced the prior stop with `Do QC and full implement`. DOCS-QC-REPORT.md records passing package QC. Publish/close DOCS-009, explicitly integrate/verify/publish main and close milestone 1 before phase 1 activation. Continue through all seven phases and releases without further approval pauses; earlier snapshot stop text is superseded by this grant and DOCS_PREPARATION.
-
-Preparation integration: merging verified source 692b85246d515a0abf75b76399d5b8fab0144251 into main parent e75c858e73168c77104e15ee97ce6b5dc3cf583c. All nine DOCS issues were verified closed before this merge. Merged review identities pass. Publish this merge, close/read back milestone 1, then activate phase 1 for the fully authorized implementation.
+Phase 1 integrated with two parents into main; merged regression and package checks passed. Publish/readback and exact-source release publication are the next required operations before successor activation.

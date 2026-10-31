@@ -12,39 +12,39 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 1 — Classic playable baseline
 
-- [ ] Phase 1 — Classic playable baseline
-    - [ ] Milestone 1.1 — Playable core
-        - [ ] T-001 — Establish the board geometry and startable Canvas game
+- [x] Phase 1 — Classic playable baseline
+    - [x] Milestone 1.1 — Playable core
+        - [x] T-001 — Establish the board geometry and startable Canvas game
             Scope: tetris.html core/markup/controller; tests/test_core.py and tests/test_browser.py; development harness/dependencies.
             Depends on: none. Contracts: G1, G2, U1, A1.
             Evidence: Start creates a correctly colored board/piece; masks, legal spawn and actual Canvas rasterization agree. Establish isolated Chromium/Firefox runner capability through repeated contexts and teardown before dependent browser checks.
-        - [ ] T-002 — Implement keyboard movement rotation and gravity
+        - [x] T-002 — Implement keyboard movement rotation and gravity
             Scope: tetris.html C1/C3/C7/C8; focused core/browser checks.
             Depends on: T-001. Contracts: G1 basic rotation, G3 failed policy, U2.
             Evidence: Left/right/down/rotation and chronological gravity respect wall/floor/stack bounds; handled keys do not scroll the game. Keep baseline rotation without kicks and independent uniform piece selection.
-        - [ ] T-003 — Complete locking line clearing scoring and game over
+        - [x] T-003 — Complete locking line clearing scoring and game over
             Scope: tetris.html C1-C3; tests/test_core.py; relevant browser checks.
             Depends on: T-001, T-002. Contracts: G2, G3 failed policy, A1.
             Evidence: Observe single/multiple clears, score/level progression, spawn/above-top loss and exactly one game completion; demonstrate a complete playable run.
             Milestone exit: perform the complete 1.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/1/1.1.md`.
-    - [ ] Milestone 1.2 — Usable browser delivery
-        - [ ] T-004 — Implement pause resume restart and page focus lifecycle
+    - [x] Milestone 1.2 — Usable browser delivery
+        - [x] T-004 — Implement pause resume restart and page focus lifecycle
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-003. Contracts: G2-G3 baseline, U2, A1.
             Evidence: Pause freezes gravity; start/restart state is correct; document hiding/browser-window blur pause without automatic resume or elapsed-time catch-up. Form controls retain native keys.
-        - [ ] T-005 — Finish information controls help and readable resizing
+        - [x] T-005 — Finish information controls help and readable resizing
             Scope: tetris.html markup/style/C7; tests/test_browser.py; README.md.
             Depends on: T-004. Contracts: U1 baseline information/two buttons, U2, A1.
             Evidence: Score/lines/level/status and exact bottom gameplay buttons render and work; keyboard help/focus/Canvas scale are readable. Optional panels/toggles remain deferred.
-        - [ ] T-006 — Package and verify the single HTML baseline
+        - [x] T-006 — Package and verify the single HTML baseline
             Scope: tools/package.py, tests/test_artifacts.py, .github/workflows/verify.yml and release.yml, VERSION, README.md, docs/INSTALL.md.
             Depends on: T-004, T-005. Contracts: U3, scoped A8.
             Evidence: Build a clean version-consistent single-HTML browser ZIP and stable named/checksummed assets; exercise packaged HTML in both browsers and establish direct/CI artifact-name checks. Do not publish the phase release before review/integration.
             Milestone exit: perform the complete 1.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/1/1.2.md`.
-    - [ ] Milestone 1.3 — Phase review
-        - [ ] T-007 — Review test and report phase 1
+    - [x] Milestone 1.3 — Phase review
+        - [x] T-007 — Review test and report phase 1
             Scope: all phase 1 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-003, T-006 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
