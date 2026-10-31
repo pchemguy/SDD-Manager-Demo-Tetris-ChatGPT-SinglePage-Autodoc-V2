@@ -102,3 +102,9 @@ def test_penetrator_multiple_barriers_all_lock_policies(core):
 
 def test_non_four_clear_does_not_award_bonus(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[19]=Array.from({length:10},(_,x)=>x>=3&&x<=6?null:"red");g.active={type:"I",x:3,y:18,rotation:0};g.lock();return g.bonuses;})()')==0
+
+def test_penetrator_reactivation_and_restart_bonus_lifecycle(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.bonuses=3;const activated=g.activatePenetrator();const repeated=g.activatePenetrator();const remaining=g.bonuses;const held=g.holdPiece();g.start();return [activated,repeated,remaining,held,g.bonuses,!!g.active.penetrator,g.holdUsed,g.activatePenetrator()];})()')==[True,False,2,False,0,False,False,False]
+
+def test_penetrator_dynamic_ghost_uses_lowest_legal_midline_position(core):
+    assert core('(()=>{const states=[];for(const barrier of [10,11]){const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:-1,rotation:1};g.board[3][5]="red";for(let y=barrier;y<20;y++)g.board[y][5]="red";g.bonuses=1;g.activatePenetrator();g.applySettings({...g.settings,ghost:"dynamic"});states.push([g.landing().y,g.ghostVisible()]);}return states;})()')==[[6,False],[7,True]]

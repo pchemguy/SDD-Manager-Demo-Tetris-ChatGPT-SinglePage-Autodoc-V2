@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-042 Verify responsive accessible layout and final packaging.
+Checkpoint: T-043 Review test and report phase 7.
 
-Completed responsive/accessibility/presentation QC, final user/development guidance, readable single-file formatting and exact browser package checks. Retained twelve real high-DPI screenshots.
+Completed full-project A1-A8 acceptance, independent review disposition and aggregated TODO/limit reporting for the version1.0.0 single-file release candidate. All requested source capabilities are implemented.
 
 ## Scope and owners
 
@@ -14,8 +14,8 @@ Working branch `phase/7-centered-panel-layout`; creation parent/integration targ
 
 ## Evidence and next action
 
-186 full-suite checks passed in111.73s. Both browsers cover all8 visibility combinations at480/640/800/1024/1440/1920 with DPR1 and2, fixed board centering, visible information, correct file-control hiding, no page horizontal overflow and unchanged game state. Four focused panning/focus/button checks also passed in6.48s. Source/package/schema/embedded binary integrity and actual browser downloads/restores passed. All twelve screenshots are retained under screenshots/.
+188 full-suite pytest checks passed in109.91s across actual Chromium headless shell/Firefox, native keyboard/Canvas/file/browser-state paths, 192 layout states and verified single-HTML/schema/package/runtime integrity. All final review findings are closed. Final integration and hosted publication follow this source checkpoint.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Native OS focus delivery/headed browsers remain outside the required matrix. Local Firefox uses the documented diagnosed override; CI does not. SQLite tests use verified upstream bytes through controlled transport and reject external binary requests; live CDN availability is network-dependent. Current task establishes source/package readiness; final project report, integration and release follow.
+Limitations: Native OS focus/headed and arbitrary live CDN availability are not claimed. Supported persistent operations require HTTP(S)/writable cookies; blocked rollback is explicit. Local Firefox override remains diagnosed/documented. Later integration/release/audit are not claimed complete by this task.

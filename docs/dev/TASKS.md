@@ -234,7 +234,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 7 — Centered panel layout
 
-- [ ] Phase 7 — Centered panel layout
+- [x] Phase 7 — Centered panel layout
     - [x] Milestone 7.1 — Centered optional panels
         - [x] T-040 — Arrange five panels around a fixed board center
             Scope: tetris.html markup/style/C7; tests/test_browser.py.
@@ -250,8 +250,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Inspect screenshots/Canvas/labels/focus and geometry at all specified widths/device pixel ratios and visibility combinations; package actual final HTML/schema and show accurate full-scope installation/help.
             Milestone exit: perform the complete 7.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/7/7.1.md`.
-    - [ ] Milestone 7.2 — Phase review
-        - [ ] T-043 — Review test and report phase 7
+    - [x] Milestone 7.2 — Phase review
+        - [x] T-043 — Review test and report phase 7
             Scope: all phase 7 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF, plus final complete-project report and aggregated unresolved/deferred TODOs.
             Depends on: T-042 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
