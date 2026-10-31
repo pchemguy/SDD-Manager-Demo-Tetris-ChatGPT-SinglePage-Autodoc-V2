@@ -49,3 +49,6 @@ def test_hold_spawn_loss(core):
 
 def test_ordered_kicks_floor_wall_and_blocked(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:18,rotation:0};const a=g.rotate(1);const first={...g.active};g.board=Array.from({length:20},()=>Array(10).fill("red"));const b=g.rotate(-1);return [a,first,b,g.active]})()')==[True,{'type':'I','x':3,'y':16,'rotation':1},False,{'type':'I','x':3,'y':16,'rotation':1}]
+
+def test_landing_stops_at_first_obstruction_without_mutation(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[10][3]="red";const before=JSON.stringify(g.board);const target=g.landing();return [target.y,g.active.y,before===JSON.stringify(g.board)]})()')==[8,-1,True]

@@ -477,6 +477,12 @@
           }
           return false;
         }
+        landing(piece=this.active) {
+          if (!piece) return null;
+          let result={...piece};
+          while (this.valid({...result,y:result.y+1})) result.y++;
+          return result;
+        }
         pause() {
           if (this.status === "running") this.status = "paused";
         }
@@ -580,6 +586,8 @@
               if (c) tile(x, y, c);
             }),
           );
+          const ghost=this.game.landing();
+          if (ghost && ghost.y!==this.game.active.y) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
           if (this.game.active)
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, TetrisCore.COLORS[this.game.active.type]),

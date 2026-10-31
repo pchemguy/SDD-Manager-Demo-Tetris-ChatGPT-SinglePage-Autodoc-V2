@@ -73,7 +73,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C1; tests/test_core.py; browser checks.
             Depends on: T-010. Contracts: G1 kicks, A2.
             Evidence: Clockwise/counterclockwise, I/O behavior and fixed offset ordering pass wall/floor/stack fixtures; failed rotations preserve the original piece.
-        - [ ] T-012 — Share ordinary landing calculation with ghost rendering
+        - [x] T-012 — Share ordinary landing calculation with ghost rendering
             Scope: tetris.html C1/C3/C7; core/browser checks.
             Depends on: T-011. Contracts: G5 ordinary landing/ghost, A2.
             Evidence: Ghost is the last consecutively reachable valid row and never changes locked cells; omit coincident ghost and verify actual Canvas projection.
