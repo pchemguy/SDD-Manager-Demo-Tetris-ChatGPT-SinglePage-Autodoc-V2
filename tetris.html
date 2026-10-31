@@ -252,6 +252,8 @@
       }
       [hidden] {display:none !important;} #settings label {display:block;font-size:12px;color:var(--muted);margin:12px 0;} select {display:block;width:100%;margin-top:5px;padding:8px;background:#142338;color:var(--ink);border:1px solid #41506b;border-radius:6px;} .right {display:flex;flex-direction:column;gap:16px;}
       #results {padding-left:22px;font-size:13px;} #results li {padding:8px 0;} #results small {display:block;color:var(--muted);font-size:10px;margin-top:4px;}
+      #leaderboard {overflow-wrap:anywhere;}
+      @media(max-width:1200px){.left{flex-direction:column-reverse;align-items:flex-end;}}
     </style>
   </head>
   <body>
@@ -743,6 +745,9 @@
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, this.game.active.penetrator ? "#ffffff" : TetrisCore.COLORS[this.game.active.type]),
             );
+          const infoState=JSON.stringify([this.game.status,this.game.score,this.game.lines,this.game.level,this.game.held,this.game.peek(),this.game.bonuses,this.game.settings,app.results]);
+          if(infoState===this.infoState)return;
+          this.infoState=infoState;
           const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
           preview("held",this.game.held); preview("next",this.game.peek());
           $("held").parentElement.hidden=!this.game.settings.hold; $("next").parentElement.hidden=!this.game.settings.nextPreview;
@@ -776,12 +781,14 @@
             this.game.status === "running" ? "Pause" : "Start";
         },
         start() {
+          if(this.busy)return;
           this.game.start();
           lastFrame = performance.now();
           this.render();
           $("game").focus();
         },
         togglePause() {
+          if(this.busy)return;
           if (this.game.status === "running") {app.settleTime();this.game.pause();}
           else if (this.game.status === "paused") this.game.resume();
           else this.game.start();
@@ -798,7 +805,12 @@
       app.endFile=(operation)=>{if(operation===app.operation)app.setBusy(false);};
       app.cancelFile=()=>{app.operation++;if(app.cancelCodec)app.cancelCodec();app.setBusy(false);$("message").textContent="Restore canceled. Resume when ready.";};
       app.download=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));try {const anchor=document.createElement("a");anchor.href=url;anchor.download=name;document.body.append(anchor);try{anchor.click();}finally{anchor.remove();}}finally{setTimeout(()=>URL.revokeObjectURL(url),1000);}};
-      $("save").onclick=async()=>{if(app.busy)return;let operation;try {operation=app.beginFile();const snapshot=app.snapshot();app.download(JSON.stringify(snapshot,null,2)+"\n","tetris-save.json","application/json");$("message").textContent="JSON snapshot saved. Resume when ready.";}catch(error){$("message").textContent="Save failed: "+error.message;}finally{app.endFile(operation);}};
+      $("save").onclick=async()=>{if(app.busy)return;let operation;try {operation=app.beginFile();const snapshot=app.snapshot();app.download(JSON.stringify(snapshot,null,2)+"\n","tetris-save.json","application/json");$("message").textContent="JSON snapshot saved. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Save failed: "+error.message;}finally{app.endFile(operation);}};
+      app.applySnapshot=(candidate)=>{const value=TetrisCore.validateSnapshot(candidate);app.writeSettings(value.settings);app.game.applySettings(value.settings);app.results=value.results;app.syncSettings();app.render();};
+      app.decodeFile=async(file)=>{if(file.size>1048576)throw Error("File exceeds the 1 MiB limit");const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>1048576)throw Error("File exceeds the 1 MiB limit");if(bytes[0]===239&&bytes[1]===187&&bytes[2]===191)throw Error("JSON BOM is not supported");const text=new TextDecoder("utf-8",{fatal:true}).decode(bytes);return TetrisCore.validateSnapshot(TetrisCore.parseJSON(text));};
+      $("restore").onclick=()=>{if(app.busy)return;try{app.restoreOperation=app.beginFile();$("restore-file").value="";$("restore-file").click();}catch(error){app.setBusy(false);$("message").textContent="Restore failed: "+error.message;}};
+      $("restore-file").addEventListener("cancel",()=>{if(app.busy&&app.restoreOperation===app.operation)app.cancelFile();});
+      $("restore-file").addEventListener("change",async()=>{const operation=app.restoreOperation;if(!app.busy||operation!==app.operation)return;try{const file=$("restore-file").files[0];if(!file){$("message").textContent="Restore canceled";return;}const candidate=await app.decodeFile(file);if(operation!==app.operation||!app.busy)return;app.applySnapshot(candidate);$("message").textContent="Snapshot restored. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Restore failed: "+error.message;}finally{if(operation===app.operation){app.endFile(operation);$("restore-file").value="";}}});
       app.writeSettings=(value,keys=Object.keys(TetrisCore.DEFAULTS))=>{
         const next=TetrisCore.validateSettings(value), previousURL=location.href, oldCookies={};
         const readCookie=key=>document.cookie.split(";").map(x=>x.trim()).filter(x=>x.startsWith("tetris_"+key+"=")).map(x=>x.slice(("tetris_"+key+"=").length));
@@ -818,7 +830,7 @@
           throw Error(error.message+(rollback?"; no settings applied":"; browser blocked rollback; persistent state may be inconsistent"));
         }
       };
-      app.changeSettings=(value,key)=>{ const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
+      app.changeSettings=(value,key)=>{ if(app.busy)throw Error("A file operation is in progress");const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
       app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
       document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value},key);$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
       $("start").onclick = () => app.start();
@@ -827,6 +839,7 @@
         const eventNow=performance.now();
         app.game.advance(Math.max(0,eventNow-lastFrame));
         lastFrame=Math.max(lastFrame,eventNow);
+        if(app.busy) {event.preventDefault();return;}
         let handled = true;
         switch (event.code) {
           case "KeyP":

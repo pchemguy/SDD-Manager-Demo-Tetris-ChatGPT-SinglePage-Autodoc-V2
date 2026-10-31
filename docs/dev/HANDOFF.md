@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-030 Render and integrate the session leaderboard.
+Checkpoint: T-033 Restore JSON atomically with complete failure handling.
 
-Rendered the session top-ten leaderboard using text-only DOM nodes and integrated stable completion records with deterministic ranking and reload reset.
+Implemented whole-candidate atomic JSON restore with paused operation ownership, cancellation/stale response protection and unchanged-state errors. Repaired narrow leaderboard access and unnecessary information DOM replacement found during QC.
 
 ## Scope and owners
 
@@ -14,8 +14,8 @@ Working branch `phase/5-portable-session-results`; creation parent/integration t
 
 ## Evidence and next action
 
-99 full-suite checks passed in35.74s; after strengthening the multi-game/restart/reload fixture, all7 persistence checks passed in6.56s across both browsers and deterministic rank/ID/time seams. Actual browser scores30,10,0 appear ranked after three games, unfinished restart preserves them, and reload clears results while saved hold setting persists.
+154 full-suite checks passed in56.46s across both browsers, real JSON downloads/uploads, all-six/default/top-ten-tie round trips, empty replacement, strict invalid content, recoverable write rollback, busy/cancel/stale responses and schema-bearing packaged HTML. Retained actual downloaded snapshot-demo.json: Restore it to demonstrate ten tied results and all nondefault settings.
 
 Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Managed headless browser evidence and documented local Firefox override apply. Final optional-panel layout and file transfer remain future tasks.
+Limitations: JSON transfer only in this phase; SQLite and final optional-panel arrangement remain planned. Supported restore persistence requires HTTP(S) and permitted cookies; blocked recovery is explicit. Managed headless browsers and local Firefox override disclosed; native OS focus/headed checks excluded.

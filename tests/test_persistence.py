@@ -85,3 +85,85 @@ def test_actual_json_save(page,tmp_path):
     assert json.loads(path.read_text())=={'formatVersion':1,'results':before[0],'settings':before[1]}
     assert page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')==before
     assert page.evaluate('app.game.status')=='paused'
+
+def upload(page,data,name='data.json'):
+    with page.expect_file_chooser() as event:page.locator('#restore').click()
+    event.value.set_files({'name':name,'mimeType':'application/octet-stream','buffer':data})
+    page.wait_for_function('!app.busy',timeout=15000)
+
+def test_json_restore_round_trip_and_unchanged_failure(page):
+    data=snapshot();data['settings']['ghost']='dynamic';data['results'][0]['score']=123
+    page.locator('#start').click()
+    upload(page,json.dumps(data).encode())
+    assert page.evaluate('app.results')==data['results']
+    assert page.evaluate('app.game.settings')==data['settings']
+    assert page.evaluate('app.game.status')=='paused'
+    assert page.evaluate('new URL(location.href).searchParams.get("ghost")')=='dynamic'
+    before=page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')
+    for bad in [b'{"formatVersion":1,"formatVersion":1}',b'\xff',b'{}',b' '*1048577]:
+        upload(page,bad)
+        assert 'failed' in page.locator('#message').inner_text().lower()
+        assert page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')==before
+    page.reload()
+    assert page.evaluate('app.results')==[]
+    assert page.evaluate('app.game.settings.ghost')=='dynamic'
+
+def test_restore_write_failure_rolls_back_all_state(page):
+    data=snapshot();data['settings']['hold']=False
+    before=page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')
+    page.evaluate('(()=>{history.replaceState=()=>{throw Error("injected history failure")};})()')
+    upload(page,json.dumps(data).encode())
+    assert page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')==before
+    assert 'no settings applied' in page.locator('#message').inner_text()
+
+def test_restore_cancel_busy_and_stale_response_isolation(page):
+    candidate=snapshot();candidate['settings']['ghost']='dynamic'
+    assert page.evaluate('''async(candidate)=>{const before=JSON.stringify([app.results,app.game.settings,document.cookie,location.href]);const original=app.decodeFile;let release;app.decodeFile=()=>new Promise(resolve=>release=resolve);app.restoreOperation=app.beginFile();const input=$("restore-file");Object.defineProperty(input,"files",{configurable:true,value:[new File(["{}"],"test.json")]});input.dispatchEvent(new Event("change"));const disabled=$("save").disabled&&$("restore").disabled&&$("format").disabled&&document.querySelector("[data-setting]").disabled;app.cancelFile();const next=app.beginFile();release(candidate);await Promise.resolve();await Promise.resolve();const unchanged=before===JSON.stringify([app.results,app.game.settings,document.cookie,location.href]);const owned=app.busy&&app.operation===next;app.decodeFile=original;app.cancelFile();return [disabled,unchanged,owned,!app.busy];}''',candidate)==[True,True,True,True]
+
+def test_restore_empty_replaces_without_resetting_game(page):
+    data=snapshot()
+    page.locator('#start').click()
+    upload(page,json.dumps(data).encode())
+    board=page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.held,app.game.bonuses])')
+    data['results']=[]
+    upload(page,json.dumps(data).encode())
+    assert page.evaluate('app.results')==[]
+    assert page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.held,app.game.bonuses])')==board
+
+def test_top_ten_ties_all_settings_actual_json_round_trips(page,tmp_path):
+    records=[{'id':f'{i:08x}-1111-4111-8111-111111111111','score':100 if i<5 else 0,'timestamp':f'2026-01-0{1+i%2}T00:00:00.000Z'} for i in reversed(range(10))]
+    expected=sorted(records,key=lambda row:(-row['score'],row['timestamp'],row['id']))
+    other={'ghost':'dynamic','hardDrop':False,'nextPreview':False,'hardDropLock':'immediate','lockPolicy':'failed','hold':False}
+    for index,settings in enumerate([other,SETTINGS]):
+        data={'formatVersion':1,'results':records,'settings':settings}
+        page.evaluate('(value)=>app.applySnapshot(value)',data)
+        with page.expect_download() as event:page.locator('#save').click()
+        path=tmp_path/f'snapshot{index}.json';event.value.save_as(path)
+        if index==0:
+            (ROOT/'.test-results').mkdir(exist_ok=True)
+            (ROOT/'.test-results/T033-snapshot-demo.json').write_bytes(path.read_bytes())
+        saved=json.loads(path.read_text())
+        assert saved=={'formatVersion':1,'results':expected,'settings':settings}
+        page.evaluate('(value)=>app.applySnapshot(value)',{'formatVersion':1,'results':[],'settings':SETTINGS if index==0 else other})
+        upload(page,path.read_bytes())
+        assert page.evaluate('app.results')==expected
+        assert page.evaluate('app.game.settings')==settings
+        cookies={row['name']:row['value'] for row in page.context.cookies()}
+        for key,value in settings.items():
+            encoded=str(int(value)) if isinstance(value,bool) else value
+            assert cookies['tetris_'+key]==encoded
+            assert page.evaluate('(key)=>new URL(location.href).searchParams.get(key)',key)==encoded
+
+def test_leaderboard_readable_at_supported_widths(page):
+    data=snapshot();data['results'][0]['score']=9007199254740991
+    page.evaluate('(value)=>app.applySnapshot(value)',data)
+    for width in [480,640,800,1024,1440,1920]:
+        page.set_viewport_size({'width':width,'height':900})
+        for selector in ['#leaderboard','#results strong','#results small']:
+            box=page.locator(selector).bounding_box()
+            assert box['x']>=0 and box['x']+box['width']<=width+1
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+
+def test_unchanged_frames_preserve_leaderboard_dom(page):
+    page.evaluate('(value)=>app.applySnapshot(value)',snapshot())
+    assert page.evaluate('(()=>{const row=$("results").firstChild;app.render();app.render();return row===$("results").firstChild;})()')

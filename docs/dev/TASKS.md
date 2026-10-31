@@ -180,7 +180,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Displayed ranks match records after several games/restarts; page reload empties results while configured settings remain; use text-only result rendering.
             Milestone exit: perform the complete 5.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/5/5.1.md`.
-    - [ ] Milestone 5.2 — JSON snapshot transfer
+    - [x] Milestone 5.2 — JSON snapshot transfer
         - [x] T-031 — Define strict snapshot validation and the JSON Schema
             Scope: tetris.html C4/C5/embedded schema, tools/export_schema.py, schemas/tetris-save.schema.json, tests/test_persistence.py.
             Depends on: T-030. Contracts: F1-F2, CFG1, A5-A6.
@@ -189,7 +189,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C10/C11/C7; browser persistence checks.
             Depends on: T-031. Contracts: F2/F4 JSON save, U1 Save location, A5.
             Evidence: Save captures current top ten/all settings, downloads exactly one tetris-save.json and changes no results/settings/cookies/URL; pause/cancellation/resource handling is correct.
-        - [ ] T-033 — Restore JSON atomically with complete failure handling
+        - [x] T-033 — Restore JSON atomically with complete failure handling
             Scope: tetris.html C5/C8-C11; persistence/settings/browser/artifact checks; README.md and docs/INSTALL.md.
             Depends on: T-031, T-032. Contracts: F2/F4-F5 JSON restore, CFG3, U1, A5-A6.
             Evidence: Complete candidate validation precedes replacement/browser writes; size/corruption/unknown fields/values and recoverable commit failures preserve state; busy/cancel paths clean up, actual downloads round trip, and schema enters the release package.
