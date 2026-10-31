@@ -412,6 +412,28 @@
         }
         return {...value};
       }
+      function encodeSetting(key,value) { return typeof DEFAULTS[key]==="boolean" ? (value?"1":"0") : value; }
+      function decodeSetting(key,text) {
+        const value=typeof DEFAULTS[key]==="boolean" ? (text==="1"?true:text==="0"?false:undefined) : text;
+        validateSettings({...DEFAULTS,[key]:value}); return value;
+      }
+      function resolveSettings(url,cookies) {
+        const params=new URL(url).searchParams, saved={}, settings={}, explicit={}, diagnostics=[];
+        for (const pair of cookies.split(";")) {
+          const at=pair.indexOf("="); if(at<0)continue;
+          const name=pair.slice(0,at).trim(); if(!name.startsWith("tetris_"))continue;
+          const key=name.slice(7); if(!Object.hasOwn(DEFAULTS,key))continue;
+          (saved[key]??=[]).push(pair.slice(at+1));
+        }
+        for(const key of Object.keys(DEFAULTS)) {
+          let value=DEFAULTS[key];
+          if(saved[key]) {try {if(saved[key].length!==1)throw Error(); value=decodeSetting(key,decodeURIComponent(saved[key][0]));}catch{diagnostics.push("Invalid saved setting: "+key);}}
+          const supplied=params.getAll(key);
+          if(supplied.length) {try {if(supplied.length!==1 || supplied[0].includes("�"))throw Error(); const raw=params.toString(); /* URLSearchParams performs standard decoding. */ value=decodeSetting(key,supplied[0]);explicit[key]=value;}catch{diagnostics.push("Invalid URL setting: "+key);}}
+          settings[key]=value;
+        }
+        return {settings,explicit,diagnostics};
+      }
       class Game {
         constructor(random = Math.random) {
           this.random = random;
@@ -620,7 +642,7 @@
           }
         }
       }
-      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings });
+      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, resolveSettings });
     </script>
     <script>
       /** Browser controller/presentation; it renders the same pure domain tested by pytest. */
@@ -793,6 +815,9 @@
       new ResizeObserver(resizeBoard).observe($("game"));
       window.addEventListener("resize", resizeBoard);
       let lastFrame = performance.now();
+      const restored=TetrisCore.resolveSettings(location.href,document.cookie);
+      app.game.applySettings(restored.settings);app.syncSettings();
+      $("message").textContent=restored.diagnostics.join("; ");
       function frame(now) {
         const elapsed = Math.max(0, now - lastFrame);
         lastFrame = Math.max(lastFrame, now);

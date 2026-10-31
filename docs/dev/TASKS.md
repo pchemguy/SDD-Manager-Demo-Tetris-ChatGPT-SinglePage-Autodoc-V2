@@ -141,7 +141,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 4 — Persistent configuration
     - [ ] Milestone 4.1 — URL and cookie settings
-        - [ ] T-024 — Resolve settings independently from URL cookies and defaults
+        - [x] T-024 — Resolve settings independently from URL cookies and defaults
             Scope: tetris.html C4/C9; tests/test_settings.py.
             Depends on: T-023. Contracts: CFG2, A4.
             Evidence: Mixed valid sources, omissions, explicit defaults, empty/repeated/invalid query values and invalid/duplicate cookies resolve per key with visible diagnostics and no saved-value loss.
