@@ -77,7 +77,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C1/C3/C7; core/browser checks.
             Depends on: T-011. Contracts: G5 ordinary landing/ghost, A2.
             Evidence: Ghost is the last consecutively reachable valid row and never changes locked cells; omit coincident ghost and verify actual Canvas projection.
-        - [ ] T-013 — Implement keyboard hard drop and drop scoring
+        - [x] T-013 — Implement keyboard hard drop and drop scoring
             Scope: tetris.html C1/C3/C8; core/browser checks.
             Depends on: T-012. Contracts: G2 hard-drop points, G5, A2.
             Evidence: Enter reaches the shared landing, awards distance once and handles zero distance; domain checks cover general/immediate policy paths while the UI uses fixed defaults.

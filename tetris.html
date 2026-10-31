@@ -311,6 +311,7 @@
             <dd>Rotate clockwise</dd>
             <dt>Z</dt>
             <dd>Rotate back</dd>
+            <dt>Enter</dt><dd>Hard drop</dd>
             <dt>C</dt><dd>Hold piece</dd>
             <dt>P / Esc</dt>
             <dd>Pause or resume</dd>
@@ -482,6 +483,14 @@
           let result={...piece};
           while (this.valid({...result,y:result.y+1})) result.y++;
           return result;
+        }
+        hardDrop(immediate=false) {
+          if (this.status!=="running") return false;
+          const target=this.landing(), distance=target.y-this.active.y;
+          this.active=target;
+          this.score=Math.min(Number.MAX_SAFE_INTEGER,this.score+distance*2);
+          if (immediate) this.lock();
+          return true;
         }
         pause() {
           if (this.status === "running") this.status = "paused";
@@ -667,6 +676,9 @@
           case "Space":
           case "KeyX":
             if (!event.repeat) app.game.rotate(1);
+            break;
+          case "Enter":
+            if (!event.repeat) app.game.hardDrop();
             break;
           case "KeyC":
             if (!event.repeat) app.game.holdPiece();

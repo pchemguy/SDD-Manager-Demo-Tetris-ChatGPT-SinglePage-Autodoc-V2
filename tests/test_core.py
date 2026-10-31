@@ -52,3 +52,6 @@ def test_ordered_kicks_floor_wall_and_blocked(core):
 
 def test_landing_stops_at_first_obstruction_without_mutation(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[10][3]="red";const before=JSON.stringify(g.board);const target=g.landing();return [target.y,g.active.y,before===JSON.stringify(g.board)]})()')==[8,-1,True]
+
+def test_hard_drop_shared_landing_score_and_immediate(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();const y=g.landing().y;g.hardDrop();const points=g.score;g.hardDrop();const same=g.score===points;const count=g.board.flat().filter(Boolean).length;g.hardDrop(true);return [g.active.y,points,same,count,g.board.flat().filter(Boolean).length,y]})()')==[-1,38,True,0,4,18]
