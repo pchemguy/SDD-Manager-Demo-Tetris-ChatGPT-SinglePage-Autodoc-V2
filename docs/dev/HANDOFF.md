@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-019 Integrate live policy changes and session-only reload behavior.
+Checkpoint: T-022 Integrate penetrator ghost drop hold and legal locking.
 
-Verified all six live settings, hold retention and timing transitions; demonstrated session-only defaults and no cookie/query effects across reloads.
+Integrated penetrator ghost/drop/gravity/hold and legal locking across all policies. Repaired live setting clock ordering found by independent review. Retained an actual white-piece/barrier visual demonstration.
 
 ## Scope and owners
 
@@ -14,9 +14,8 @@ Working branch `phase/3-configurable-penetrator`; creation parent/integration ta
 
 ## Evidence and next action
 
-...............................................................          [100%]
-63 passed in 25.90s; actual inline application source and selected browser/package paths exercised.
+75 full-suite pytest checks passed in26.39s, including both browser modes, actual white Canvas pixels/bonus symbols, session-only settings and packaged HTML. Before repair, hold exclusion and fresh settings deadlines failed. Source inspected to contain no cookie/query access. Visual demonstration: penetrator-demo.png; white floor piece below intact barrier with one remaining bonus.
 
 Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.
+Limitations: Both required managed headless browser modes verified; host-specific Firefox sandbox override and modeled lifecycle remain disclosed. Native OS focus/headed checks excluded. URL/cookie persistence and results/files remain future increments.

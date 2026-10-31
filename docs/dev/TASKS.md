@@ -115,7 +115,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Exercise all six controls, hold retention, disabled actions and grounded policy timing; prove this increment neither reads nor writes configuration cookies/query parameters and reload restores defaults.
             Milestone exit: perform the complete 3.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/3/3.1.md`.
-    - [ ] Milestone 3.2 — Earned penetration
+    - [x] Milestone 3.2 — Earned penetration
         - [x] T-020 — Award capped bonuses and render penetrator status
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-019. Contracts: G6 earning/cap/white display, U1, A3.
@@ -124,7 +124,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C1/C3/C8; tests/test_core.py.
             Depends on: T-020. Contracts: G6 activation, G7 travel, A3.
             Evidence: One activation spends one bonus, repeated/empty activation is a no-op, barriers are traversed without erasure and proposed moves retain at least one legal eventual landing.
-        - [ ] T-022 — Integrate penetrator ghost drop hold and legal locking
+        - [x] T-022 — Integrate penetrator ghost drop hold and legal locking
             Scope: tetris.html C1/C3/C7; core/settings/browser checks; README.md.
             Depends on: T-020, T-021. Contracts: G3-G7, CFG4, A2-A3.
             Evidence: Ghost/drop/gravity agree on the lowest valid cavity, hold is excluded while active, all policy paths lock legally and successors are regular; demonstrate barrier traversal and bonus spending.

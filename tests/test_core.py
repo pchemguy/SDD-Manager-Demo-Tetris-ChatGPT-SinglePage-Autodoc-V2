@@ -90,3 +90,15 @@ def test_bonus_four_lines_cap_and_other_clears(core):
 
 def test_penetrator_activation_viability_and_barriers(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.bonuses=1;g.board[8]=Array(10).fill("red");const before=JSON.stringify(g.board);const a=g.activatePenetrator();const b=g.activatePenetrator();for(let i=0;i<10;i++)g.down();return [a,b,g.bonuses,g.active.y,g.landing().y,before===JSON.stringify(g.board)]})()')==[True,False,0,9,18,True]
+
+def test_penetrator_drop_hold_lock_and_floor_overlap(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.bonuses=1;g.board[8]=Array(10).fill("red");g.board[19][3]="red";g.activatePenetrator();const hold=g.holdPiece();const y=g.landing().y;g.hardDrop();const visible=g.ghostVisible();const legal=g.valid(g.active);g.advance(g.interval());return [hold,y,visible,legal,g.board.flat().filter(c=>c==="#ffffff").length,!!g.active?.penetrator,g.bonuses]})()')==[False,17,False,True,4,False,0]
+
+def test_penetrator_rejects_proposals_with_no_eventual_landing(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board=Array.from({length:20},(_,y)=>Array.from({length:10},(_,x)=>x===9||([0,19].includes(y)&&x>=3&&x<=6)?null:"red"));g.bonuses=1;const activated=g.activatePenetrator();const before=JSON.stringify([g.active,g.board]);return [activated,g.move(1,0),g.rotate(1),g.rotate(-1),before===JSON.stringify([g.active,g.board])];})()')==[True,False,False,False,True]
+
+def test_penetrator_multiple_barriers_all_lock_policies(core):
+    assert core('(()=>{const results=[];for(const mode of ["failed","interval","immediate"]){const g=new TetrisCore.Game(()=>0);g.start();g.bonuses=1;for(const y of [8,15])g.board[y]=Array.from({length:10},(_,x)=>x===9?null:"red");g.board[19][3]="red";const barriers=JSON.stringify([g.board[8],g.board[15]]);g.activatePenetrator();if(mode==="failed"){g.applySettings({...g.settings,lockPolicy:"failed"});for(let i=0;i<30&&g.active?.penetrator;i++)g.down();}else if(mode==="immediate"){g.applySettings({...g.settings,hardDropLock:"immediate"});g.hardDrop();}else{for(let i=0;i<8;i++)g.down();const y=g.active.y;g.pause();g.advance(9999);if(g.active.y!==y)throw Error("paused movement");g.resume();g.hardDrop();g.advance(400);g.applySettings({...g.settings,ghost:"dynamic"});g.advance(600);}results.push([g.board.flat().filter(c=>c==="#ffffff").length,!!g.active?.penetrator,barriers===JSON.stringify([g.board[8],g.board[15]])]);}return results;})()')==[[4,False,True]]*3
+
+def test_non_four_clear_does_not_award_bonus(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[19]=Array.from({length:10},(_,x)=>x>=3&&x<=6?null:"red");g.active={type:"I",x:3,y:18,rotation:0};g.lock();return g.bonuses;})()')==0

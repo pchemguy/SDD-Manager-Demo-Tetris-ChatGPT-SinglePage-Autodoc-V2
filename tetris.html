@@ -469,7 +469,7 @@
           else this.syncGround();
         }
         holdPiece() {
-          if (this.status !== "running" || this.holdUsed || !this.settings.hold) return false;
+          if (this.status !== "running" || this.holdUsed || !this.settings.hold || this.active.penetrator) return false;
           const incoming=this.held, outgoing=this.active.type;
           this.held=outgoing;
           this.spawn(incoming,true);
@@ -597,7 +597,7 @@
         }
         syncGround() {
           if (!this.active) { this.groundedTime=null; return; }
-          const grounded=!this.valid({...this.active,y:this.active.y+1});
+          const grounded=this.active.penetrator ? this.active.y===this.landing()?.y : !this.valid({...this.active,y:this.active.y+1});
           if (!grounded) this.groundedTime=null;
           else if (this.groundedTime===null || this.groundedTime===undefined) this.groundedTime=0;
         }
@@ -712,7 +712,7 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
-      app.changeSettings=(value)=>{ app.game.applySettings(value); app.syncSettings(); app.render(); };
+      app.changeSettings=(value)=>{ const next=TetrisCore.validateSettings(value);app.settleTime();app.game.applySettings(next); app.syncSettings(); app.render(); };
       app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
       document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value});$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
       $("start").onclick = () => app.start();
