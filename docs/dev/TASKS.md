@@ -236,7 +236,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 7 — Centered panel layout
     - [ ] Milestone 7.1 — Centered optional panels
-        - [ ] T-040 — Arrange five panels around a fixed board center
+        - [x] T-040 — Arrange five panels around a fixed board center
             Scope: tetris.html markup/style/C7; tests/test_browser.py.
             Depends on: T-039. Contracts: U1 panel order/geometry, A7.
             Evidence: Left-to-right order and symmetric side regions keep board centered with mandatory information visible; optional overflow never covers those mandatory regions.

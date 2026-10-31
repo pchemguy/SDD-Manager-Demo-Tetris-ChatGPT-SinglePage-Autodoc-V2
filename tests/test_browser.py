@@ -141,3 +141,15 @@ def test_penetrator_white_hotkey_bonus_and_hold_browser(page):
     from pathlib import Path
     Path('.test-results').mkdir(exist_ok=True)
     page.screenshot(path='.test-results/T022-penetrator-'+page.context.browser.browser_type.name+'.png',full_page=True)
+
+def test_five_panel_order_and_mandatory_geometry(page):
+    boxes=[page.locator(selector).bounding_box() for selector in ['#leaderboard','#info','#game','#settings','#help']]
+    assert all(boxes[i]['x']+boxes[i]['width']<=boxes[i+1]['x'] for i in range(4))
+    for width in [480,640,800,1024,1440,1920]:
+        page.set_viewport_size({'width':width,'height':900})
+        game=page.locator('#game').bounding_box();info=page.locator('#info').bounding_box()
+        assert abs(game['x']+game['width']/2-width/2)<=2
+        assert info['x']>=0 and info['x']+info['width']<=width
+        assert page.locator('#leader-slot').evaluate('(node)=>node.clientWidth>0')
+        assert page.evaluate('(()=>{const info=$("info"),b=info.getBoundingClientRect();return info.contains(document.elementFromPoint(b.x+16,b.y+16));})()')
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
