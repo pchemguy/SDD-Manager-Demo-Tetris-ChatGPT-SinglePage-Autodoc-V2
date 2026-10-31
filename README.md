@@ -34,3 +34,5 @@ python tools/package.py --check
 Both commands and the packaged HTML were verified locally. The ZIP contains `tetris.html`, `LICENSE` and `INSTALL.md`; `dist/SHA256SUMS.txt` covers the standalone HTML and ZIP. See [installation](docs/INSTALL.md). The verify workflow runs tests and the independent naming gate; the manually dispatched release workflow is build-only and checks an existing release tag. SDD Manager owns release publication, followed by exact downloaded-byte/latest-link checks. No hosted release or live CI result is claimed before its observed completion.
 
 Published and verified: [v0.1.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.1.0).
+
+Modern increment: a seven-bag queue, once-per-piece keyboard hold (C), and next/held shape previews are implemented.

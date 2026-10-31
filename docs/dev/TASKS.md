@@ -53,7 +53,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 2 — Modern rules
 
 - [ ] Phase 2 — Modern rules
-    - [ ] Milestone 2.1 — Bag hold and preview
+    - [x] Milestone 2.1 — Bag hold and preview
         - [x] T-008 — Implement seven-bag generation and the shared queue
             Scope: tetris.html C2/C3; tests/test_core.py.
             Depends on: T-007. Contracts: G4, A2.
@@ -62,7 +62,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-008. Contracts: G4, A2.
             Evidence: Empty/swap hold, used restriction, fresh spawn timing, reset and hold-induced spawn loss agree with G4; expose hold through keyboard only.
-        - [ ] T-010 — Render next and held piece previews from queue state
+        - [x] T-010 — Render next and held piece previews from queue state
             Scope: tetris.html C3/C7; core/browser checks; README.md.
             Depends on: T-008, T-009. Contracts: G4, U1, A2.
             Evidence: Next reflects the next spawn without consumption; held type/orientation is correct; integrated bag/hold/preview remains deterministic and visibly readable.

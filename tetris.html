@@ -279,6 +279,7 @@
               <div class="stat-value" id="level">1</div>
             </div>
           </div>
+          <div class="stats" id="previews"><div><div class="label">Hold</div><div id="held" class="stat-value">—</div></div><div><div class="label">Next</div><div id="next" class="stat-value">—</div></div></div>
           <div class="buttons">
             <button id="start">Start</button><button id="pause">Start</button>
           </div>
@@ -581,6 +582,8 @@
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, TetrisCore.COLORS[this.game.active.type]),
             );
+          const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
+          preview("held",this.game.held); preview("next",this.game.peek());
           $("status").textContent = {
             ready: "Ready",
             running: "Running",
@@ -625,6 +628,9 @@
       $("start").onclick = () => app.start();
       $("pause").onclick = () => app.togglePause();
       $("game").addEventListener("keydown", (event) => {
+        const eventNow=performance.now();
+        app.game.advance(Math.max(0,eventNow-lastFrame));
+        lastFrame=Math.max(lastFrame,eventNow);
         let handled = true;
         switch (event.code) {
           case "KeyP":
