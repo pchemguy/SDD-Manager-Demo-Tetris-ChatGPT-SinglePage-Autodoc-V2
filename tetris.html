@@ -26,9 +26,12 @@ const COLORS={I:'#41d7e8',J:'#648aff',L:'#ffa45a',O:'#f4d85a',S:'#6fd99b',T:'#bb
 function cells(piece){return SHAPES[piece.type].map(([sx,sy])=>{let x=sx,y=sy,n=piece.type==='I'?4:3;for(let i=0;i<(piece.type==='O'?0:piece.rotation);i++)[x,y]=[n-1-y,x];return [piece.x+x,piece.y+y];});}
 class Game{
  constructor(random=Math.random){this.random=random;this.board=Array.from({length:20},()=>Array(10).fill(null));this.active=null;this.status='ready';this.score=0;}
- start(){this.board=Array.from({length:20},()=>Array(10).fill(null));this.score=0;this.status='running';this.spawn();}
+ start(){this.board=Array.from({length:20},()=>Array(10).fill(null));this.score=0;this.elapsed=0;this.status='running';this.spawn();}
  spawn(){const types=Object.keys(SHAPES);this.active={type:types[Math.min(6,Math.floor(this.random()*7))],x:3,y:-1,rotation:0};}
  valid(piece){return cells(piece).every(([x,y])=>x>=0&&x<10&&y>=-2&&y<20&&(y<0||!this.board[y][x]));}
+ move(dx,dy){if(this.status!=='running')return false;const next={...this.active,x:this.active.x+dx,y:this.active.y+dy};if(!this.valid(next))return false;this.active=next;return true;}
+ rotate(direction){if(this.status!=='running')return false;const next={...this.active,rotation:(this.active.rotation+direction+4)%4};if(!this.valid(next))return false;this.active=next;return true;}
+ advance(ms){if(!Number.isFinite(ms)||ms<0)throw Error('Invalid elapsed time');if(this.status!=='running')return;this.elapsed+=ms;while(this.elapsed>=1000){this.elapsed-=1000;this.move(0,1);}}
 }
 globalThis.TetrisCore=Object.freeze({Game,cells,SHAPES,COLORS});
 </script>
@@ -45,7 +48,9 @@ const app={game:new TetrisCore.Game(),render(){
  if(this.game.active)TetrisCore.cells(this.game.active).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[this.game.active.type]));
  $('status').textContent=this.game.status[0].toUpperCase()+this.game.status.slice(1);$('score').textContent=this.game.score.toLocaleString();$('start').textContent=this.game.status==='ready'?'Start':'Restart';
 },start(){this.game.start();this.render();$('game').focus();}};
-$('start').onclick=()=>app.start();$('pause').onclick=()=>app.start();app.render();
+$('start').onclick=()=>app.start();$('pause').onclick=()=>app.start();
+$('game').addEventListener('keydown',event=>{let handled=true;switch(event.code){case 'ArrowLeft':app.game.move(-1,0);break;case 'ArrowRight':app.game.move(1,0);break;case 'ArrowDown':app.game.move(0,1);break;case 'ArrowUp':case 'Space':case 'KeyX':if(!event.repeat)app.game.rotate(1);break;case 'KeyZ':if(!event.repeat)app.game.rotate(-1);break;default:handled=false;}if(handled){event.preventDefault();app.render();}});
+let lastFrame=performance.now();function frame(now){const elapsed=now-lastFrame;lastFrame=now;app.game.advance(elapsed);app.render();requestAnimationFrame(frame);}requestAnimationFrame(frame);app.render();
 </script>
 </body>
 </html>

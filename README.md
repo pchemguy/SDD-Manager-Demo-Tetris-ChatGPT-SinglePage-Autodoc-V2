@@ -12,7 +12,7 @@ Development uses [SDD Manager](SDD-MANAGER.md). See the [AI-assisted development
 
 ## Development checks
 
-The initial board/spawn view is implemented; playable movement and rules follow the remaining tasks. Development dependencies are pinned in `requirements-dev.txt` and installed into the ignored `.dev/python` target. Production remains one HTML file.
+Board spawning, keyboard movement/rotation and elapsed-time gravity are implemented; locking/clearing and the remaining rules follow the next tasks. Development dependencies are pinned in `requirements-dev.txt` and installed into the ignored `.dev/python` target. Production remains one HTML file.
 
 On this Linux execution host the verified test command is:
 

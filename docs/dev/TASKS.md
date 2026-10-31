@@ -18,7 +18,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html core/markup/controller; tests/test_core.py and tests/test_browser.py; development harness/dependencies.
             Depends on: none. Contracts: G1, G2, U1, A1.
             Evidence: Start creates a correctly colored board/piece; masks, legal spawn and actual Canvas rasterization agree. Establish isolated Chromium/Firefox runner capability through repeated contexts and teardown before dependent browser checks.
-        - [ ] T-002 — Implement keyboard movement rotation and gravity
+        - [x] T-002 — Implement keyboard movement rotation and gravity
             Scope: tetris.html C1/C3/C7/C8; focused core/browser checks.
             Depends on: T-001. Contracts: G1 basic rotation, G3 failed policy, U2.
             Evidence: Left/right/down/rotation and chronological gravity respect wall/floor/stack bounds; handled keys do not scroll the game. Keep baseline rotation without kicks and independent uniform piece selection.
