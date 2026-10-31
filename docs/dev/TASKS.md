@@ -164,39 +164,39 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 5 — Portable session results
 
-- [ ] Phase 5 — Portable session results
-    - [ ] Milestone 5.1 — Session leaderboard
-        - [ ] T-028 — Create stable completed-game records exactly once
+- [x] Phase 5 — Portable session results
+    - [x] Milestone 5.1 — Session leaderboard
+        - [x] T-028 — Create stable completed-game records exactly once
             Scope: tetris.html C3/C6/C8; tests/test_core.py and test_persistence.py.
             Depends on: T-027. Contracts: G2 completion, F1, A5.
             Evidence: Generate canonical UUID/UTC/safe score records at game over only; repeated events and unfinished restarts do not add results.
-        - [ ] T-029 — Rank and retain the session top ten deterministically
+        - [x] T-029 — Rank and retain the session top ten deterministically
             Scope: tetris.html C5/C6; tests/test_persistence.py.
             Depends on: T-028. Contracts: F1, A5.
             Evidence: Score/time/ID tie ordering, zero-score entries, truncation, stable identity and empty replacement are correct; no result history uses cookies/local storage.
-        - [ ] T-030 — Render and integrate the session leaderboard
+        - [x] T-030 — Render and integrate the session leaderboard
             Scope: tetris.html C6-C8/markup; browser checks; README.md.
             Depends on: T-028, T-029. Contracts: F1, U1 leaderboard subset, A5.
             Evidence: Displayed ranks match records after several games/restarts; page reload empties results while configured settings remain; use text-only result rendering.
             Milestone exit: perform the complete 5.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/5/5.1.md`.
-    - [ ] Milestone 5.2 — JSON snapshot transfer
-        - [ ] T-031 — Define strict snapshot validation and the JSON Schema
+    - [x] Milestone 5.2 — JSON snapshot transfer
+        - [x] T-031 — Define strict snapshot validation and the JSON Schema
             Scope: tetris.html C4/C5/embedded schema, tools/export_schema.py, schemas/tetris-save.schema.json, tests/test_persistence.py.
             Depends on: T-030. Contracts: F1-F2, CFG1, A5-A6.
             Evidence: Validate exact root/record/settings keys, version, UUIDs, duplicate IDs/JSON keys, safe integers and real canonical UTC timestamps; schema companion parity and structural/semantic rejection cases pass.
-        - [ ] T-032 — Download one complete JSON snapshot through Save
+        - [x] T-032 — Download one complete JSON snapshot through Save
             Scope: tetris.html C10/C11/C7; browser persistence checks.
             Depends on: T-031. Contracts: F2/F4 JSON save, U1 Save location, A5.
             Evidence: Save captures current top ten/all settings, downloads exactly one tetris-save.json and changes no results/settings/cookies/URL; pause/cancellation/resource handling is correct.
-        - [ ] T-033 — Restore JSON atomically with complete failure handling
+        - [x] T-033 — Restore JSON atomically with complete failure handling
             Scope: tetris.html C5/C8-C11; persistence/settings/browser/artifact checks; README.md and docs/INSTALL.md.
             Depends on: T-031, T-032. Contracts: F2/F4-F5 JSON restore, CFG3, U1, A5-A6.
             Evidence: Complete candidate validation precedes replacement/browser writes; size/corruption/unknown fields/values and recoverable commit failures preserve state; busy/cancel paths clean up, actual downloads round trip, and schema enters the release package.
             Milestone exit: perform the complete 5.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/5/5.2.md`.
-    - [ ] Milestone 5.3 — Phase review
-        - [ ] T-034 — Review test and report phase 5
+    - [x] Milestone 5.3 — Phase review
+        - [x] T-034 — Review test and report phase 5
             Scope: all phase 5 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-030, T-033 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

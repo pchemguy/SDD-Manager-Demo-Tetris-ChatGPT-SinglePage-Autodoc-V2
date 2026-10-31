@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="application-version" content="0.4.0" />
+    <meta name="application-version" content="0.5.0" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link
       rel="icon"
@@ -251,6 +251,9 @@
         }
       }
       [hidden] {display:none !important;} #settings label {display:block;font-size:12px;color:var(--muted);margin:12px 0;} select {display:block;width:100%;margin-top:5px;padding:8px;background:#142338;color:var(--ink);border:1px solid #41506b;border-radius:6px;} .right {display:flex;flex-direction:column;gap:16px;}
+      #results {padding-left:22px;font-size:13px;} #results li {padding:8px 0;} #results small {display:block;color:var(--muted);font-size:10px;margin-top:4px;}
+      #leaderboard {overflow-wrap:anywhere;}
+      @media(max-width:1200px){.left{flex-direction:column-reverse;align-items:flex-end;}}
     </style>
   </head>
   <body>
@@ -265,6 +268,7 @@
     <div id="message" role="status"></div>
     <main class="layout">
       <div class="left">
+        <section id="leaderboard" class="panel"><h2>Session top ten</h2><ol id="results"></ol><p class="hint">Completed games only. This history lasts until page reload.</p></section>
         <section id="info" class="panel" aria-label="Game info and controls">
           <h2>Game info</h2>
           <div class="status" id="status">Ready</div>
@@ -309,6 +313,7 @@
           <label>Hard-drop locking<select data-setting="hardDropLock"><option value="general">General policy</option><option value="immediate">Immediate</option></select></label>
           <label>General locking<select data-setting="lockPolicy"><option value="interval">Full gravity interval</option><option value="failed">Failed downward attempt</option></select></label>
           <label>Hold piece<select data-setting="hold"><option value="1">On</option><option value="0">Off</option></select></label>
+          <div id="file-controls"><label>Save format<select id="format"><option value="json">JSON</option></select></label><div class="buttons"><button id="save">Save</button><button id="restore">Restore</button></div><input id="restore-file" type="file" accept=".json,.sqlite,application/json,application/vnd.sqlite3" hidden /></div>
         </section>
         <section id="help" class="panel">
           <h2>Controls / help</h2>
@@ -337,6 +342,7 @@
       </div>
     </main>
     <footer>FIND YOUR RHYTHM &nbsp; / &nbsp; ONE PIECE AT A TIME</footer>
+    <script id="save-schema" type="application/schema+json">{"$schema":"https://json-schema.org/draft/2020-12/schema","$id":"https://pchemguy.github.io/tetris-save.schema.json","title":"Tetris snapshot version 1","type":"object","additionalProperties":false,"required":["formatVersion","results","settings"],"properties":{"formatVersion":{"type":"integer","const":1},"settings":{"type":"object","additionalProperties":false,"required":["ghost","hardDrop","nextPreview","hardDropLock","lockPolicy","hold"],"properties":{"ghost":{"enum":["hidden","dynamic","visible"]},"hardDrop":{"type":"boolean"},"nextPreview":{"type":"boolean"},"hardDropLock":{"enum":["general","immediate"]},"lockPolicy":{"enum":["failed","interval"]},"hold":{"type":"boolean"}}},"results":{"type":"array","maxItems":10,"items":{"type":"object","additionalProperties":false,"required":["id","score","timestamp"],"properties":{"id":{"type":"string","minLength":36,"maxLength":36,"pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},"score":{"type":"integer","minimum":0,"maximum":9007199254740991},"timestamp":{"type":"string","minLength":24,"maxLength":24,"pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$","format":"date-time"}}}}}}</script>
     <script id="tetris-core">
       /** Pure game domain. Time/randomness are inputs; browser effects stay outside. */
       "use strict";
@@ -441,8 +447,50 @@
         }
         return {settings,explicit,diagnostics};
       }
+      function createResult(score,random=bytes=>crypto.getRandomValues(bytes),now=()=>new Date()) {
+        if(!Number.isSafeInteger(score)||score<0)throw Error("Invalid completed score");
+        const time=now();if(time.getUTCFullYear()<1||time.getUTCFullYear()>9999)throw Error("Completion clock year outside supported range");
+        const bytes=random(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");const id=[hex.slice(0,8),hex.slice(8,12),hex.slice(12,16),hex.slice(16,20),hex.slice(20)].join("-");return {id,score,timestamp:time.toISOString()};
+      }
+      function rankResults(results) { return [...results].sort((a,b)=>b.score-a.score || a.timestamp.localeCompare(b.timestamp) || a.id.localeCompare(b.id)).slice(0,10); }
+      function exactKeys(value,keys) {return !!value && typeof value==="object" && !Array.isArray(value) && Object.keys(value).sort().join()===keys.sort().join();}
+      function validateResult(row) {
+        if(!exactKeys(row,["id","score","timestamp"]) || typeof row.id!=="string" || row.id.length!==36 || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(row.id))throw Error("Invalid result ID/fields");
+        if(!Number.isSafeInteger(row.score)||row.score<0)throw Error("Invalid result score");
+        if(typeof row.timestamp!=="string"||!/^(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z$/.test(row.timestamp) || !Number.isFinite(Date.parse(row.timestamp)) || new Date(row.timestamp).toISOString()!==row.timestamp)throw Error("Invalid UTC completion timestamp");
+        return {...row};
+      }
+      function validateSnapshot(value) {
+        if(!exactKeys(value,["formatVersion","results","settings"])||value.formatVersion!==1)throw Error("Unsupported snapshot format/fields");
+        const settings=validateSettings(value.settings);
+        if(!Array.isArray(value.results)||value.results.length>10)throw Error("Results must contain at most ten entries");
+        const results=value.results.map(validateResult);
+        if(new Set(results.map(r=>r.id)).size!==results.length)throw Error("Duplicate result IDs");
+        return {formatVersion:1,results:rankResults(results),settings};
+      }
+      // Snapshot numeric fields are integers; validate decimal tokens before floating-point conversion.
+      function snapshotNumber(raw) {
+        let [mantissa,exponent="0"]=raw.toLowerCase().split("e");const negative=mantissa.startsWith("-");if(negative)mantissa=mantissa.slice(1);
+        const [whole,fraction=""]=mantissa.split(".");let digits=(whole+fraction).replace(/^0+/,"");if(!digits)return negative?-0:0;
+        const shift=Number(exponent)-fraction.length;if(!Number.isSafeInteger(shift))throw Error("JSON number exceeds integer limits");
+        if(shift<0){const count=-shift;if(count>=digits.length||!digits.endsWith("0".repeat(count)))throw Error("Snapshot numbers must be integers");digits=digits.slice(0,-count);}else{if(digits.length+shift>16)throw Error("JSON integer exceeds safe range");digits+="0".repeat(shift);}
+        if(digits.length>16||BigInt(digits)>9007199254740991n)throw Error("JSON integer exceeds safe range");return (negative?-1:1)*Number(digits);
+      }
+      function parseJSON(text) {
+        let at=0;const whitespace=()=>{while(/[\x20\t\r\n]/.test(text[at]||"x"))at++;};
+        const string=()=>{const start=at++;while(at<text.length){const c=text[at++];if(c==='"')return JSON.parse(text.slice(start,at));if(c==='\\')at++;}throw Error("Unterminated JSON string");};
+        const value=(depth=0)=>{
+          if(depth>64)throw Error("JSON nesting limit exceeded");whitespace();const c=text[at];
+          if(c==='"')return string();
+          if(c==='{'){at++;const out=Object.create(null),seen=new Set();whitespace();if(text[at]==='}'){at++;return out;}while(true){whitespace();if(text[at]!=='"')throw Error("Invalid JSON property");const key=string();if(seen.has(key))throw Error("Duplicate JSON property: "+key.slice(0,80));seen.add(key);whitespace();if(text[at++]!==':')throw Error("Invalid JSON separator");out[key]=value(depth+1);whitespace();const end=text[at++];if(end==='}')return out;if(end!==',')throw Error("Invalid JSON object");}}
+          if(c==='['){at++;const out=[];whitespace();if(text[at]===']'){at++;return out;}while(true){out.push(value(depth+1));whitespace();const end=text[at++];if(end===']')return out;if(end!==',')throw Error("Invalid JSON array");}}
+          const match=/^(?:true|false|null|-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)/.exec(text.slice(at));if(!match)throw Error("Invalid JSON value");at+=match[0].length;return /^[-0-9]/.test(match[0])?snapshotNumber(match[0]):JSON.parse(match[0]);
+        };
+        const result=value();whitespace();if(at!==text.length)throw Error("Trailing JSON content");return result;
+      }
       class Game {
-        constructor(random = Math.random) {
+        constructor(random = Math.random, complete = () => {}) {
+          this.onComplete=complete;
           this.random = random;
           this.board = Array.from({ length: 20 }, () => Array(10).fill(null));
           this.active = null;
@@ -588,6 +636,7 @@
           this.completion = { score: this.score };
           this.status = "over";
           this.active = null;
+          this.onComplete(this.completion);
         }
         down(soft = false) {
           if (this.status !== "running") return false;
@@ -649,14 +698,15 @@
           }
         }
       }
-      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, settingURL, resolveSettings });
+      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, settingURL, resolveSettings, createResult, rankResults, validateResult, validateSnapshot, parseJSON });
     </script>
     <script>
       /** Browser controller/presentation; it renders the same pure domain tested by pytest. */
       "use strict";
       const $ = (id) => document.getElementById(id);
       const app = {
-        game: new TetrisCore.Game(),
+        results: [],
+        game: new TetrisCore.Game(Math.random, completion=>{app.results=TetrisCore.rankResults([...app.results,TetrisCore.validateResult(TetrisCore.createResult(completion.score))]);}),
         render() {
           const canvas = $("board"),
             ctx = canvas.getContext("2d"),
@@ -695,9 +745,14 @@
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, this.game.active.penetrator ? "#ffffff" : TetrisCore.COLORS[this.game.active.type]),
             );
+          const infoState=JSON.stringify([this.game.status,this.game.score,this.game.lines,this.game.level,this.game.held,this.game.peek(),this.game.bonuses,this.game.settings,app.results]);
+          if(infoState===this.infoState)return;
+          this.infoState=infoState;
           const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
           preview("held",this.game.held); preview("next",this.game.peek());
           $("held").parentElement.hidden=!this.game.settings.hold; $("next").parentElement.hidden=!this.game.settings.nextPreview;
+          const rows=app.results.map(row=>{const li=document.createElement("li");const score=document.createElement("strong");score.textContent=row.score.toLocaleString();const time=document.createElement("small");time.textContent=new Date(row.timestamp).toLocaleString();li.append(score,time);return li;});
+          $("results").replaceChildren(...rows);
           $("status").textContent = {
             ready: "Ready",
             running: "Running",
@@ -726,12 +781,14 @@
             this.game.status === "running" ? "Pause" : "Start";
         },
         start() {
+          if(this.busy)return;
           this.game.start();
           lastFrame = performance.now();
           this.render();
           $("game").focus();
         },
         togglePause() {
+          if(this.busy)return;
           if (this.game.status === "running") {app.settleTime();this.game.pause();}
           else if (this.game.status === "paused") this.game.resume();
           else this.game.start();
@@ -741,6 +798,19 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
+      app.busy=false;app.operation=0;
+      app.setBusy=(busy)=>{app.busy=busy;document.querySelectorAll("[data-setting],#save,#restore,#format").forEach(node=>node.disabled=busy);};
+      app.snapshot=()=>TetrisCore.validateSnapshot({formatVersion:1,results:app.results,settings:app.game.settings});
+      app.beginFile=()=>{if(app.busy)throw Error("A file operation is already running");app.settleTime();app.game.pause();app.render();app.setBusy(true);$("message").textContent="File operation in progress. Gameplay is paused.";return ++app.operation;};
+      app.endFile=(operation)=>{if(operation===app.operation)app.setBusy(false);};
+      app.cancelFile=()=>{app.operation++;if(app.cancelCodec)app.cancelCodec();app.setBusy(false);$("message").textContent="Restore canceled. Resume when ready.";};
+      app.download=(data,name,type)=>{const url=URL.createObjectURL(new Blob([data],{type}));try {const anchor=document.createElement("a");anchor.href=url;anchor.download=name;document.body.append(anchor);try{anchor.click();}finally{anchor.remove();}}finally{setTimeout(()=>URL.revokeObjectURL(url),1000);}};
+      $("save").onclick=async()=>{if(app.busy)return;let operation;try {operation=app.beginFile();const snapshot=app.snapshot();app.download(JSON.stringify(snapshot,null,2)+"\n","tetris-save.json","application/json");$("message").textContent="JSON snapshot saved. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Save failed: "+error.message;}finally{app.endFile(operation);}};
+      app.applySnapshot=(candidate)=>{const value=TetrisCore.validateSnapshot(candidate);app.writeSettings(value.settings);app.game.applySettings(value.settings);app.results=value.results;app.syncSettings();app.render();};
+      app.decodeFile=async(file)=>{if(file.size>1048576)throw Error("File exceeds the 1 MiB limit");const bytes=new Uint8Array(await file.arrayBuffer());if(bytes.length>1048576)throw Error("File exceeds the 1 MiB limit");if(bytes[0]===239&&bytes[1]===187&&bytes[2]===191)throw Error("JSON BOM is not supported");const text=new TextDecoder("utf-8",{fatal:true}).decode(bytes);return TetrisCore.validateSnapshot(TetrisCore.parseJSON(text));};
+      $("restore").onclick=()=>{if(app.busy)return;try{app.restoreOperation=app.beginFile();$("restore-file").value="";$("restore-file").click();}catch(error){app.setBusy(false);$("message").textContent="Restore failed: "+error.message;}};
+      $("restore-file").addEventListener("cancel",()=>{if(app.busy&&app.restoreOperation===app.operation)app.cancelFile();});
+      $("restore-file").addEventListener("change",async()=>{const operation=app.restoreOperation;if(!app.busy||operation!==app.operation)return;try{const file=$("restore-file").files[0];if(!file){$("message").textContent="Restore canceled";return;}const candidate=await app.decodeFile(file);if(operation!==app.operation||!app.busy)return;app.applySnapshot(candidate);$("message").textContent="Snapshot restored. Resume when ready.";}catch(error){if(operation===app.operation)$("message").textContent="Restore failed: "+error.message;}finally{if(operation===app.operation){app.endFile(operation);$("restore-file").value="";}}});
       app.writeSettings=(value,keys=Object.keys(TetrisCore.DEFAULTS))=>{
         const next=TetrisCore.validateSettings(value), previousURL=location.href, oldCookies={};
         const readCookie=key=>document.cookie.split(";").map(x=>x.trim()).filter(x=>x.startsWith("tetris_"+key+"=")).map(x=>x.slice(("tetris_"+key+"=").length));
@@ -760,7 +830,7 @@
           throw Error(error.message+(rollback?"; no settings applied":"; browser blocked rollback; persistent state may be inconsistent"));
         }
       };
-      app.changeSettings=(value,key)=>{ const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
+      app.changeSettings=(value,key)=>{ if(app.busy)throw Error("A file operation is in progress");const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
       app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
       document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value},key);$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
       $("start").onclick = () => app.start();
@@ -769,6 +839,7 @@
         const eventNow=performance.now();
         app.game.advance(Math.max(0,eventNow-lastFrame));
         lastFrame=Math.max(lastFrame,eventNow);
+        if(app.busy) {event.preventDefault();return;}
         let handled = true;
         switch (event.code) {
           case "KeyP":
