@@ -116,7 +116,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Milestone exit: perform the complete 3.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/3/3.1.md`.
     - [ ] Milestone 3.2 — Earned penetration
-        - [ ] T-020 — Award capped bonuses and render penetrator status
+        - [x] T-020 — Award capped bonuses and render penetrator status
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-019. Contracts: G6 earning/cap/white display, U1, A3.
             Evidence: Four-line clear earns one, other clears earn none, cap is three and indicator updates; white is reserved for penetrator active/locked cells and ghost.

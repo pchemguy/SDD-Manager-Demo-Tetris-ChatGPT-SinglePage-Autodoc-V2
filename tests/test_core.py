@@ -84,3 +84,6 @@ def test_dynamic_ghost_all_above_and_straddling(core):
 
 def test_live_policy_changes_and_hold_retention(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.holdPiece();g.applySettings({...g.settings,hold:false});const disabled=g.holdPiece();const held=g.held;g.applySettings({...g.settings,hold:true});const used=g.holdUsed;g.hardDrop();g.advance(400);g.applySettings({...g.settings,ghost:"hidden"});const preserved=g.groundedTime;g.applySettings({...g.settings,hardDropLock:"immediate"});const reset=g.groundedTime;return [disabled,held,used,preserved,reset];})()')==[False,'I',True,400,0]
+
+def test_bonus_four_lines_cap_and_other_clears(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();for(let n=0;n<4;n++){g.board=Array.from({length:20},()=>Array(10).fill(null));for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?null:"red");g.active={type:"I",x:3,y:16,rotation:1};g.lock();}return [g.bonuses,Object.values(TetrisCore.COLORS).includes("#ffffff")]})()')==[3,False]

@@ -281,6 +281,7 @@
             </div>
           </div>
           <div class="stats" id="previews"><div><div class="label">Hold</div><div id="held" class="stat-value">—</div></div><div><div class="label">Next</div><div id="next" class="stat-value">—</div></div></div>
+          <div class="label">Penetrator bonuses</div><div id="bonuses" class="stat-value" aria-label="0 penetrator bonuses">—</div>
           <div class="buttons">
             <button id="start">Start</button><button id="pause">Start</button>
           </div>
@@ -428,6 +429,7 @@
           this.completion = null;
           this.elapsed = 0;
           this.status = "running";
+          this.bonuses=0;
           this.held = null;
           this.holdUsed = false;
           this.queue = [];
@@ -563,13 +565,14 @@
             return;
           }
           for (const [x, y] of cells(this.active))
-            this.board[y][x] = COLORS[this.active.type];
+            this.board[y][x] = this.active.penetrator ? "#ffffff" : COLORS[this.active.type];
           const remaining = this.board.filter((row) => !row.every(Boolean)),
             count = 20 - remaining.length;
           this.score = Math.min(
             Number.MAX_SAFE_INTEGER,
             this.score + [0, 100, 300, 500, 800][count] * this.level,
           );
+          if(count===4) this.bonuses=Math.min(3,this.bonuses+1);
           this.lines += count;
           this.level = 1 + Math.floor(this.lines / 10);
           while (remaining.length < 20) remaining.unshift(Array(10).fill(null));
@@ -642,10 +645,10 @@
             }),
           );
           const ghost=this.game.landing();
-          if (ghost && this.game.ghostVisible()) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
+          if (ghost && this.game.ghostVisible()) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,ghost.penetrator ? "#ffffff" : TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
           if (this.game.active)
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
-              tile(x, y, TetrisCore.COLORS[this.game.active.type]),
+              tile(x, y, this.game.active.penetrator ? "#ffffff" : TetrisCore.COLORS[this.game.active.type]),
             );
           const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
           preview("held",this.game.held); preview("next",this.game.peek());
@@ -656,6 +659,7 @@
             over: "Game over",
             paused: "Paused",
           }[this.game.status];
+          $("bonuses").textContent="⚡".repeat(this.game.bonuses||0)||"—"; $("bonuses").setAttribute("aria-label",(this.game.bonuses||0)+" penetrator bonuses");
           $("score").textContent = this.game.score.toLocaleString();
           $("lines").textContent = this.game.lines || 0;
           $("level").textContent = this.game.level || 1;
