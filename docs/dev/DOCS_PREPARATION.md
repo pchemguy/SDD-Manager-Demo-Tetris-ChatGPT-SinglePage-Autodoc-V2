@@ -6,15 +6,15 @@ Current control and evidence for the full project. [DOCS_TASKS](DOCS_TASKS.md) o
 
 - Mode: autodoc/onepass, selected by the user's project-development request.
 - Scope: the complete single-page HTML Tetris target; one documentation pass with bounded implementation phases to be planned later.
-- Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. It did not approve an unseen PROJECT document. PROJECT proposal approval remains pending; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
+- Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. The user's subsequent `k` approved the published PROJECT proposal at `c52e30a33cac17d1015053a2820f853eeb750e79` on 2026-10-31; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
 - Tracking: enabled for documentation and implementation by root AGENTS.md. GitHub milestone 1 (`sdd-docs-main`) and DOCS-001 through DOCS-009 issues #1 through #9 were created and read back with exact bundled content and associations before target writes.
 - Publication: every owned commit must be pushed and read back before advancement.
-- Next boundary: publish the PROJECT proposal and stop for human approval; initialization and DOCS-001 closure are verified. After approval, prepare through DOCS-008 and stop before DOCS-009 package QC or implementation.
+- Next boundary: record and publish PROJECT approval, close/read back DOCS-002, then prepare through DOCS-008 and stop before DOCS-009 package QC or implementation.
 - Reporting: Standard, with concise progress updates.
 
 ## Scope source
 
-The user's complete target comprises the classic playable baseline, modern rules, conditional ghost, penetrator, all six session-only settings followed by cookie/URL persistence, session top-ten leaderboard, JSON/SQLite manual Save/Restore, and the prescribed centered five-panel layout. The forthcoming PROJECT owns principal product scope; SPEC will own exact contracts. No later documentation passes are selected.
+The user's complete target comprises the classic playable baseline, modern rules, conditional ghost, penetrator, all six session-only settings followed by cookie/URL persistence, session top-ten leaderboard, JSON/SQLite manual Save/Restore, and the prescribed centered five-panel layout. The accepted PROJECT owns principal product scope; SPEC will own exact contracts. No later documentation passes are selected.
 
 ## Accepted clarification decisions
 
@@ -39,7 +39,7 @@ No material product decision is currently unresolved for brief review. Detailed 
 | Task | Evidence / decision basis |
 | --- | --- |
 | DOCS-001 | All four existing root files retained unchanged against initial commit `89d088c799d0556603bc0c49b3ac0934d9bacbcc`; no copies needed. Task list instantiated from the bundled template with only DOCS-001 checked. This control record and HANDOFF complete initialization metadata. Initialization commit `bca8bec2c7eca063a4daa21a6d5d15de859ead04` was pushed with exact ref readback and confirmed process cleanup. Issue #1 was closed as completed and read back before PROJECT authoring. |
-| DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval pending; DOCS-002 remains unchecked. |
+| DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval supplied by the subsequent `k`; exact presented bytes retained unchanged. DOCS-002 closes with this approval evidence and its owning checkbox. |
 | DOCS-003 | ARCHITECTURE not yet authored; downstream checkpoint preapproved by autodoc after PROJECT approval. |
 | DOCS-004 | DECOMPOSITION not yet authored; same scoped preapproval. |
 | DOCS-005 | SPEC and its QC not yet authored. |
@@ -60,4 +60,4 @@ No material product decision is currently unresolved for brief review. Detailed 
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 through DOCS-009 and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) closure is pending this approval publication; DOCS-003 through DOCS-009 and milestone 1 remain open; reconcile later effects before replay.
