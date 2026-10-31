@@ -181,7 +181,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Milestone exit: perform the complete 5.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/5/5.1.md`.
     - [ ] Milestone 5.2 — JSON snapshot transfer
-        - [ ] T-031 — Define strict snapshot validation and the JSON Schema
+        - [x] T-031 — Define strict snapshot validation and the JSON Schema
             Scope: tetris.html C4/C5/embedded schema, tools/export_schema.py, schemas/tetris-save.schema.json, tests/test_persistence.py.
             Depends on: T-030. Contracts: F1-F2, CFG1, A5-A6.
             Evidence: Validate exact root/record/settings keys, version, UUIDs, duplicate IDs/JSON keys, safe integers and real canonical UTC timestamps; schema companion parity and structural/semantic rejection cases pass.
