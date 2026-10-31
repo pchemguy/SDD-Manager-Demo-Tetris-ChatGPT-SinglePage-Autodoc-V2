@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-033 Restore JSON atomically with complete failure handling.
+Checkpoint: T-034 Review test and report phase 5.
 
-Implemented whole-candidate atomic JSON restore with paused operation ownership, cancellation/stale response protection and unchanged-state errors. Repaired narrow leaderboard access and unnecessary information DOM replacement found during QC.
+Completed independent phase5 QC and prepared version0.5.0 JSON/result release with matching Schema asset.
 
 ## Scope and owners
 
@@ -14,8 +14,11 @@ Working branch `phase/5-portable-session-results`; creation parent/integration t
 
 ## Evidence and next action
 
-154 full-suite checks passed in56.46s across both browsers, real JSON downloads/uploads, all-six/default/top-ten-tie round trips, empty replacement, strict invalid content, recoverable write rollback, busy/cancel/stale responses and schema-bearing packaged HTML. Retained actual downloaded snapshot-demo.json: Restore it to demonstrate ten tied results and all nondefault settings.
+........................................................................ [ 46%]
+........................................................................ [ 93%]
+..........                                                               [100%]
+154 passed in 72.36s (0:01:12); actual inline application source and selected browser/package paths exercised.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: JSON transfer only in this phase; SQLite and final optional-panel arrangement remain planned. Supported restore persistence requires HTTP(S) and permitted cookies; blocked recovery is explicit. Managed headless browsers and local Firefox override disclosed; native OS focus/headed checks excluded.
+Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.

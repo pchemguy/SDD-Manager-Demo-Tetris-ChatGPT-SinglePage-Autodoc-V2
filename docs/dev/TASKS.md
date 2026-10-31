@@ -164,7 +164,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 5 — Portable session results
 
-- [ ] Phase 5 — Portable session results
+- [x] Phase 5 — Portable session results
     - [x] Milestone 5.1 — Session leaderboard
         - [x] T-028 — Create stable completed-game records exactly once
             Scope: tetris.html C3/C6/C8; tests/test_core.py and test_persistence.py.
@@ -195,8 +195,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Complete candidate validation precedes replacement/browser writes; size/corruption/unknown fields/values and recoverable commit failures preserve state; busy/cancel paths clean up, actual downloads round trip, and schema enters the release package.
             Milestone exit: perform the complete 5.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/5/5.2.md`.
-    - [ ] Milestone 5.3 — Phase review
-        - [ ] T-034 — Review test and report phase 5
+    - [x] Milestone 5.3 — Phase review
+        - [x] T-034 — Review test and report phase 5
             Scope: all phase 5 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-030, T-033 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
