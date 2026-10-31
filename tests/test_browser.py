@@ -63,7 +63,7 @@ def test_information_help_and_readable_resize(page):
     assert page.locator('#level').inner_text() == '1'
     assert page.locator('#lines').inner_text() == '0'
     assert page.locator('#help').is_visible()
-    assert page.locator('#info button').count() == 2
+    assert page.locator('#info > .buttons button').count() == 2
     for width in [480, 640, 800, 1024, 1440, 1920]:
         page.set_viewport_size({'width': width, 'height': 900})
         for selector in ['#info', '#game']:
@@ -141,3 +141,92 @@ def test_penetrator_white_hotkey_bonus_and_hold_browser(page):
     from pathlib import Path
     Path('.test-results').mkdir(exist_ok=True)
     page.screenshot(path='.test-results/T022-penetrator-'+page.context.browser.browser_type.name+'.png',full_page=True)
+
+def test_five_panel_order_and_mandatory_geometry(page):
+    boxes=[page.locator(selector).bounding_box() for selector in ['#leaderboard','#info','#game','#settings','#help']]
+    assert all(boxes[i]['x']+boxes[i]['width']<=boxes[i+1]['x'] for i in range(4))
+    for width in [480,640,800,1024,1440,1920]:
+        page.set_viewport_size({'width':width,'height':900})
+        game=page.locator('#game').bounding_box();info=page.locator('#info').bounding_box()
+        assert abs(game['x']+game['width']/2-width/2)<=2
+        assert info['x']>=0 and info['x']+info['width']<=width
+        assert page.locator('#leader-slot').evaluate('(node)=>node.clientWidth>0')
+        assert page.evaluate('(()=>{const info=$("info"),b=info.getBoundingClientRect();return info.contains(document.elementFromPoint(b.x+16,b.y+16));})()')
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+
+def test_all_panel_combinations_geometry_state_and_file_visibility(page):
+    page.locator('#start').click();page.locator('#pause').click()
+    before=page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.settings,app.results])')
+    assert page.locator('#panel-toggles button').count()==3
+    assert page.locator('#info > .buttons button').count()==2
+    for width in [480,640,800,1024,1440,1920]:
+        page.set_viewport_size({'width':width,'height':900})
+        for bits in range(8):
+            page.evaluate('(bits)=>["leaderboard","settings","help"].forEach((key,i)=>{const node=$(key==="leaderboard"?"leader-slot":key);if(node.hidden===!!(bits&(1<<i)))$("toggle-"+key).click();})',bits)
+            box=page.locator('#game').bounding_box();info=page.locator('#info').bounding_box()
+            assert abs(box['x']+box['width']/2-width/2)<=2
+            assert info['x']>=0 and info['x']+info['width']<=width
+            assert page.locator('#save').is_visible()==bool(bits&2)
+            assert page.locator('#restore').is_visible()==bool(bits&2)
+            assert page.locator('.right').get_attribute('aria-hidden')==str(not bool(bits&6)).lower()
+            assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+            assert page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.settings,app.results])')==before
+    page.locator('[data-setting=ghost]').focus()
+    page.locator('#toggle-settings').click()
+    assert page.evaluate('document.activeElement.id')=='game'
+    page.keyboard.press('KeyP')
+    assert page.evaluate('app.game.status')=='running'
+
+def test_panel_visibility_is_session_presentation_state(page):
+    before=page.evaluate('[app.game.settings,document.cookie,location.href]')
+    page.locator('#toggle-settings').click()
+    assert not page.locator('#settings').is_visible()
+    page.locator('#start').click()
+    page.locator('#start').click()
+    assert not page.locator('#settings').is_visible()
+    assert page.evaluate('[app.game.settings,document.cookie,location.href]')==before
+    assert len(page.evaluate('Object.keys(app.snapshot().settings)'))==6
+    page.reload()
+    assert page.locator('#settings').is_visible()
+
+def test_final_screenshots_and_high_dpi(browser,base_url):
+    from pathlib import Path
+    Path('.test-results').mkdir(exist_ok=True)
+    context=browser.new_context(viewport={'width':1440,'height':900},device_scale_factor=2)
+    page=context.new_page();page.goto(base_url+'/tetris.html')
+    page.locator('#start').click();page.locator('#pause').click()
+    for width in [480,640,800,1024,1440,1920]:
+        page.set_viewport_size({'width':width,'height':900})
+        page.wait_for_function('Math.abs($("board").width-$("board").getBoundingClientRect().width*2)<2')
+        for bits in range(8):
+            page.evaluate('(bits)=>["leaderboard","settings","help"].forEach((key,i)=>{const node=$(key==="leaderboard"?"leader-slot":key);if(node.hidden===!!(bits&(1<<i)))$("toggle-"+key).click();})',bits)
+            box=page.locator('#game').bounding_box()
+            assert abs(box['x']+box['width']/2-width/2)<=2
+            assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+        page.screenshot(path=f'.test-results/final-{browser.browser_type.name}-{width}.png',full_page=True)
+    assert page.locator('#toggle-settings').get_attribute('aria-controls')=='settings'
+    assert page.locator('#info > .buttons button').all_text_contents()==['Restart','Start']
+    page.locator('#board').click()
+    assert page.evaluate('document.activeElement.id')=='game'
+    context.close()
+
+def test_native_pan_and_small_gameplay_buttons(page):
+    page.set_viewport_size({'width':480,'height':900})
+    page.locator('#start').click();page.locator('#pause').click()
+    assert page.locator('#info > .buttons button').evaluate_all('(nodes)=>nodes.every(node=>node.scrollWidth<=node.clientWidth+1)'), page.locator('#info > .buttons button').evaluate_all('(nodes)=>nodes.map(n=>({text:n.textContent,client:n.clientWidth,scroll:n.scrollWidth,font:getComputedStyle(n).font,padding:getComputedStyle(n).padding,width:n.getBoundingClientRect().width}))')
+    before=page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.settings,app.results,document.cookie,location.href])')
+    for selector in ['#leader-slot','.right']:
+        assert page.locator(selector).evaluate('(node)=>node.scrollWidth>node.clientWidth')
+        page.locator(selector).focus()
+        for _ in range(8):page.keyboard.press('ArrowRight')
+        page.wait_for_function('(selector)=>{const node=document.querySelector(selector);return node.scrollLeft>=node.scrollWidth-node.clientWidth-2;}',arg=selector,timeout=3000)
+        assert page.evaluate('JSON.stringify([app.game.board,app.game.active,app.game.settings,app.results,document.cookie,location.href])')==before
+
+def test_board_click_returns_keyboard_focus_from_settings(page):
+    page.locator('#start').click()
+    page.locator('[data-setting=ghost]').focus()
+    page.locator('#board').click()
+    assert page.evaluate('document.activeElement.id')=='game'
+    x=page.evaluate('app.game.active.x')
+    page.keyboard.press('ArrowLeft')
+    assert page.evaluate('app.game.active.x')==x-1

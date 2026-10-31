@@ -1,72 +1,62 @@
-# Single-page HTML Tetris
+# Single-page Tetris
 
-A browser Tetris project targeting one HTML file with embedded application HTML, CSS and JavaScript. The intended scope includes modern rules, a penetrator ability, configurable gameplay, a session leaderboard, and manual JSON/SQLite save and restore.
+A complete keyboard Tetris game in one HTML file. It includes seven-bag randomization, hold and next previews, ordered wall kicks, ghost projection, hard drop, configurable grounded locking, earned white penetrators, six persistent settings, a session top-ten leaderboard and manual JSON/SQLite snapshots.
 
-The classic playable baseline is available in `tetris.html`. Modern capabilities are delivered in subsequent bounded releases.
+[Download the game](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/latest/download/tetris.html) or [download the ZIP](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/latest/download/tetris-browser.zip). No build or Node.js is needed. See [installation and usage](docs/INSTALL.md). The [JSON Schema](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/latest/download/tetris-save.schema.json) and checksums are release assets; the ZIP also includes the schema, license and installation guide.
 
-## Project documents
+## Play
 
-Read the [project brief](docs/dev/PROJECT.md), [architecture](docs/dev/ARCHITECTURE.md), [component model](docs/dev/DECOMPOSITION.md), [specification](docs/dev/SPEC.md), [delivery plan](docs/dev/PLAN.md), [repository layout](docs/dev/layout.md) and [implementation tasks](docs/dev/TASKS.md) for the intended product. See the [preparation record](docs/dev/DOCS_PREPARATION.md) for current decisions and pending approvals. The [handoff](docs/dev/HANDOFF.md) provides workflow continuity.
+Click Start or the board to focus it. All piece actions use the keyboard.
 
-Development uses [SDD Manager](SDD-MANAGER.md). See the [AI-assisted development disclosure](AI_DISCLOSURE.md).
+| Key | Action |
+| --- | --- |
+| Left / Right | Move |
+| Down | Soft drop |
+| Up / Space / X | Rotate clockwise |
+| Z | Rotate counterclockwise |
+| Enter | Hard drop when enabled |
+| C | Hold once per piece when enabled |
+| B | Spend one penetrator bonus |
+| P / Escape | Pause or resume an existing game |
+| R | Start/restart |
 
-## Development checks
+Clearing four lines earns one bonus, up to three. An activated penetrator is white, crosses occupied cells and lands at its lowest fully legal position. It cannot be held. Ghost and hard drop use that same landing. Ordinary pieces stop at their first obstruction. Default locking waits one full gravity interval after grounding; grounded moves do not restart the delay. Lifting off clears it. Hard drop follows that policy unless immediate locking is selected.
 
-The classic core implements spawning, keyboard movement/rotation, gravity, legal locking, line clearing, score/level progression, game over and restart. Pause/resume, automatic page/window-event pause and restart are implemented. The information panel shows score, lines and level; keyboard help and high-DPI responsive Canvas sizing are implemented. Releases and later capabilities follow the task plan. Development dependencies are pinned in `requirements-dev.txt` and installed into the ignored `.dev/python` target. Production remains one HTML file.
+The three panel toggles sit above the two gameplay buttons. The board remains centered and game information stays visible. On narrow screens, optional regions scroll horizontally; focus a side region and use its native arrow keys to pan. Inputs and other controls keep their normal keyboard behavior.
 
-On this Linux execution host the verified test command is:
+## Settings and snapshots
+
+Each setting resolves independently: valid explicit URL parameter, saved cookie, default. Explicit default values are saved too; omitted parameters retain saved values. Invalid/repeated sources report diagnostics and fall back. Changes update only the selected cookie/query pair, preserving other raw query text and the fragment.
+
+| URL key | Accepted text | Default |
+| --- | --- | --- |
+| ghost | hidden, dynamic, visible | visible |
+| hardDrop | 0, 1 | 1 |
+| nextPreview | 0, 1 | 1 |
+| hardDropLock | general, immediate | general |
+| lockPolicy | failed, interval | interval |
+| hold | 0, 1 | 1 |
+
+Dynamic ghost hides only when every projected cell is above row ten; a straddling landing remains visible. Cookies are named tetris_KEY and persist for one year with Path=/, SameSite=Lax and Secure on HTTPS. Full persistent changes/restores require HTTP(S) and permitted cookies; failures report clearly and attempt rollback.
+
+Only completed games enter the leaderboard. Rank is score descending, UTC completion time ascending, then stable UUID ascending. Unfinished restarts add nothing. Reload clears results while configured settings persist. Save captures the current top ten and all six settings; Restore replaces them after complete validation and does not restore the active board, hold or bonuses. File operations pause a running game and leave it paused for explicit resume.
+
+JSON and SQLite preserve UUIDv4 IDs, safe non-negative integer scores and canonical UTC timestamps. Files are limited to 1 MiB. JSON rejects duplicate properties, invalid numeric tokens, unknown fields and invalid calendar dates. SQLite checks metadata, schema, indexes, storage types and exact integer text. Both use the same complete candidate validator and browser-state transaction. See [format contracts](docs/dev/spec/persistence.md) and [schema](schemas/tetris-save.schema.json).
+
+SQLite fetches only the pinned sql.js 1.14.2 JavaScript loader from jsDelivr with Fetch integrity. Its matching binary and all worker/application code are embedded in the HTML. There is no separate binary asset. The isolated codec has a ten-second deadline, including startup. Network/library failure affects only SQLite; JSON and gameplay remain available. The upstream MIT notice is retained in the HTML.
+
+## Development and evidence
+
+Production is tetris.html; development dependencies are pinned in requirements-dev.txt. Local Linux verification uses:
 
 ```sh
 PYTHONPATH="$PWD/.dev/python" PLAYWRIGHT_BROWSERS_PATH="$PWD/.dev/browsers" TETRIS_FIREFOX_SANDBOX=off python -m pytest -q
-```
-
-The Firefox override is limited to trusted local tests on this host after its normal content processes failed with `/proc/self/uid_map: EPERM`; it is not a general browser default. Browsers are managed builds matching Playwright 1.56.0, installed in the dedicated project directory. Chromium uses the headless shell. The initial installer returned an invalid first archive, then hit a lock heartbeat failure; verified complete official fallback archives were extracted without changing host restrictions. Browser provenance/digests are retained in the T-001 report. Re-evaluate the override on other hosts and follow the repository browser policy.
-
-## Browser package
-
-Build and inspect the stable browser release assets with:
-
-```sh
 python tools/package.py
 python tools/package.py --check
 ```
 
-Both commands and the packaged HTML were verified locally. The ZIP contains `tetris.html`, `LICENSE` and `INSTALL.md`; `dist/SHA256SUMS.txt` covers the standalone HTML and ZIP. See [installation](docs/INSTALL.md). The verify workflow runs tests and the independent naming gate; the manually dispatched release workflow is build-only and checks an existing release tag. SDD Manager owns release publication, followed by exact downloaded-byte/latest-link checks. No hosted release or live CI result is claimed before its observed completion.
+The Firefox override is limited to this trusted local execution host after normal content processes failed with /proc/self/uid_map: EPERM. CI uses managed Chromium headless shell and Firefox without that host-specific override. Tests exercise the actual inline domain, HTML/Canvas, downloads, cookies, URLs, file failures, package contents and runtime integrity. Native OS focus delivery and headed browsers are outside the required evidence matrix. Controlled SQL tests serve verified upstream loader bytes and reject external binary requests; live CDN availability remains network-dependent.
 
-Published and verified: [v0.1.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.1.0).
+Release assets have stable version-free names. Each phase is verified and explicitly integrated before its release; publication verifies source/tag/body identity and actual downloaded bytes, checksums and latest links. See [tasks](docs/dev/TASKS.md), [phase reports](docs/dev/reports/phases), [handoff](docs/dev/HANDOFF.md), [specification](docs/dev/SPEC.md) and [architecture](docs/dev/ARCHITECTURE.md).
 
-Modern increment: a seven-bag queue, once-per-piece keyboard hold (C), and next/held shape previews are implemented.
-
-Phase 2 delivered: Added seven-bag randomization, once-per-piece hold and shape previews, ordered wall kicks, ghost projection, keyboard hard drop and a full gravity interval of grounded lock delay. Keyboard event timing preserves fresh incoming pieces and processes elapsed time chronologically.
-
-Published and verified: [v0.2.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.2.0).
-
-Session configuration increment: six settings apply immediately in memory. This phase deliberately does not read or write setting cookies/query parameters; reload restores defaults. Dynamic ghost hides only when every projected cell is above row ten.
-
-Penetrator increment: clearing four rows awards one bonus up to three; B spends one. White pieces cross intact stacks, cannot be held, and use their lowest fully legal landing for gravity, ghost and hard drop. The ordinary lock policy still applies.
-
-Phase 3 delivered: Added six session-only game settings, dynamic midline ghost visibility and earned penetrator bonuses (up to three). White penetrators cross occupied barriers and share the lowest valid landing across gravity, ghost and hard drop; active penetrators cannot be held.
-
-Published and verified: [v0.3.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.3.0).
-
-Persistent configuration increment: each of the six settings resolves independently from a valid explicit URL parameter, then a valid saved cookie, then its default. Explicit defaults are saved; omitted parameters retain saved values. Changes update only their parameter and cookie, preserving other raw query text and the fragment. Invalid/repeated values produce diagnostics and fall back. Serve through HTTP(S) with cookies permitted for persistent changes and later restores; direct-file and blocked-cookie environments cannot guarantee persistence. Write failures retain live settings and attempt verified rollback, reporting any browser-blocked recovery. Gameplay remains usable if cookie reads fail.
-
-Phase 4 delivered: Added independent URL/cookie/default configuration resolution for all six settings, explicit-default saving and canonical updates. Invalid or repeated sources report diagnostics; recoverable browser-write failures roll back without applying live changes.
-
-Published and verified: [v0.4.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.4.0).
-
-Session leaderboard: completed games receive one cryptographically generated UUIDv4 and UTC completion timestamp. The ten best scores rank by score descending, time ascending and ID ascending. Restarting an unfinished game adds nothing; reloading clears results while retaining configured settings.
-
-JSON snapshots: Save downloads one tetris-save.json with formatVersion1, the current top ten and all six settings. Restore replaces results and settings only after complete structural/semantic validation; stable IDs and canonical UTC timestamps are retained. The supplied tetris-save.schema.json matches the embedded schema. Files over1MiB, malformed UTF-8, duplicate keys/IDs, unsafe or fractional numbers, invalid dates and unknown fields/values are rejected. File operations pause a running game and leave it paused for explicit resume; cancel or failure releases the controls. Restoring does not restore the active game. SQLite is added in the next increment.
-
-Phase 5 delivered: Added the session top-ten leaderboard and manual JSON Save/Restore. Stable IDs, safe integer scores and canonical UTC completion times are preserved. Complete strict validation, duplicate-key detection, a companion JSON Schema and transactional settings updates protect failed restores.
-
-Published and verified: [v0.5.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.5.0).
-
-SQLite runtime compatibility: the production sql.js1.14.2 loader is pinned to jsDelivr and verified with Fetch integrity. Its matching binary is embedded in tetris.html; no separate binary request is required. The upstream MIT notice is retained in the HTML. The initial asm prototype was replaced after minimal Chromium SQL execution failed; see the phase6 runtime amendment.
-
-SQLite snapshots: choose JSON or SQLite in Settings, then Save one file. Restore detects content rather than filename. SQLite uses sql.js1.14.2 with an integrity-checked JavaScript loader from jsDelivr and its matching binary embedded in this HTML. No separate binary asset is needed. Each isolated operation, including startup, has a ten-second deadline and files are limited to1MiB. Database metadata, schema, indexes, storage types and exact integer values are validated before the same atomic settings/results commit as JSON. Optional library/network failure affects only SQLite. The embedded upstream MIT notice is retained; see the runtime amendment for verified bytes and compatibility rationale.
-
-Phase 6 delivered: Added real SQLite Save/Restore alongside JSON using a pinned integrity-checked sql.js runtime in an isolated worker with a ten-second deadline. Database metadata/schema/storage types and complete semantic content are validated before the shared restore transaction. JSON and gameplay remain independent of the optional library.
-
-Published and verified: [v0.6.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.6.0).
+Development follows [SDD Manager](SDD-MANAGER.md). See the [AI-assisted development disclosure](AI_DISCLOSURE.md).

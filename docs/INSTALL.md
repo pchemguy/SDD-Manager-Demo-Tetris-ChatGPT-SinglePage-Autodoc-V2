@@ -1,31 +1,19 @@
-# Install and play
+# Install and use Tetris
 
-Download `tetris-browser.zip`, extract it to a folder, and open `tetris.html` in a desktop Chromium or Firefox browser. You can also download the standalone HTML. No Node.js installation or development server is required to play.
+Download tetris.html directly from the GitHub release, or extract tetris-browser.zip and open its HTML. No build, Node.js, separate worker, binary, style or image file is needed. The ZIP also contains the JSON Schema, project license and this guide. Verify downloads against SHA256SUMS.txt when needed.
 
-For static HTTP(S) hosting, serve the extracted folder with any static web host. Later cookie/URL configuration features require a browser context that permits cookies; direct-file behavior is browser-dependent. This baseline has no saved settings or leaderboard.
+For complete persistent configuration and Restore support, place tetris.html on any HTTP(S) static host and permit its cookies. Opening the file directly supports gameplay and saving, but browser cookie restrictions can prevent persistent setting changes/restores; the game reports those failures and retains the previous live configuration. Browser failures preventing rollback are reported explicitly.
 
-## Baseline controls
+Click Start or click the board before using game keys. Move with Left/Right, soft drop with Down, rotate with Up/Space/X or Z, hard drop with Enter, hold with C, activate a bonus with B, pause/resume with P/Escape and restart with R. The two bottom gameplay buttons start/restart or pause/start. Returning after a hidden/blurred page leaves the game paused until explicit resume.
 
-- Left/Right: move.
-- Down: soft drop.
-- Up, Space or X: rotate clockwise; Z: rotate back.
-- P or Escape: pause/resume; R: restart.
-- Start/Restart starts a fresh game. The right Pause/Start button pauses or resumes.
+Clear four lines to earn one penetrator bonus (maximum three). B spends one, turns the active piece white and allows travel through the stack without erasing it. Its lowest legal landing is shared by ghost, gravity and hard drop; hold is unavailable until that piece locks. The default grounded delay is one full current gravity interval and does not reset for continuously grounded motion. Settings can select failed-downward locking or immediate hard-drop locking.
 
-Click the board or start/resume to focus gameplay. Other form controls retain native keyboard behavior. Document hiding or window blur pauses the game; returning does not resume automatically.
+Leaderboard, Settings and Controls/help have separate show/hide buttons above the gameplay row. The mandatory board/information stay visible and centered. At narrow widths, optional side regions have horizontal overflow; focus them to pan with native arrow keys. Keyboard piece actions run only with the board focused. Native form controls retain their keyboard behavior.
 
-The baseline includes score, lines, level and game over. Hold, next preview, ghost, seven-bag, wall kicks, hard drop, penetrator, settings, results transfer and optional-panel toggles are planned later releases.
+The six settings are Ghost, Hard drop, Next preview, Hard-drop locking, General locking and Hold. URL keys are ghost=hidden/dynamic/visible, hardDrop=0/1, nextPreview=0/1, hardDropLock=general/immediate, lockPolicy=failed/interval and hold=0/1. Defaults are visible,1,1,general,interval,1 respectively. Each resolves independently from valid URL, cookie, default. An explicit default is saved; an omitted parameter retains its cookie. Invalid or repeated values report diagnostics. Panel visibility and export format are session presentation state rather than extra exported settings.
 
-## Artifact verification
+Save and Restore are the single pair at the bottom of Settings and disappear with that panel. Save downloads one tetris-save.json or tetris-save.sqlite containing completed top-ten results and all six settings. Restore detects content rather than filename and replaces the leaderboard/settings after validating the whole file. IDs, integer scores and UTC timestamps remain stable. It never restores the active board, hold or bonuses. Failed validation leaves results/settings/cookie values/full URL unchanged; recoverable browser writes roll back. Operations pause a running game and leave it paused for explicit resume. The limit is 1 MiB and one operation at a time.
 
-`SHA256SUMS.txt` lists the exact standalone HTML and browser ZIP hashes. Verify them with any SHA-256 utility before installation. Release filenames remain stable; tags and the embedded application version identify the release. Development tooling and credentials are excluded from the ZIP.
+SQLite alone requires the pinned sql.js 1.14.2 JavaScript loader from jsDelivr. Its verified matching binary is embedded in this HTML and requires no extra request. Worker startup and codec work have a ten-second deadline and release resources on terminal paths. If the library/network is unavailable, JSON and gameplay remain usable. The upstream MIT notice accompanies the embedded binary in the HTML.
 
-Verification uses isolated Chromium headless shell and Firefox on Linux. Native OS window focus delivery and full/headed browsers are not part of that evidence. Firefox tests on the current restricted host require a diagnosed, process-local content-sandbox override for trusted local pages; ordinary supported hosts use normal browser settings.
-
-Modern controls: C holds once per piece, Enter hard drops, and the dim ghost previews the shared landing. Seven-bag generation and ordered wall kicks are active. A grounded piece receives a full gravity interval before locking; moving along the floor does not restart that delay.
-
-Persistent configuration increment: each of the six settings resolves independently from a valid explicit URL parameter, then a valid saved cookie, then its default. Explicit defaults are saved; omitted parameters retain saved values. Changes update only their parameter and cookie, preserving other raw query text and the fragment. Invalid/repeated values produce diagnostics and fall back. Serve through HTTP(S) with cookies permitted for persistent changes and later restores; direct-file and blocked-cookie environments cannot guarantee persistence. Write failures retain live settings and attempt verified rollback, reporting any browser-blocked recovery. Gameplay remains usable if cookie reads fail.
-
-JSON snapshots: Save downloads one tetris-save.json with formatVersion1, the current top ten and all six settings. Restore replaces results and settings only after complete structural/semantic validation; stable IDs and canonical UTC timestamps are retained. The supplied tetris-save.schema.json matches the embedded schema. Files over1MiB, malformed UTF-8, duplicate keys/IDs, unsafe or fractional numbers, invalid dates and unknown fields/values are rejected. File operations pause a running game and leave it paused for explicit resume; cancel or failure releases the controls. Restoring does not restore the active game. SQLite is added in the next increment.
-
-SQLite snapshots: choose JSON or SQLite in Settings, then Save one file. Restore detects content rather than filename. SQLite uses sql.js1.14.2 with an integrity-checked JavaScript loader from jsDelivr and its matching binary embedded in this HTML. No separate binary asset is needed. Each isolated operation, including startup, has a ten-second deadline and files are limited to1MiB. Database metadata, schema, indexes, storage types and exact integer values are validated before the same atomic settings/results commit as JSON. Optional library/network failure affects only SQLite. The embedded upstream MIT notice is retained; see the runtime amendment for verified bytes and compatibility rationale.
+The supported verification matrix is Chromium headless shell and managed Firefox, with actual Canvas/input/download/cookie/URL/file and package checks. The local execution host needed a Firefox-only content-sandbox override after a diagnosed user-namespace failure; CI does not set it. Native OS focus delivery/headed browsers are not claimed. Full phase evidence and limitations are under docs/dev/reports.

@@ -1,4 +1,4 @@
-Added real SQLite Save/Restore alongside JSON using a pinned integrity-checked sql.js runtime in an isolated worker with a ten-second deadline. Database metadata/schema/storage types and complete semantic content are validated before the shared restore transaction. JSON and gameplay remain independent of the optional library.
+Completed the five-panel layout with separate visibility toggles, centered board and mandatory game information. Save/Restore follows Settings visibility. The full requested classic/modern/penetrator gameplay, six persistent settings, session leaderboard and JSON/SQLite transfer are delivered.
 
 Download tetris.html directly or extract tetris-browser.zip. SHA256SUMS.txt covers the release assets. The JSON Schema is included separately and in the ZIP.
 

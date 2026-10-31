@@ -234,24 +234,24 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 7 — Centered panel layout
 
-- [ ] Phase 7 — Centered panel layout
-    - [ ] Milestone 7.1 — Centered optional panels
-        - [ ] T-040 — Arrange five panels around a fixed board center
+- [x] Phase 7 — Centered panel layout
+    - [x] Milestone 7.1 — Centered optional panels
+        - [x] T-040 — Arrange five panels around a fixed board center
             Scope: tetris.html markup/style/C7; tests/test_browser.py.
             Depends on: T-039. Contracts: U1 panel order/geometry, A7.
             Evidence: Left-to-right order and symmetric side regions keep board centered with mandatory information visible; optional overflow never covers those mandatory regions.
-        - [ ] T-041 — Add individual panel toggles and preserve input focus
+        - [x] T-041 — Add individual panel toggles and preserve input focus
             Scope: tetris.html C7/C8; browser checks.
             Depends on: T-040. Contracts: U1 toggles/file buttons, U2 focus, A7.
             Evidence: Three toggles sit above the exact gameplay row; all eight combinations preserve state/centering, Settings hides its only Save/Restore pair, and focus/keyboard remain usable after hiding a focused panel.
-        - [ ] T-042 — Verify responsive accessible layout and final packaging
+        - [x] T-042 — Verify responsive accessible layout and final packaging
             Scope: tetris.html C7 as needed; tests/test_browser.py and test_artifacts.py; README.md and docs/INSTALL.md.
             Depends on: T-040, T-041. Contracts: U1-U3, A7/A8.
             Evidence: Inspect screenshots/Canvas/labels/focus and geometry at all specified widths/device pixel ratios and visibility combinations; package actual final HTML/schema and show accurate full-scope installation/help.
             Milestone exit: perform the complete 7.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/7/7.1.md`.
-    - [ ] Milestone 7.2 — Phase review
-        - [ ] T-043 — Review test and report phase 7
+    - [x] Milestone 7.2 — Phase review
+        - [x] T-043 — Review test and report phase 7
             Scope: all phase 7 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF, plus final complete-project report and aggregated unresolved/deferred TODOs.
             Depends on: T-042 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
