@@ -87,3 +87,6 @@ def test_live_policy_changes_and_hold_retention(core):
 
 def test_bonus_four_lines_cap_and_other_clears(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();for(let n=0;n<4;n++){g.board=Array.from({length:20},()=>Array(10).fill(null));for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?null:"red");g.active={type:"I",x:3,y:16,rotation:1};g.lock();}return [g.bonuses,Object.values(TetrisCore.COLORS).includes("#ffffff")]})()')==[3,False]
+
+def test_penetrator_activation_viability_and_barriers(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.bonuses=1;g.board[8]=Array(10).fill("red");const before=JSON.stringify(g.board);const a=g.activatePenetrator();const b=g.activatePenetrator();for(let i=0;i<10;i++)g.down();return [a,b,g.bonuses,g.active.y,g.landing().y,before===JSON.stringify(g.board)]})()')==[True,False,0,9,18,True]

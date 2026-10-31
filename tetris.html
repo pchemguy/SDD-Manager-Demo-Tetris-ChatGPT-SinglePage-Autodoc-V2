@@ -321,6 +321,7 @@
             <dd>Rotate clockwise</dd>
             <dt>Z</dt>
             <dd>Rotate back</dd>
+            <dt>B</dt><dd>Activate penetrator (earn ⚡ with four lines)</dd>
             <dt>Enter</dt><dd>Hard drop</dd>
             <dt>C</dt><dd>Hold piece</dd>
             <dt>P / Esc</dt>
@@ -475,6 +476,16 @@
           this.holdUsed=true;
           return true;
         }
+        activatePenetrator() {
+          if (this.status!=="running" || !this.bonuses || this.active.penetrator) return false;
+          const next={...this.active,penetrator:true};
+          if (!this.landing(next)) return false;
+          this.active=next; this.bonuses--; this.syncGround(); return true;
+        }
+        canTravel(piece) {
+          if (!piece.penetrator) return this.valid(piece);
+          return cells(piece).every(([x,y])=>x>=0&&x<10&&y>=-2&&y<20) && this.landing(piece)!==null;
+        }
         valid(piece) {
           return cells(piece).every(
             ([x, y]) =>
@@ -492,7 +503,7 @@
             x: this.active.x + dx,
             y: this.active.y + dy,
           };
-          if (!this.valid(next)) return false;
+          if (!this.canTravel(next)) return false;
           this.active = next;
           this.syncGround();
           return true;
@@ -505,12 +516,17 @@
           };
           for (const [dx,dy] of [[0,0],[-1,0],[1,0],[-2,0],[2,0],[0,-1],[0,-2]]) {
             const kicked={...next,x:next.x+dx,y:next.y+dy};
-            if (this.valid(kicked)) { this.active=kicked; this.syncGround(); return true; }
+            if (this.canTravel(kicked)) { this.active=kicked; this.syncGround(); return true; }
           }
           return false;
         }
         landing(piece=this.active) {
           if (!piece) return null;
+          if (piece.penetrator) {
+            let result=null;
+            for (let y=piece.y;y<20;y++) { const candidate={...piece,y}; if(cells(candidate).every(([,cy])=>cy>=0) && this.valid(candidate)) result=candidate; }
+            return result;
+          }
           let result={...piece};
           while (this.valid({...result,y:result.y+1})) result.y++;
           return result;
@@ -731,6 +747,9 @@
           case "Space":
           case "KeyX":
             if (!event.repeat) app.game.rotate(1);
+            break;
+          case "KeyB":
+            if(!event.repeat) app.game.activatePenetrator();
             break;
           case "Enter":
             if (!event.repeat) app.game.hardDrop();

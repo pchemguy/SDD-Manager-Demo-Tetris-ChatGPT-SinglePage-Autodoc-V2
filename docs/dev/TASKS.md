@@ -120,7 +120,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-019. Contracts: G6 earning/cap/white display, U1, A3.
             Evidence: Four-line clear earns one, other clears earn none, cap is three and indicator updates; white is reserved for penetrator active/locked cells and ghost.
-        - [ ] T-021 — Implement activation and viable penetrating movement
+        - [x] T-021 — Implement activation and viable penetrating movement
             Scope: tetris.html C1/C3/C8; tests/test_core.py.
             Depends on: T-020. Contracts: G6 activation, G7 travel, A3.
             Evidence: One activation spends one bonus, repeated/empty activation is a no-op, barriers are traversed without erasure and proposed moves retain at least one legal eventual landing.
