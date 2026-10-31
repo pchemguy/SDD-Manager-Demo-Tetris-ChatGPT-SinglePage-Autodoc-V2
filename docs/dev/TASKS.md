@@ -100,7 +100,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 3 — Configurable penetrator gameplay
 
 - [ ] Phase 3 — Configurable penetrator gameplay
-    - [ ] Milestone 3.1 — Session configuration
+    - [x] Milestone 3.1 — Session configuration
         - [x] T-017 — Add the six canonical session settings and controls
             Scope: tetris.html C4/C7/C8; tests/test_settings.py.
             Depends on: T-016. Contracts: CFG1 session-only, U1.
@@ -109,7 +109,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-017. Contracts: G5 dynamic mode, CFG4, A2.
             Evidence: All-above hides, any cell at/below row ten shows, and mode/movement/rotation changes re-evaluate visibility without changing landing or board.
-        - [ ] T-019 — Integrate live policy changes and session-only reload behavior
+        - [x] T-019 — Integrate live policy changes and session-only reload behavior
             Scope: tetris.html C3/C4/C8; tests/test_settings.py and browser checks; README.md.
             Depends on: T-017, T-018. Contracts: G3-G5, CFG1/CFG4, A4 session subset.
             Evidence: Exercise all six controls, hold retention, disabled actions and grounded policy timing; prove this increment neither reads nor writes configuration cookies/query parameters and reload restores defaults.

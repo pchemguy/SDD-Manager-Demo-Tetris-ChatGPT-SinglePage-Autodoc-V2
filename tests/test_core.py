@@ -81,3 +81,6 @@ def test_settings_exact_and_disabled_actions(core):
 
 def test_dynamic_ghost_all_above_and_straddling(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:-1,rotation:1};g.applySettings({...g.settings,ghost:"dynamic"});g.board[10][5]="red";const above=g.ghostVisible();g.board[10][5]=null;g.board[11][5]="red";const straddle=g.ghostVisible();g.hardDrop();return [above,straddle,g.ghostVisible()]})()')==[False,True,False]
+
+def test_live_policy_changes_and_hold_retention(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.holdPiece();g.applySettings({...g.settings,hold:false});const disabled=g.holdPiece();const held=g.held;g.applySettings({...g.settings,hold:true});const used=g.holdUsed;g.hardDrop();g.advance(400);g.applySettings({...g.settings,ghost:"hidden"});const preserved=g.groundedTime;g.applySettings({...g.settings,hardDropLock:"immediate"});const reset=g.groundedTime;return [disabled,held,used,preserved,reset];})()')==[False,'I',True,400,0]
