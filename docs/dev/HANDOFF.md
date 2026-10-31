@@ -25,3 +25,5 @@ Limitations: Managed Chromium headless shell and Firefox; Firefox uses the docum
 ## Phase integration
 
 Phase 4 integrated with two parents into main; merged regression and package checks passed. Publish/readback and exact-source release publication are the next required operations before successor activation.
+
+Release v0.4.0 published and downloaded-byte/latest-link verified. Continue the next eligible phase in the authorized full T-001..T-043 range.
