@@ -436,7 +436,7 @@
           let value=DEFAULTS[key];
           if(saved[key]) {try {if(saved[key].length!==1)throw Error(); value=decodeSetting(key,decodeURIComponent(saved[key][0]));}catch{diagnostics.push("Invalid saved setting: "+key);}}
           const supplied=params.getAll(key);
-          if(supplied.length) {try {if(supplied.length!==1 || supplied[0].includes("�"))throw Error(); const raw=params.toString(); /* URLSearchParams performs standard decoding. */ value=decodeSetting(key,supplied[0]);explicit[key]=value;}catch{diagnostics.push("Invalid URL setting: "+key);}}
+          if(supplied.length) {try {if(supplied.length!==1 || supplied[0].includes("�"))throw Error(); value=decodeSetting(key,supplied[0]);explicit[key]=value;}catch{diagnostics.push("Invalid URL setting: "+key);}}
           settings[key]=value;
         }
         return {settings,explicit,diagnostics};
@@ -841,7 +841,10 @@
       new ResizeObserver(resizeBoard).observe($("game"));
       window.addEventListener("resize", resizeBoard);
       let lastFrame = performance.now();
-      const restored=TetrisCore.resolveSettings(location.href,document.cookie);
+      let savedCookies="", cookieReadError=null;
+      try{savedCookies=document.cookie;}catch(error){cookieReadError="Persistent configuration unavailable: "+error.message;}
+      const restored=TetrisCore.resolveSettings(location.href,savedCookies);
+      if(cookieReadError)restored.diagnostics.push(cookieReadError);
       app.game.applySettings(restored.settings);app.syncSettings();
       try { for(const [key,value] of Object.entries(restored.explicit)) { const encoded=encodeURIComponent(TetrisCore.encodeSetting(key,value));document.cookie="tetris_"+key+"="+encoded+"; Path=/; SameSite=Lax; Max-Age=31536000"+(location.protocol==="https:"?"; Secure":"");if(!document.cookie.split(";").some(x=>x.trim()==="tetris_"+key+"="+encoded))throw Error("Persistent configuration unavailable: cookies blocked"); } }catch(error){restored.diagnostics.push(error.message);}
       $("message").textContent=restored.diagnostics.join("; ");
