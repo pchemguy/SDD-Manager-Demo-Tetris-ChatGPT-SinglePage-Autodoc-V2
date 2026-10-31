@@ -9,7 +9,7 @@ Current control and evidence for the full project. [DOCS_TASKS](DOCS_TASKS.md) o
 - Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. The user's subsequent `k` approved the published PROJECT proposal at `c52e30a33cac17d1015053a2820f853eeb750e79` on 2026-10-31; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
 - Tracking: enabled for documentation and implementation by root AGENTS.md. GitHub milestone 1 (`sdd-docs-main`) and DOCS-001 through DOCS-009 issues #1 through #9 were created and read back with exact bundled content and associations before target writes.
 - Publication: every owned commit must be pushed and read back before advancement.
-- Next boundary: record and publish PROJECT approval, close/read back DOCS-002, then prepare through DOCS-008 and stop before DOCS-009 package QC or implementation.
+- Next boundary: prepare through DOCS-008; PROJECT approval publication and issue #2 closure/readback are verified and stop before DOCS-009 package QC or implementation.
 - Reporting: Standard, with concise progress updates.
 
 ## Scope source
@@ -32,7 +32,11 @@ All decisions in this section were proposed in chat and accepted by the user's `
 | Live settings | Apply immediately; changing locking policy while grounded starts timing afresh. |
 | Cookie verification | Verify cookies and URL persistence over HTTP(S); direct file opening may limit cookies. |
 
-No material product decision is currently unresolved for brief review. Detailed algorithms, defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
+No material product decision is currently unresolved for brief review. Detailed defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
+
+## Structural design decisions
+
+The design owner selected a pure inline game domain, controller-owned live state, a shared candidate-snapshot validator and an isolated SQLite codec worker. SQLite uses the pinned sql.js 1.13.0 asm.js build from jsDelivr, whose upstream versioned README confirms single-JavaScript distribution. This preserves the one-HTML application constraint and isolates optional CDN failures. Actual CDN bytes/browser integration remain implementation verification, not observed product capability.
 
 ## Decisions and document evidence
 
@@ -40,7 +44,7 @@ No material product decision is currently unresolved for brief review. Detailed 
 | --- | --- |
 | DOCS-001 | All four existing root files retained unchanged against initial commit `89d088c799d0556603bc0c49b3ac0934d9bacbcc`; no copies needed. Task list instantiated from the bundled template with only DOCS-001 checked. This control record and HANDOFF complete initialization metadata. Initialization commit `bca8bec2c7eca063a4daa21a6d5d15de859ead04` was pushed with exact ref readback and confirmed process cleanup. Issue #1 was closed as completed and read back before PROJECT authoring. |
 | DOCS-002 | PROJECT proposed at SHA-256 `dfe653c839d9bfde015f9f2b4fce30a01ce386db391fa3141c79c9b68369fe04`. Reviewed against the complete user request and accepted clarification decisions; complete principal scope retained without detailed architecture/specification. README adds truthful preparation status and disclosure links. Human first approval supplied by the subsequent `k`; exact presented bytes retained unchanged. DOCS-002 closes with this approval evidence and its owning checkbox. |
-| DOCS-003 | ARCHITECTURE not yet authored; downstream checkpoint preapproved by autodoc after PROJECT approval. |
+| DOCS-003 | ARCHITECTURE SHA-256 `3a1d73f814f63075beb344e1971699277e72a4479256da74c7a8fe61f0f2cd2e`; accepted under autodoc scoped preapproval after PROJECT approval. Owner reviewed all brief responsibilities, state ownership, dependency direction, shared landing/validation and browser error boundaries. No material design blocker remains; DECOMPOSITION is next. |
 | DOCS-004 | DECOMPOSITION not yet authored; same scoped preapproval. |
 | DOCS-005 | SPEC and its QC not yet authored. |
 | DOCS-006 | PLAN and strategy QC not yet authored. |
@@ -60,4 +64,4 @@ No material product decision is currently unresolved for brief review. Detailed 
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) closure is pending this approval publication; DOCS-003 through DOCS-009 and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) closure is pending this architecture publication; later issues and milestone 1 remain open; reconcile later effects before replay.
