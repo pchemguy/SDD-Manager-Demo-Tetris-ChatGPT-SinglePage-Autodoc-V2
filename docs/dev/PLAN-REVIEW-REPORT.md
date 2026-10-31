@@ -2,7 +2,7 @@
 
 ## Current gate
 
-State: **Ready for layout authoring (strategy scope only)**. TASKS generation remains held until physical layout and combined PLAN/layout review are complete. Reviewed the complete seven-phase strategy against the current Ready SPEC/design inputs. No confirmed strategy blocker remains. This is not whole-package QC or implementation evidence.
+State: **Ready for TASKS derivation (combined PLAN/layout scope)**. Layout and combined conformance review are complete; the retained Initial strategy review describes the earlier scoped gate. Reviewed the complete seven-phase strategy against the current Ready SPEC/design inputs. No confirmed strategy or placement blocker remains. This is not whole-package QC or implementation evidence.
 
 ## Reviewed identities
 
@@ -46,3 +46,11 @@ All 1-2 delivery-milestone groups were explicitly assessed for fragmentation. Re
 ## Findings and limits
 
 No confirmed strategy finding. No correction/recheck cycle was required. Browser setup, runtime library/CDN viability, package checks and hosted release verification are future work. Layout support is not yet reviewed; this scoped Ready gate permits layout authoring only, not TASKS or implementation.
+
+## Revision 1 — Combined PLAN and layout review
+
+Date: 2026-10-31. Owner: sdd-plan. Added physical allocation in `docs/dev/layout.md`; its SHA-256 is `294e2ef9d7c295230c84aadfe53cef4ca06d3624889d3955b37c2b7976e9166d`. PLAN and all governing inputs retain the Initial strategy review identities unchanged. This extends the initially pending placement scope; no original finding was erased and no strategy amendment was needed.
+
+Reviewed all C1-C11 components in both directions against source sections, domain/browser tests, fixtures, isolated environments, schema, packaging, CI, release verification, reports and user documentation. The authoritative application remains one HTML; the schema companion is derived and tested for parity. Development tooling and generated assets are explicitly separate from shipped runtime. Stable names and artifact exclusions match U3. All seven phase routes can be derived into localized changes using this ownership map. Proposed paths/commands are not presented as existing/verified implementation.
+
+Rechecks: current SPEC/design hashes match the Initial review; PLAN is unchanged; layout local links and Markdown heading separation pass; component and release-asset coverage were manually traced; root AGENTS receives links to present governing documents without weakening policy. No confirmed placement/conformance finding remains. Combined gate: Ready for TASKS. Product/runtime/packaged-artifact execution remains unperformed.

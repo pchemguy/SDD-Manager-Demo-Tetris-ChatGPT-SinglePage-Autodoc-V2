@@ -49,3 +49,9 @@ Follow `sdd-manage`'s preparation and phase-activation workflows for required tr
 ## Project guidance
 
 Maintain project-specific navigation and validated setup/check commands here as they become established. Do not invent commands, paths, requirements or completion claims.
+
+## Current project navigation
+
+The product is a single-page HTML Tetris game. Read [PROJECT](docs/dev/PROJECT.md), [ARCHITECTURE](docs/dev/ARCHITECTURE.md), [DECOMPOSITION](docs/dev/DECOMPOSITION.md), [SPEC](docs/dev/SPEC.md), [PLAN](docs/dev/PLAN.md) and [layout](docs/dev/layout.md) for current scope, contracts and intended allocation. [DOCS_PREPARATION](docs/dev/DOCS_PREPARATION.md) owns preparation control/approval evidence; [DOCS_TASKS](docs/dev/DOCS_TASKS.md) contains preparation tasks only.
+
+Application, tests and packaging paths in layout are proposed until implementation. No setup/test command is yet validated for this project. Production delivery remains one HTML; development tools and the bundled plugin must not enter the browser release package. Keep actual implementation task ownership and validated commands current here when established.

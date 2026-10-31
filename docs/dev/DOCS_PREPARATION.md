@@ -52,7 +52,7 @@ The design owner selected a pure inline game domain, controller-owned live state
 | DOCS-004 | DECOMPOSITION SHA-256 `c23cfeac552a33b96349e9d64105becab0c6e1c788830671e92b449abc6962d5`; accepted under autodoc preapproval. Reviewed C1-C11 for single state owners, directed dependencies, reproducible time/randomness seams, legal penetrator locks and controller-only restore commits; consistent with ARCHITECTURE. |
 | DOCS-005 | SPEC root SHA-256 `c2d5834706a573a664f45501619b73f11749547a7b5fb258bdd62f03ab0ace00` and three focused children are accepted under autodoc preapproval. Exact root/child/governing hashes and G/CFG/F/U coverage are in SPEC-REVIEW-REPORT.md; current gate Ready for PLAN, no confirmed unresolved finding. No product execution or package QC is claimed. |
 | DOCS-006 | PLAN SHA-256 `3d4d746042c1f9a461858fc7700c2a2fad9ee35d0de8ff330f3d4e1bb5a5e492` accepted under autodoc preapproval. PLAN-REVIEW-REPORT.md records complete coverage and seven bounded releases, explicitly assesses 1-2 milestone groups, and is Ready for layout authoring only; combined placement readiness is pending. |
-| DOCS-007 | layout and combined PLAN/layout QC not yet authored. |
+| DOCS-007 | layout SHA-256 `294e2ef9d7c295230c84aadfe53cef4ca06d3624889d3955b37c2b7976e9166d` accepted under autodoc preapproval. PLAN-REVIEW-REPORT Revision 1 verifies combined strategy/physical ownership and is Ready for TASKS; unchanged upstream identities retained. Root AGENTS navigation now points only to present governing documents; setup commands remain explicitly unvalidated. |
 | DOCS-008 | TASKS and task-list QC not yet authored. |
 | DOCS-009 | Package QC not selected; remains beyond the autodoc stop. |
 
@@ -68,4 +68,4 @@ The design owner selected a pure inline game domain, controller-owned live state
 
 ## Pending transitions
 
-DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) is closed as completed and read back. DOCS-006 (#6) closure is pending this PLAN publication; later issues and milestone 1 remain open; reconcile later effects before replay.
+DOCS-001 (#1) was closed as completed and read back after publication. DOCS-002 (#2) is closed as completed and read back. DOCS-003 (#3) is closed as completed and read back. DOCS-004 (#4) is closed as completed and read back. DOCS-005 (#5) is closed as completed and read back. DOCS-006 (#6) is closed as completed and read back. DOCS-007 (#7) closure is pending this layout publication; DOCS-008, DOCS-009 and milestone 1 remain open; reconcile later effects before replay.
