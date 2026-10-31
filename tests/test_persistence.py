@@ -168,12 +168,12 @@ def test_unchanged_frames_preserve_leaderboard_dom(page):
     page.evaluate('(value)=>app.applySnapshot(value)',snapshot())
     assert page.evaluate('(()=>{const row=$("results").firstChild;app.render();app.render();return row===$("results").firstChild;})()')
 
-SQLITE_URL='https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/sql-asm.js'
-SQLITE_HASH='c83beac167ae9c1af075449555b1db68b24b5280d0fc65c1f7ac4d1cd103459d'
+SQLITE_URL='https://cdn.jsdelivr.net/npm/sql.js@1.14.2/dist/sql-wasm.js'
+SQLITE_HASH='f1c84000dbc856c9d87f4f3aabc4d3654bd436165db4be3da13751db3a9c20d7'
 
 def sql_library():
     import hashlib,urllib.request
-    path=ROOT/'.dev/sql-asm-1.13.0.js'
+    path=ROOT/'.dev/sql-wasm-1.14.2.js'
     if not path.exists():
         with urllib.request.urlopen(SQLITE_URL,timeout=30) as response:data=response.read(8*1024*1024)
         path.parent.mkdir(exist_ok=True);path.write_bytes(data)
@@ -182,6 +182,7 @@ def sql_library():
     return data
 
 def route_sql(page):
+    page.route("**/*.wasm",lambda route:route.abort())
     page.route(SQLITE_URL,lambda route:route.fulfill(status=200,content_type='application/javascript',body=sql_library(),headers={'access-control-allow-origin':'*'}))
 
 def test_pinned_sqlite_worker_probe_and_cleanup(page):
@@ -196,3 +197,21 @@ def test_sqlite_network_failure_preserves_gameplay(page):
     page.locator('#start').click()
     page.keyboard.press('ArrowDown')
     assert page.evaluate('app.game.score')>0
+
+def test_sqlite_save_real_database_independent_inspection(page,tmp_path):
+    import sqlite3
+    route_sql(page)
+    page.evaluate('app.applySnapshot('+json.dumps(snapshot())+')')
+    page.locator('#format').select_option('sqlite')
+    try:
+        with page.expect_download(timeout=15000) as event:page.locator('#save').click()
+    except Exception as error:
+        raise AssertionError(page.locator('#message').inner_text()+str(page.evaluate('[app.busy,app.workerActive]'))) from error
+    download=event.value;assert download.suggested_filename=='tetris-save.sqlite'
+    path=tmp_path/'scores.sqlite';download.save_as(path)
+    with sqlite3.connect(path) as db:
+        assert db.execute('PRAGMA user_version').fetchone()[0]==1
+        assert db.execute('PRAGMA application_id').fetchone()[0]==0x54545253
+        assert db.execute('SELECT id,score,timestamp FROM high_scores').fetchall()==[tuple(snapshot()['results'][0].values())]
+        assert dict(db.execute('SELECT key,value FROM settings'))=={'ghost':'visible','hardDrop':'1','nextPreview':'1','hardDropLock':'general','lockPolicy':'interval','hold':'1'}
+    assert not page.evaluate('app.busy || app.workerActive')

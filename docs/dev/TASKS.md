@@ -210,7 +210,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html embedded worker/C10/C11; tests/test_persistence.py and test_artifacts.py.
             Depends on: T-034. Contracts: U3 external boundary, F4 worker limits.
             Evidence: Verify pinned sql.js 1.13.0 asm.js CDN bytes/integrity and worker initialization; keep all app bootstrap inline, enforce operation ownership/deadline/termination and show optional-library failure without breaking JSON/gameplay.
-        - [ ] T-036 — Export versioned SQLite snapshots and the format choice
+        - [x] T-036 — Export versioned SQLite snapshots and the format choice
             Scope: tetris.html C10/C11/C7; persistence/browser checks.
             Depends on: T-035. Contracts: F3 export, F4 Save, CFG1 encodings, A5.
             Evidence: Create exact tables/types/metadata and all six unique textual settings rows, preserve record IDs/UTC/scores and download one actual tetris-save.sqlite; expose both Save formats.

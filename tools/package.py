@@ -10,7 +10,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_ASSETS = {'tetris.html', 'tetris-browser.zip', 'SHA256SUMS.txt'}
-LIBRARY = 'https://cdn.jsdelivr.net/npm/sql.js@1.13.0/dist/sql-asm.js'
+LIBRARY = 'https://cdn.jsdelivr.net/npm/sql.js@1.14.2/dist/sql-wasm.js'
 
 def expected_assets():
     return BASE_ASSETS | ({'tetris-save.schema.json'} if (ROOT / 'schemas/tetris-save.schema.json').is_file() else set())
