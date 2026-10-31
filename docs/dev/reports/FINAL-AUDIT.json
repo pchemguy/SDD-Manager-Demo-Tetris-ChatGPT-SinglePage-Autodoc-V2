@@ -1,0 +1,142 @@
+{
+  "tasks": 43,
+  "preparation_issues": 9,
+  "closed_milestones": 19,
+  "task_commits": {
+    "T-043": "e4c2da61f406ef18fd4137a249c485a028cad31f",
+    "T-042": "da7d2d73a8a79f065c4927127a571a6ec1ba5a53",
+    "T-041": "32384d7734bc638efbc651772fd278305a32930b",
+    "T-040": "defacb550c1a3aa3be2443fdde8f952347cf2359",
+    "T-039": "dff326cc9fabb940d1f3715d12bf77396a4b7381",
+    "T-038": "fd1cfcc90d46c09c09f0df335e5bca9e51dc94a3",
+    "T-037": "228260c6fb96daaeadaa1ac10bf152aff57f111a",
+    "T-036": "a6945844fb55dcc0ea7268f62c3a54dfa39ea2aa",
+    "T-035": "fd0fa5613a2a85555233442b530eecf76013ae47",
+    "T-034": "7d36621f6c211c37f85bf8a83c1e4664f7e41d61",
+    "T-033": "bacaa23a2b0ec1b6dbdc908f6887567aea1737d7",
+    "T-032": "69de03b5267e184ac63b66fe10af01a225ec4ad4",
+    "T-031": "f866641491211fb760de0562963c87d90a391132",
+    "T-030": "b92a69e963b53eac96bfe009cd28a375ef62db87",
+    "T-029": "8948525d84a32e2ffd9f9f4a4ffa9431cb9aa2c8",
+    "T-028": "c734b37fc4a20710df4f69b28f340108377f8ca1",
+    "T-027": "be74eac63fde51b2eef1dff097de0cbf30ae1e5e",
+    "T-026": "f3311451f88ba49ca89a03c6328d736f2fe69ce7",
+    "T-025": "29445e761e3be56eef0e5c2dbcc5f9b509f28b58",
+    "T-024": "ac4c814e62342261beb47457a2598fe773cafb2d",
+    "T-023": "93e62ca0f221980fc2b575991a7b6c033bc6bda5",
+    "T-022": "960434b23eb54a24411bcdb9df6a15cc0edd8856",
+    "T-021": "f9a1fa7346927f9abe6035d4ffddf71350e563da",
+    "T-020": "c60bf6d60aed07f69f83fe420b2317f93bf8ad14",
+    "T-019": "04a2dbe205aa30e143d829caadda3781a9b268ce",
+    "T-018": "d337d4ebcf5374fd1e4cfa4c58e92539e35d33de",
+    "T-017": "65cd1d59c7ae0b41e8d82639db9e20b11bfae6f1",
+    "T-016": "d6ee12beb7a438ba972d4e7b2326dbd17a9fb967",
+    "T-015": "e2dd3d4bf29aac9e22339aa1ea79bd7ceeaef92d",
+    "T-014": "df687da9d469f072aa05efaf8afaed00c88e722c",
+    "T-013": "bb01c8607e8e73763c749f8418898c03b38855d5",
+    "T-012": "dfaf9477b5faa7098807c33a6c7bc9298d494cc2",
+    "T-011": "80134ba87abc3ebd80a28f9bb1c5ad74b125623d",
+    "T-010": "627d1a384f7eb7054b8ee0a70ceca69ee7858ab0",
+    "T-009": "cc5649f83d79af4a62ef66d06c903b339f2194e5",
+    "T-008": "e7c38ab71b79aa13d3bb71ac599464568a279854",
+    "T-007": "c5b02125cfb34efd8583433af2cd43efedb226fd",
+    "T-006": "0ea08e9851f6706912b5b5c97d4841928e99e27b",
+    "T-005": "b46cab52ab08aabf067e9de8b56ff2731a8110f5",
+    "T-004": "b8f1ab2742f702584fb98375178825f6623cf6c7",
+    "T-003": "36eb4cef5f411975382ffa377d97d1880abcc1e8",
+    "T-002": "f76ec239fa8c93fc362fb20b42446452ed3c3b0a",
+    "T-001": "29f73d960be7381d8e311473549f9caeaa051373"
+  },
+  "releases": [
+    {
+      "version": "0.1.0",
+      "source": "431dd9409d04e41b8ab80ddf6c33dc43bc455718",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.1.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "source": "e3954336859d6c50048bda74a9c1cf6133aa68af",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.2.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "source": "f96274b47b9a778cf64ab2e4fdbafd22ab0b45ab",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.3.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "0.4.0",
+      "source": "0a210043158e2c2b1b26865bf697b406d953016f",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.4.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "0.5.0",
+      "source": "8c393517460c0e4391467fb7f9698460928d0573",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.5.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris-save.schema.json",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "0.6.0",
+      "source": "7e6403159e9d6022ac518dd08071bb2fbb9d65c1",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.6.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris-save.schema.json",
+        "tetris.html"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "source": "6385eb75696e345d5d0ff672618ab91f554ffc11",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v1.0.0",
+      "assets": [
+        "SHA256SUMS.txt",
+        "tetris-browser.zip",
+        "tetris-save.schema.json",
+        "tetris.html"
+      ]
+    }
+  ],
+  "latest": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v1.0.0",
+  "final_ci": [
+    {
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41197480183",
+      "branch": "v1.0.0"
+    },
+    {
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41197466708",
+      "branch": "main"
+    }
+  ],
+  "head": "c69dbb2b6039b13a60eef2fa643fc304d386bf09",
+  "working_tree": ""
+}

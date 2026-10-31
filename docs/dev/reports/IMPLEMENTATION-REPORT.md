@@ -2,7 +2,7 @@
 
 ## Outcome and snapshot boundary
 
-The requested single-page Tetris source is complete. T001 through T043 have verified implementation/evidence; the T043 closing commit records the final checkbox with this report. The final candidate is version1.0.0. This snapshot precedes the coordinator's final explicit main integration, eligible release commit/tag, publication and downloaded-byte audit. Versions0.1.0 through0.6.0 were already integrated, published and download-verified. The later phase7 RELEASE-REPORT and final audit record the remaining hosted outcomes.
+The requested single-page Tetris project is complete. All43 tasks and seven delivery phases are implemented, verified and explicitly integrated into main. All seven stable releases through [v1.0.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v1.0.0) are published and downloaded-byte/latest-link verified. Final source: `6385eb75696e345d5d0ff672618ab91f554ffc11`. The [final audit](FINAL-AUDIT.md) confirms hosted closure, task/checkbox/report pairing, two-parent integrations, release source/body/assets and passing final CI. Earlier T043/release-source versions of this report in Git correctly retained the then-pending coordinator boundary.
 
 ## Complete acceptance coverage
 
@@ -15,11 +15,11 @@ The requested single-page Tetris source is complete. T001 through T043 have veri
 | A5 | Stable cryptographic UUIDv4/safe score/canonical UTC completion records; deterministic top-ten ranking/session lifecycle. Actual JSON/SQLite downloads/uploads cover empty/top10/ties/default/nondefault settings with preserved identity/time and independent sqlite3 export inspection; phases5-6. |
 | A6 | Complete validation before live commit; strict duplicate-key/ID and exact numeric-token JSON handling, real calendar dates, SQLite metadata/schema/PK-only indexes/storage/exact decimal integer checks. Invalid/oversized/truncated/schema/CDN/integrity/timeout files preserve state; recoverable writes roll back. Busy/cancel/stale responses and delayed reads are isolated; phases5-6. |
 | A7 | Leaderboard / info / centered board / settings / help order; three toggles above the exact two gameplay buttons; mandatory panels visible; file buttons follow Settings. All8 combinations at six widths with DPR1/2 in both browsers (192 geometry states), native side panning, focus and label-fit checks pass; phase7. |
-| A8 | One HTML with embedded CSS/JS/worker/binary/schema, one optional pinned CDN JavaScript loader, matching companion Schema and stable raw/ZIP/checksum assets. Real packaged HTML, downloads/reloads, inventory/version/checksums and embedded-runtime integrity pass. Final hosted tag/body/download/latest verification follows this task; prior six releases already passed. |
+| A8 | One HTML with embedded CSS/JS/worker/binary/schema, one optional pinned CDN JavaScript loader, matching companion Schema and stable raw/ZIP/checksum assets. Real packaged HTML, downloads/reloads, inventory/version/checksums and embedded-runtime integrity pass. All seven hosted tag/body/download/latest verification gates passed; the final audit records the completed publication outcome. |
 
 Verification: 188 pytest checks passed in109.91s for the version1.0.0 candidate. Chromium headless shell and managed Firefox execute the actual HTML; the inline-core harness runs the same domain source. The layout matrix covers480,640,800,1024,1440,1920 CSS pixels. Twelve high-DPI screenshots were reviewed and retained. The prior186-check final-layout run passed in111.73s; the final two core acceptance checks add activation/restart lifecycle and penetrator dynamic-midline coverage.
 
-Hosted CI for the0.6.0 release source and tag was independently observed successful: [source run](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41195231537), [tag run](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41195245876). Final1.0.0 CI is a later observation, not claimed here.
+Final1.0.0 CI was independently observed successful for both [main release source](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41197466708) and [tag](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/actions/runs/41197480183). The final merged-state local run also passed188 checks in112.56s.
 
 ## Review and repair disposition
 
@@ -43,4 +43,4 @@ No requested feature remains deferred or unimplemented. Earlier phase deferrals 
 
 Evidence limits are deliberate rather than open feature work: native OS focus delivery and headed browsers are outside the required matrix. Local Firefox needed the documented process-local content-sandbox override after an established host user-namespace failure; CI does not set it. SQLite tests use controlled transport carrying verified upstream loader bytes and reject external binary requests; arbitrary live CDN/network availability is not guaranteed. HTTP(S) and writable cookies are the supported persistent-change/restore context; browser failures that also prevent rollback are explicitly reported. Direct-file restrictions are documented. Active game state is intentionally outside snapshots and result history intentionally resets on reload.
 
-The remaining authorized coordinator operations at this snapshot are final integration, publication/download verification and a hosted/history audit. No further feature or review campaign is implied after those complete.
+All authorized coordinator operations are complete: final integration, release publication/download verification and hosted/history audit. No further feature or review campaign is implied.
