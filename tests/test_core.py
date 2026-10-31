@@ -32,3 +32,6 @@ def test_above_top_and_spawn_loss_complete_once(core):
 
 def test_failed_down_locks_and_soft_drop_scores(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.down(true);const points=g.score;g.active={type:"I",x:3,y:18,rotation:0};g.down(true);return [points,g.score,g.board.flat().filter(Boolean).length,g.active.y]})()') == [1, 1, 4, -1]
+
+def test_pause_preserves_remaining_gravity_time(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.advance(500);g.pause();g.advance(10000);const paused=g.active.y;g.resume();g.advance(499);const before=g.active.y;g.advance(1);return [paused,before,g.active.y]})()') == [-1,-1,0]

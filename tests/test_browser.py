@@ -38,3 +38,21 @@ def test_play_complete_game_and_restart(page):
     assert page.evaluate('app.game.board.flat().filter(Boolean).length') > 0
     page.locator('#start').click()
     assert page.evaluate('[app.game.score,app.game.lines,app.game.level]') == [0, 0, 1]
+
+def test_pause_buttons_keys_and_window_event(page):
+    page.locator('#start').click()
+    page.locator('#pause').click()
+    assert page.locator('#status').inner_text() == 'Paused'
+    y = page.evaluate('app.game.active.y')
+    page.keyboard.press('ArrowDown')
+    assert page.evaluate('app.game.active.y') == y
+    page.keyboard.press('KeyP')
+    assert page.locator('#status').inner_text() == 'Running'
+    page.evaluate('window.dispatchEvent(new Event("blur"))')
+    assert page.locator('#status').inner_text() == 'Paused'
+    page.locator('#pause').click()
+    assert page.locator('#status').inner_text() == 'Running'
+
+def test_frame_timestamp_older_than_restart_clock(page):
+    page.locator('#start').click()
+    assert page.evaluate('(()=>{const schedule=window.requestAnimationFrame;window.requestAnimationFrame=()=>0;try{lastFrame=performance.now()+100;frame(performance.now());return app.game.status;}finally{window.requestAnimationFrame=schedule;}})()') == 'running'

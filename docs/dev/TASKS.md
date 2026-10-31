@@ -29,7 +29,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Milestone exit: perform the complete 1.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/1/1.1.md`.
     - [ ] Milestone 1.2 — Usable browser delivery
-        - [ ] T-004 — Implement pause resume restart and page focus lifecycle
+        - [x] T-004 — Implement pause resume restart and page focus lifecycle
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-003. Contracts: G2-G3 baseline, U2, A1.
             Evidence: Pause freezes gravity; start/restart state is correct; document hiding/browser-window blur pause without automatic resume or elapsed-time catch-up. Form controls retain native keys.

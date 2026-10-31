@@ -31,6 +31,8 @@ class Game{
  valid(piece){return cells(piece).every(([x,y])=>x>=0&&x<10&&y>=-2&&y<20&&(y<0||!this.board[y][x]));}
  move(dx,dy){if(this.status!=='running')return false;const next={...this.active,x:this.active.x+dx,y:this.active.y+dy};if(!this.valid(next))return false;this.active=next;return true;}
  rotate(direction){if(this.status!=='running')return false;const next={...this.active,rotation:(this.active.rotation+direction+4)%4};if(!this.valid(next))return false;this.active=next;return true;}
+ pause(){if(this.status==='running')this.status='paused';}
+ resume(){if(this.status==='paused')this.status='running';}
  interval(){return Math.max(80,1000*Math.pow(.85,(this.level||1)-1));}
  end(){if(this.status==='over')return;this.completion={score:this.score};this.status='over';this.active=null;}
  down(soft=false){if(this.status!=='running')return false;if(this.move(0,1)){if(soft)this.score=Math.min(Number.MAX_SAFE_INTEGER,this.score+1);return true;}this.lock();return false;}
@@ -50,11 +52,12 @@ const app={game:new TetrisCore.Game(),render(){
  const tile=(x,y,color)=>{if(y<0)return;ctx.fillStyle=color;ctx.fillRect(x*s+2,y*s+2,s-4,s-4);ctx.fillStyle='#ffffff35';ctx.fillRect(x*s+3,y*s+3,s-6,2);};
  this.game.board.forEach((row,y)=>row.forEach((c,x)=>{if(c)tile(x,y,c);}));
  if(this.game.active)TetrisCore.cells(this.game.active).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[this.game.active.type]));
- $('status').textContent=({ready:'Ready',running:'Running',over:'Game over',paused:'Paused'})[this.game.status];$('score').textContent=this.game.score.toLocaleString();$('start').textContent=this.game.status==='ready'?'Start':'Restart';
-},start(){this.game.start();this.render();$('game').focus();}};
-$('start').onclick=()=>app.start();$('pause').onclick=()=>app.start();
-$('game').addEventListener('keydown',event=>{let handled=true;switch(event.code){case 'ArrowLeft':app.game.move(-1,0);break;case 'ArrowRight':app.game.move(1,0);break;case 'ArrowDown':app.game.down(true);break;case 'ArrowUp':case 'Space':case 'KeyX':if(!event.repeat)app.game.rotate(1);break;case 'KeyZ':if(!event.repeat)app.game.rotate(-1);break;default:handled=false;}if(handled){event.preventDefault();app.render();}});
-let lastFrame=performance.now();function frame(now){const elapsed=now-lastFrame;lastFrame=now;app.game.advance(elapsed);app.render();requestAnimationFrame(frame);}requestAnimationFrame(frame);app.render();
+ $('status').textContent=({ready:'Ready',running:'Running',over:'Game over',paused:'Paused'})[this.game.status];$('score').textContent=this.game.score.toLocaleString();$('start').textContent=this.game.status==='ready'?'Start':'Restart';$('pause').textContent=this.game.status==='running'?'Pause':'Start';
+},start(){this.game.start();lastFrame=performance.now();this.render();$('game').focus();},togglePause(){if(this.game.status==='running')this.game.pause();else if(this.game.status==='paused')this.game.resume();else this.game.start();lastFrame=performance.now();this.render();$('game').focus();}};
+$('start').onclick=()=>app.start();$('pause').onclick=()=>app.togglePause();
+$('game').addEventListener('keydown',event=>{let handled=true;switch(event.code){case 'KeyP':case 'Escape':if(!event.repeat)app.togglePause();break;case 'KeyR':if(!event.repeat)app.start();break;case 'ArrowLeft':app.game.move(-1,0);break;case 'ArrowRight':app.game.move(1,0);break;case 'ArrowDown':app.game.down(true);break;case 'ArrowUp':case 'Space':case 'KeyX':if(!event.repeat)app.game.rotate(1);break;case 'KeyZ':if(!event.repeat)app.game.rotate(-1);break;default:handled=false;}if(handled){event.preventDefault();app.render();}});
+const autoPause=()=>{if(app.game.status==='running'){app.game.pause();app.render();}};window.addEventListener('blur',autoPause);document.addEventListener('visibilitychange',()=>{if(document.hidden)autoPause();});
+let lastFrame=performance.now();function frame(now){const elapsed=Math.max(0,now-lastFrame);lastFrame=Math.max(lastFrame,now);app.game.advance(elapsed);app.render();requestAnimationFrame(frame);}requestAnimationFrame(frame);app.render();
 </script>
 </body>
 </html>
