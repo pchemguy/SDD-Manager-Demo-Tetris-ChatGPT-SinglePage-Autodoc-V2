@@ -417,6 +417,13 @@
         const value=typeof DEFAULTS[key]==="boolean" ? (text==="1"?true:text==="0"?false:undefined) : text;
         validateSettings({...DEFAULTS,[key]:value}); return value;
       }
+      function settingURL(current,settings,keys) {
+        const url=new URL(current), selected=new Set(keys);
+        const pairs=url.search ? url.search.slice(1).split("&") : [];
+        const kept=pairs.filter(pair=>{try{return !selected.has(decodeURIComponent(pair.split("=",1)[0].replace(/\+/g," ")));}catch{return true;}});
+        for(const key of keys) kept.push(encodeURIComponent(key)+"="+encodeURIComponent(encodeSetting(key,settings[key])));
+        url.search="?"+kept.join("&");return url.href;
+      }
       function resolveSettings(url,cookies) {
         const params=new URL(url).searchParams, saved={}, settings={}, explicit={}, diagnostics=[];
         for (const pair of cookies.split(";")) {
@@ -642,7 +649,7 @@
           }
         }
       }
-      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, resolveSettings });
+      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, settingURL, resolveSettings });
     </script>
     <script>
       /** Browser controller/presentation; it renders the same pure domain tested by pytest. */
@@ -734,9 +741,28 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
-      app.changeSettings=(value)=>{ const next=TetrisCore.validateSettings(value);app.settleTime();app.game.applySettings(next); app.syncSettings(); app.render(); };
+      app.writeSettings=(value,keys=Object.keys(TetrisCore.DEFAULTS))=>{
+        const next=TetrisCore.validateSettings(value), previousURL=location.href, oldCookies={};
+        const readCookie=key=>document.cookie.split(";").map(x=>x.trim()).filter(x=>x.startsWith("tetris_"+key+"=")).map(x=>x.slice(("tetris_"+key+"=").length));
+        for(const key of keys){const seen=readCookie(key);if(seen.length>1)throw Error("Ambiguous saved setting: "+key);oldCookies[key]=seen.length?seen[0]:null;}
+        const writeCookie=(key,encoded)=>{document.cookie="tetris_"+key+"="+(encoded??"")+"; Path=/; SameSite=Lax; Max-Age="+(encoded===null?0:31536000)+(location.protocol==="https:"?"; Secure":"");};
+        try {
+          const url=TetrisCore.settingURL(previousURL,next,keys);
+          for(const key of keys){const encoded=encodeURIComponent(TetrisCore.encodeSetting(key,next[key]));writeCookie(key,encoded);const seen=readCookie(key);if(seen.length!==1||seen[0]!==encoded)throw Error("Cookie write blocked: "+key);}
+          history.replaceState(history.state,"",url);
+          if(location.href!==url)throw Error("URL update failed");
+        }catch(error){
+          let rollback=true;
+          try{if(location.href!==previousURL)history.replaceState(history.state,"",previousURL);}catch{rollback=false;}
+          if(location.href!==previousURL)rollback=false;
+          for(const key of keys){try{writeCookie(key,oldCookies[key]);}catch{rollback=false;}}
+          for(const key of keys){try{const seen=readCookie(key);if(oldCookies[key]===null?seen.length!==0:seen.length!==1||seen[0]!==oldCookies[key])rollback=false;}catch{rollback=false;}}
+          throw Error(error.message+(rollback?"; no settings applied":"; browser blocked rollback; persistent state may be inconsistent"));
+        }
+      };
+      app.changeSettings=(value,key)=>{ const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
       app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
-      document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value});$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
+      document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value},key);$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
       $("start").onclick = () => app.start();
       $("pause").onclick = () => app.togglePause();
       $("game").addEventListener("keydown", (event) => {
@@ -817,6 +843,7 @@
       let lastFrame = performance.now();
       const restored=TetrisCore.resolveSettings(location.href,document.cookie);
       app.game.applySettings(restored.settings);app.syncSettings();
+      try { for(const [key,value] of Object.entries(restored.explicit)) { const encoded=encodeURIComponent(TetrisCore.encodeSetting(key,value));document.cookie="tetris_"+key+"="+encoded+"; Path=/; SameSite=Lax; Max-Age=31536000"+(location.protocol==="https:"?"; Secure":"");if(!document.cookie.split(";").some(x=>x.trim()==="tetris_"+key+"="+encoded))throw Error("Persistent configuration unavailable: cookies blocked"); } }catch(error){restored.diagnostics.push(error.message);}
       $("message").textContent=restored.diagnostics.join("; ");
       function frame(now) {
         const elapsed = Math.max(0, now - lastFrame);

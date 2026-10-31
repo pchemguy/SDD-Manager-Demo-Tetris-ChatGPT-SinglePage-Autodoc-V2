@@ -145,7 +145,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C4/C9; tests/test_settings.py.
             Depends on: T-023. Contracts: CFG2, A4.
             Evidence: Mixed valid sources, omissions, explicit defaults, empty/repeated/invalid query values and invalid/duplicate cookies resolve per key with visible diagnostics and no saved-value loss.
-        - [ ] T-025 — Persist setting changes with browser write verification
+        - [x] T-025 — Persist setting changes with browser write verification
             Scope: tetris.html C8/C9; tests/test_settings.py.
             Depends on: T-024. Contracts: CFG3-CFG4, A4.
             Evidence: Write canonical cookie/query encodings, preserve unrelated URL/cookies/fragment, verify writes and roll back recoverable failures without changing live state.

@@ -22,3 +22,19 @@ def test_invalid_duplicate_cookie_and_url_fallback(core):
     assert data['settings']['ghost']=='dynamic'
     assert data['settings']['hold'] is True
     assert len(data['diagnostics'])==4
+
+def test_setting_change_url_cookie_and_write_rollback(page):
+    page.goto(page.url+'?unrelated=keep&ghost=visible#fragment')
+    assert page.evaluate('document.cookie.includes("tetris_ghost=visible")')
+    page.locator('[data-setting=hold]').select_option('0')
+    assert page.evaluate('app.game.settings.hold') is False
+    assert page.evaluate('location.hash')=='#fragment'
+    assert page.evaluate('new URL(location.href).searchParams.get("unrelated")')=='keep'
+    before=page.evaluate('[app.game.settings,location.href,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort()]')
+    page.evaluate('(()=>{history.replaceState=()=>{throw Error("injected history failure")};})()')
+    page.locator('[data-setting=ghost]').select_option('dynamic')
+    assert page.evaluate('[app.game.settings,location.href,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort()]')==before
+    assert 'no settings applied' in page.locator('#message').inner_text()
+
+def test_setting_url_preserves_untouched_raw_pairs(core):
+    assert core('TetrisCore.settingURL("https://example.test/game?ghost=%FF&u=a%20b&u=%2b&hold=0#part",{...TetrisCore.DEFAULTS,hold:true},["hold"])')=='https://example.test/game?ghost=%FF&u=a%20b&u=%2b&hold=1#part'
