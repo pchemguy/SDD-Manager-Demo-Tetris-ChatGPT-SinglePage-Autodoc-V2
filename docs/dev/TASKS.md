@@ -68,7 +68,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Next reflects the next spawn without consumption; held type/orientation is correct; integrated bag/hold/preview remains deterministic and visibly readable.
             Milestone exit: perform the complete 2.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/2/2.1.md`.
-    - [ ] Milestone 2.2 — Landing and grounded timing
+    - [x] Milestone 2.2 — Landing and grounded timing
         - [x] T-011 — Implement the documented ordered wall kicks
             Scope: tetris.html C1; tests/test_core.py; browser checks.
             Depends on: T-010. Contracts: G1 kicks, A2.
@@ -85,7 +85,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3; tests/test_core.py; browser integration checks.
             Depends on: T-013. Contracts: G3, G5 locking, A2.
             Evidence: Check before/at deadline, nonreset grounded moves, lift/re-ground, pause, policy changes and coincident gravity/lock; modern default is general interval locking, with no old event applied to a successor.
-        - [ ] T-015 — Review landing and timing integration
+        - [x] T-015 — Review landing and timing integration
             Scope: all 2.2 implementation, relevant queue/core consumers, tests and documentation.
             Depends on: T-011, T-012, T-013, T-014. Contracts: G1/G3/G5, A2 and PLAN 2.2 exits.
             Evidence: capability-wide code review separate from test execution, deterministic timing/landing regressions, blocker repairs and retained TODO disposition; include milestone report and HANDOFF with completion.

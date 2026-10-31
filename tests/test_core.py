@@ -62,3 +62,15 @@ def test_grounded_full_interval_nonreset_pause_and_lift(core):
 
 def test_policy_change_resets_grounded_time(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.hardDrop();g.advance(800);g.setLockPolicy("failed");g.setLockPolicy("interval");g.advance(999);const a=g.board.flat().filter(Boolean).length;g.advance(1);return [a,g.board.flat().filter(Boolean).length]})()')==[0,4]
+
+def test_kick_wall_ccw_stack_order_and_o_invariance(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();const result=[];for(const d of [1,-1]){g.active={type:"I",x:-2,y:5,rotation:1};result.push(g.valid(g.active),g.rotate(d),g.active.x);}g.board=Array.from({length:20},()=>Array(10).fill(null));g.active={type:"T",x:3,y:5,rotation:0};g.board[7][4]="red";result.push(g.rotate(1),g.active.x);g.active={type:"O",x:3,y:5,rotation:0};const before=TetrisCore.cells(g.active);g.rotate(-1);result.push(JSON.stringify(before)===JSON.stringify(TetrisCore.cells(g.active)));return result;})()')==[True,True,0,True,True,0,True,2,True]
+
+def test_rejected_rotation_preserves_legal_piece(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"T",x:3,y:5,rotation:0};const occupied=TetrisCore.cells(g.active);g.board=Array.from({length:20},(_,y)=>Array.from({length:10},(_,x)=>occupied.some(([cx,cy])=>cx===x&&cy===y)?null:"red"));const before=JSON.stringify(g.active);return [g.valid(g.active),g.rotate(1),before===JSON.stringify(g.active)];})()')==[True,False,True]
+
+def test_coincident_deadline_and_repeated_failed_attempts(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.hardDrop();g.advance(400);g.down();g.hardDrop();g.advance(599);const before=g.board.flat().filter(Boolean).length;g.advance(1);return [before,g.board.flat().filter(Boolean).length,g.active.y,g.elapsed];})()')==[0,4,-1,0]
+
+def test_grounded_spawn_and_hold_start_full_timing(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[1][3]="red";g.spawn("I");const initial=g.groundedTime;g.advance(999);const before=g.board.flat().filter(Boolean).length;g.advance(1);const locked=g.board.flat().filter(Boolean).length;const h=new TetrisCore.Game(()=>0);h.start();h.board[1][3]="red";h.holdPiece();h.advance(999);const state=h.status;h.advance(1);return [initial,before,locked,state,h.status];})()')==[0,1,5,'running','over']

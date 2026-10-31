@@ -32,7 +32,7 @@ def base_url():
     server.server_close()
     thread.join(timeout=5)
 
-@pytest.fixture(params=['chromium', 'firefox'])
+@pytest.fixture(scope='session', params=['chromium', 'firefox'])
 def browser(request):
     from playwright.sync_api import sync_playwright
     with sync_playwright() as pw:

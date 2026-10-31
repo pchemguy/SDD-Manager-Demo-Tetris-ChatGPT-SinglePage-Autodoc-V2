@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-010 Render next and held piece previews from queue state.
+Checkpoint: T-015 Review landing and timing integration.
 
-Rendered readable canonical next/held shape previews and repaired hold event clock ordering after independent milestone review.
+Completed independent landing/timing review and added the missing kick, deadline, grounded spawn/hold, Canvas ghost and preview-mask acceptance checks.
 
 ## Scope and owners
 
@@ -14,9 +14,9 @@ Working branch `phase/2-modern-rules`; creation parent/integration target `main`
 
 ## Evidence and next action
 
-..............                                                           [100%]
-14 passed in 1.48s; actual inline application source and selected browser/package paths exercised.
+..........................................................               [100%]
+58 passed in 22.56s; actual inline application source and selected browser/package paths exercised.
 
 Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Both browser modes tested; modeled stale-clock regression; native OS focus delivery/headed browsers excluded. Later modern landing rules remain deferred.
+Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.
