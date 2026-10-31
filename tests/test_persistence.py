@@ -239,3 +239,70 @@ def test_sqlite_restore_equivalence_and_invalid_atomicity(page,tmp_path):
         assert 'failed' in page.locator('#message').inner_text().lower()
         assert page.evaluate('[app.results,app.game.settings,document.cookie,location.href]')==before
         assert not page.evaluate('app.workerActive || app.busy')
+
+def test_sqlite_timeout_integrity_and_json_independence(page):
+    page.route(SQLITE_URL,lambda route:route.fulfill(status=200,body='corrupt library',headers={'access-control-allow-origin':'*'}))
+    assert page.evaluate('app.sqlite("probe",null).then(()=>false,()=>true)')
+    assert not page.evaluate('app.workerActive')
+    page.unroute(SQLITE_URL)
+    route_sql(page)
+    assert page.evaluate('(()=>{const real=Worker;Worker=class {terminate(){globalThis.workerTerminated=true;}postMessage(){}};return app.sqlite("probe",null).then(()=>false,error=>{Worker=real;return error.message.includes("ten-second")&&workerTerminated;});})()')
+    assert not page.evaluate('app.workerActive')
+    page.route(SQLITE_URL,lambda route:route.abort())
+    with page.expect_download() as event:page.locator('#save').click()
+    assert event.value.suggested_filename=='tetris-save.json'
+    assert not page.evaluate('app.busy')
+
+def test_full_cross_format_top_ten_safe_integer_round_trips(page,tmp_path):
+    import sqlite3
+    route_sql(page)
+    records=[{'id':f'{i:08x}-1111-4111-8111-111111111111','score':9007199254740991 if i<2 else 100,'timestamp':f'2026-01-0{1+i%2}T00:00:00.000Z'} for i in reversed(range(10))]
+    expected=sorted(records,key=lambda row:(-row['score'],row['timestamp'],row['id']))
+    other={'ghost':'dynamic','hardDrop':False,'nextPreview':False,'hardDropLock':'immediate','lockPolicy':'failed','hold':False}
+    for index,settings in enumerate([other,SETTINGS]):
+        data={'formatVersion':1,'results':records,'settings':settings}
+        page.evaluate('(value)=>app.applySnapshot(value)',data)
+        page.locator('#format').select_option('sqlite')
+        with page.expect_download() as event:page.locator('#save').click()
+        path=tmp_path/f'cross{index}.sqlite';event.value.save_as(path)
+        with sqlite3.connect(path) as db:
+            assert db.execute('SELECT COUNT(*),MAX(score) FROM high_scores').fetchone()==(10,9007199254740991)
+            assert set(row[0] for row in db.execute('SELECT typeof(score) FROM high_scores'))=={'integer'}
+            assert sorted(db.execute('SELECT id,score,timestamp FROM high_scores'))==sorted(tuple(row.values()) for row in expected)
+        page.evaluate('(value)=>app.applySnapshot(value)',{'formatVersion':1,'results':[],'settings':SETTINGS if index==0 else other})
+        upload(page,path.read_bytes())
+        assert page.evaluate('app.results')==expected
+        assert page.evaluate('app.game.settings')==settings
+        page.locator('#format').select_option('json')
+        with page.expect_download() as event:page.locator('#save').click()
+        json_path=tmp_path/f'cross{index}.json';event.value.save_as(json_path)
+        assert json.loads(json_path.read_text())=={'formatVersion':1,'results':expected,'settings':settings}
+        page.evaluate('(value)=>app.applySnapshot(value)',{'formatVersion':1,'results':[],'settings':SETTINGS if index==0 else other})
+        upload(page,json_path.read_bytes())
+        assert page.evaluate('app.results')==expected
+        assert page.evaluate('app.game.settings')==settings
+
+def test_sqlite_exact_unsafe_integer_rejected_without_check_constraint(page,tmp_path):
+    route_sql(page)
+    def change(db):
+        db.executescript('ALTER TABLE high_scores RENAME TO old_scores;CREATE TABLE high_scores(id TEXT PRIMARY KEY NOT NULL,score INTEGER NOT NULL CHECK(1),timestamp TEXT NOT NULL);INSERT INTO high_scores SELECT * FROM old_scores;DROP TABLE old_scores;UPDATE high_scores SET score=9007199254740993;')
+    before=page.evaluate('[app.results,app.game.settings,document.cookie,location.href]')
+    upload(page,database_bytes(tmp_path,change))
+    assert page.evaluate('[app.results,app.game.settings,document.cookie,location.href]')==before
+    assert 'Invalid SQLite score storage' in page.locator('#message').inner_text()
+
+def test_canceled_delayed_read_never_launches_stale_codec(page):
+    assert page.evaluate('''async()=>{let release,calls=0;const original=app.sqlite;app.sqlite=async()=>{calls++;return null;};const operation=app.beginFile();const file={size:16,arrayBuffer:()=>new Promise(resolve=>release=resolve)};const pending=app.decodeFile(file,operation).catch(()=>null);app.cancelFile();const next=app.beginFile();release(new TextEncoder().encode("SQLite format 3"+String.fromCharCode(0)).buffer);await pending;const owned=app.busy&&app.operation===next;app.sqlite=original;app.cancelFile();return [calls,owned,!app.workerActive];}''')==[0,True,True]
+
+def test_sqlite_empty_and_truncated_header_atomicity(page,tmp_path):
+    route_sql(page)
+    page.evaluate('(value)=>app.applySnapshot(value)',snapshot())
+    good=database_bytes(tmp_path,lambda db:db.execute('DELETE FROM high_scores'))
+    upload(page,good)
+    assert page.evaluate('app.results')==[]
+    before=page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')
+    for damaged in [good[:16],good[:100]]:
+        upload(page,damaged)
+        assert 'failed' in page.locator('#message').inner_text().lower()
+        assert page.evaluate('[app.results,app.game.settings,document.cookie.split(";").map(x=>x.trim()).filter(Boolean).sort(),location.href]')==before
+        assert not page.evaluate('app.busy || app.workerActive')

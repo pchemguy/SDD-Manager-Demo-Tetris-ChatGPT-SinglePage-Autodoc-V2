@@ -1,5 +1,6 @@
 """Build and independently inspect stable, single-HTML browser release assets."""
 import argparse
+import base64
 import hashlib
 from html.parser import HTMLParser
 import json
@@ -19,6 +20,8 @@ class Dependencies(HTMLParser):
     def __init__(self):
         super().__init__()
         self.version = None
+        self.binary = None
+        self.in_binary = False
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
@@ -26,11 +29,24 @@ class Dependencies(HTMLParser):
             if self.version is not None:
                 raise ValueError('Duplicate application-version metadata')
             self.version = values.get('content')
+        if tag == 'script' and values.get('id') == 'sqlite-wasm':
+            if self.binary is not None or values.get('data-version') != '1.14.2' or values.get('data-sha256') != '38c14f6e379210bc942bdc4ebca44e7bfdb4318ecc1c72ca666a28fdce96670a':
+                raise ValueError('Embedded runtime metadata invalid')
+            self.binary = ''
+            self.in_binary = True
         url = values.get('src')
         if tag == 'link':
             url = values.get('href')
         if url and not url.startswith('data:') and not (tag == 'script' and url == LIBRARY):
             raise ValueError('Application requires a non-embedded runtime asset: ' + url)
+
+    def handle_data(self, data):
+        if self.in_binary:
+            self.binary += data
+
+    def handle_endtag(self, tag):
+        if tag == 'script':
+            self.in_binary = False
 
 def source_version():
     version = (ROOT / 'VERSION').read_text().strip()
@@ -39,6 +55,15 @@ def source_version():
     html = (ROOT / 'tetris.html').read_text()
     document = Dependencies()
     document.feed(html)
+    if LIBRARY in html:
+        if document.binary is None:
+            raise ValueError('Embedded SQLite runtime is missing')
+        try:
+            binary = base64.b64decode(''.join(document.binary.split()), validate=True)
+        except ValueError as error:
+            raise ValueError('Embedded SQLite runtime encoding invalid') from error
+        if len(binary) != 658410 or hashlib.sha256(binary).hexdigest() != '38c14f6e379210bc942bdc4ebca44e7bfdb4318ecc1c72ca666a28fdce96670a':
+            raise ValueError('Embedded SQLite runtime integrity mismatch')
     if document.version != version:
         raise ValueError('HTML and VERSION differ')
     return version

@@ -73,3 +73,21 @@ def test_version_metadata_is_semantic_html(tmp_path, monkeypatch, meta):
     (tmp_path / 'VERSION').write_text('0.2.0\n')
     with pytest.raises(ValueError, match='VERSION'):
         module.source_version()
+
+@pytest.mark.parametrize('damage',['missing','corrupt'])
+def test_embedded_runtime_integrity_gate(tmp_path,monkeypatch,damage):
+    import re
+    spec=importlib.util.spec_from_file_location('runtime_package_gate',ROOT/'tools/package.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    html=(ROOT/'tetris.html').read_text()
+    match=re.search(r'<script\s+id="sqlite-wasm"[^>]*>([\s\S]*?)</script>',html)
+    assert match
+    if damage=='missing':html=html[:match.start()]+html[match.end():]
+    else:
+        encoded=''.join(match[1].split());corrupt=('A' if encoded[0]!='A' else 'B')+encoded[1:]
+        html=html[:match.start(1)]+corrupt+html[match.end(1):]
+    (tmp_path/'tetris.html').write_text(html)
+    (tmp_path/'VERSION').write_bytes((ROOT/'VERSION').read_bytes())
+    monkeypatch.setattr(module,'ROOT',tmp_path)
+    with pytest.raises(ValueError,match='[Ee]mbedded'):
+        module.source_version()

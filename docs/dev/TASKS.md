@@ -205,7 +205,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 6 — SQLite snapshots
 
 - [ ] Phase 6 — SQLite snapshots
-    - [ ] Milestone 6.1 — SQLite snapshot transfer
+    - [x] Milestone 6.1 — SQLite snapshot transfer
         - [x] T-035 — Establish the pinned isolated SQLite worker runtime
             Scope: tetris.html embedded worker/C10/C11; tests/test_persistence.py and test_artifacts.py.
             Depends on: T-034. Contracts: U3 external boundary, F4 worker limits.
@@ -219,7 +219,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C5/C8/C10; persistence/browser checks.
             Depends on: T-036. Contracts: F3 decode, F4 restore, CFG3, A5-A6.
             Evidence: Detect bytes rather than extension; inspect schema/integrity/storage types/metadata/limits without file SQL execution, decode exact scores and reject invalid rows before applying the shared candidate.
-        - [ ] T-038 — Complete cross-format fault coverage and resource cleanup
+        - [x] T-038 — Complete cross-format fault coverage and resource cleanup
             Scope: tetris.html C10/C11 integration as needed; tests/test_persistence.py and test_artifacts.py; README.md and docs/INSTALL.md.
             Depends on: T-035, T-036, T-037. Contracts: F1-F5 complete, A5-A6/A8 scoped.
             Evidence: Independently inspect exports with Python sqlite3, cross-restore both formats, exercise corrupt/extra-schema/missing/duplicate/CDN/timeout/cancel/busy cases in both browsers, verify unchanged-state failures and worker/URL/database cleanup, and update install/package limits.
