@@ -204,28 +204,29 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 6 — SQLite snapshots
 
-- [ ] Phase 6 — SQLite snapshots
-    - [ ] Milestone 6.1 — SQLite snapshot transfer
-        - [ ] T-035 — Establish the pinned isolated SQLite worker runtime
+- [x] Phase 6 — SQLite snapshots
+    - [x] Milestone 6.1 — SQLite snapshot transfer
+        - [x] T-035 — Establish the pinned isolated SQLite worker runtime
             Scope: tetris.html embedded worker/C10/C11; tests/test_persistence.py and test_artifacts.py.
             Depends on: T-034. Contracts: U3 external boundary, F4 worker limits.
             Evidence: Verify pinned sql.js 1.13.0 asm.js CDN bytes/integrity and worker initialization; keep all app bootstrap inline, enforce operation ownership/deadline/termination and show optional-library failure without breaking JSON/gameplay.
-        - [ ] T-036 — Export versioned SQLite snapshots and the format choice
+        - [x] T-036 — Export versioned SQLite snapshots and the format choice
             Scope: tetris.html C10/C11/C7; persistence/browser checks.
             Depends on: T-035. Contracts: F3 export, F4 Save, CFG1 encodings, A5.
+            Compatibility amendment: use pinned production sql.js1.14.2 JavaScript loader plus its embedded binary; the T035 asm initialization prototype failed Chromium SQL execution. See DOCS_PREPARATION and ARCHITECTURE.
             Evidence: Create exact tables/types/metadata and all six unique textual settings rows, preserve record IDs/UTC/scores and download one actual tetris-save.sqlite; expose both Save formats.
-        - [ ] T-037 — Validate SQLite imports through the shared restore transaction
+        - [x] T-037 — Validate SQLite imports through the shared restore transaction
             Scope: tetris.html C5/C8/C10; persistence/browser checks.
             Depends on: T-036. Contracts: F3 decode, F4 restore, CFG3, A5-A6.
             Evidence: Detect bytes rather than extension; inspect schema/integrity/storage types/metadata/limits without file SQL execution, decode exact scores and reject invalid rows before applying the shared candidate.
-        - [ ] T-038 — Complete cross-format fault coverage and resource cleanup
+        - [x] T-038 — Complete cross-format fault coverage and resource cleanup
             Scope: tetris.html C10/C11 integration as needed; tests/test_persistence.py and test_artifacts.py; README.md and docs/INSTALL.md.
             Depends on: T-035, T-036, T-037. Contracts: F1-F5 complete, A5-A6/A8 scoped.
             Evidence: Independently inspect exports with Python sqlite3, cross-restore both formats, exercise corrupt/extra-schema/missing/duplicate/CDN/timeout/cancel/busy cases in both browsers, verify unchanged-state failures and worker/URL/database cleanup, and update install/package limits.
             Milestone exit: perform the complete 6.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/6/6.1.md`.
-    - [ ] Milestone 6.2 — Phase review
-        - [ ] T-039 — Review test and report phase 6
+    - [x] Milestone 6.2 — Phase review
+        - [x] T-039 — Review test and report phase 6
             Scope: all phase 6 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-038 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
