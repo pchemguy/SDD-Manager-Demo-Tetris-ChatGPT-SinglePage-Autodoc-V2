@@ -23,3 +23,5 @@ Limitations: Lifecycle events and stale clocks are modeled in real browsers; nat
 ## Phase integration
 
 Phase 1 integrated with two parents into main; merged regression and package checks passed. Publish/readback and exact-source release publication are the next required operations before successor activation.
+
+Release v0.1.0 published and downloaded-byte/latest-link verified. Continue the next eligible phase in the authorized full T-001..T-043 range.

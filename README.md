@@ -2,7 +2,7 @@
 
 A browser Tetris project targeting one HTML file with embedded application HTML, CSS and JavaScript. The intended scope includes modern rules, a penetrator ability, configurable gameplay, a session leaderboard, and manual JSON/SQLite save and restore.
 
-Implementation is in progress. The classic playable core is available in `tetris.html`; no release has been published yet. Information/help, pause/resume and readable resizing are implemented; packaging completes the first delivery phase.
+The classic playable baseline is available in `tetris.html`. Modern capabilities are delivered in subsequent bounded releases.
 
 ## Project documents
 
@@ -32,3 +32,5 @@ python tools/package.py --check
 ```
 
 Both commands and the packaged HTML were verified locally. The ZIP contains `tetris.html`, `LICENSE` and `INSTALL.md`; `dist/SHA256SUMS.txt` covers the standalone HTML and ZIP. See [installation](docs/INSTALL.md). The verify workflow runs tests and the independent naming gate; the manually dispatched release workflow is build-only and checks an existing release tag. SDD Manager owns release publication, followed by exact downloaded-byte/latest-link checks. No hosted release or live CI result is claimed before its observed completion.
+
+Published and verified: [v0.1.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.1.0).
