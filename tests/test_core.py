@@ -19,3 +19,16 @@ def test_gravity_uses_elapsed_intervals(core):
 
 def test_rotation_and_blocked_rotation(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.rotate(1);const first=TetrisCore.cells(g.active);g.active={type:"I",x:3,y:18,rotation:0};return [first,g.rotate(1),g.active.rotation]})()') == [[[5,-1],[5,0],[5,1],[5,2]], False, 0]
+
+def test_line_clear_score_and_level(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.lines=9;g.board[19]=Array.from({length:10},(_,x)=>x>=3&&x<=6?null:"red");g.active={type:"I",x:3,y:18,rotation:0};g.lock();return [g.score,g.lines,g.level,g.interval(),g.board.flat().filter(Boolean).length]})()') == [100, 10, 2, 850, 0]
+
+def test_four_rows_clear_simultaneously(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();for(let y=16;y<20;y++)g.board[y]=Array.from({length:10},(_,x)=>x===5?null:"red");g.active={type:"I",x:3,y:16,rotation:1};g.lock();return [g.score,g.lines,g.board.length,g.board.flat().filter(Boolean).length]})()') == [800, 4, 20, 0]
+
+def test_above_top_and_spawn_loss_complete_once(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:-2,rotation:1};g.lock();const event=g.completion;g.end();return [g.status,g.board.flat().filter(Boolean).length,event===g.completion,g.completion.score]})()') == ['over', 0, True, 0]
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[0][3]="red";g.spawn();return g.status})()') == 'over'
+
+def test_failed_down_locks_and_soft_drop_scores(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.down(true);const points=g.score;g.active={type:"I",x:3,y:18,rotation:0};g.down(true);return [points,g.score,g.board.flat().filter(Boolean).length,g.active.y]})()') == [1, 1, 4, -1]

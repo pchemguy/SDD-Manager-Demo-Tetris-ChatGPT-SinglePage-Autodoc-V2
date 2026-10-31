@@ -26,12 +26,16 @@ const COLORS={I:'#41d7e8',J:'#648aff',L:'#ffa45a',O:'#f4d85a',S:'#6fd99b',T:'#bb
 function cells(piece){return SHAPES[piece.type].map(([sx,sy])=>{let x=sx,y=sy,n=piece.type==='I'?4:3;for(let i=0;i<(piece.type==='O'?0:piece.rotation);i++)[x,y]=[n-1-y,x];return [piece.x+x,piece.y+y];});}
 class Game{
  constructor(random=Math.random){this.random=random;this.board=Array.from({length:20},()=>Array(10).fill(null));this.active=null;this.status='ready';this.score=0;}
- start(){this.board=Array.from({length:20},()=>Array(10).fill(null));this.score=0;this.elapsed=0;this.status='running';this.spawn();}
- spawn(){const types=Object.keys(SHAPES);this.active={type:types[Math.min(6,Math.floor(this.random()*7))],x:3,y:-1,rotation:0};}
+ start(){this.board=Array.from({length:20},()=>Array(10).fill(null));this.score=0;this.lines=0;this.level=1;this.completion=null;this.elapsed=0;this.status='running';this.spawn();}
+ spawn(){const types=Object.keys(SHAPES);this.active={type:types[Math.min(6,Math.floor(this.random()*7))],x:3,y:-1,rotation:0};this.elapsed=0;if(!this.valid(this.active))this.end();}
  valid(piece){return cells(piece).every(([x,y])=>x>=0&&x<10&&y>=-2&&y<20&&(y<0||!this.board[y][x]));}
  move(dx,dy){if(this.status!=='running')return false;const next={...this.active,x:this.active.x+dx,y:this.active.y+dy};if(!this.valid(next))return false;this.active=next;return true;}
  rotate(direction){if(this.status!=='running')return false;const next={...this.active,rotation:(this.active.rotation+direction+4)%4};if(!this.valid(next))return false;this.active=next;return true;}
- advance(ms){if(!Number.isFinite(ms)||ms<0)throw Error('Invalid elapsed time');if(this.status!=='running')return;this.elapsed+=ms;while(this.elapsed>=1000){this.elapsed-=1000;this.move(0,1);}}
+ interval(){return Math.max(80,1000*Math.pow(.85,(this.level||1)-1));}
+ end(){if(this.status==='over')return;this.completion={score:this.score};this.status='over';this.active=null;}
+ down(soft=false){if(this.status!=='running')return false;if(this.move(0,1)){if(soft)this.score=Math.min(Number.MAX_SAFE_INTEGER,this.score+1);return true;}this.lock();return false;}
+ lock(){if(this.status!=='running'||!this.active)return;if(!this.valid(this.active)||cells(this.active).some(([,y])=>y<0)){this.end();return;}for(const [x,y] of cells(this.active))this.board[y][x]=COLORS[this.active.type];const remaining=this.board.filter(row=>!row.every(Boolean)),count=20-remaining.length;this.score=Math.min(Number.MAX_SAFE_INTEGER,this.score+[0,100,300,500,800][count]*this.level);this.lines+=count;this.level=1+Math.floor(this.lines/10);while(remaining.length<20)remaining.unshift(Array(10).fill(null));this.board=remaining;this.spawn();}
+ advance(ms){if(!Number.isFinite(ms)||ms<0)throw Error('Invalid elapsed time');while(ms>0&&this.status==='running'){const remaining=this.interval()-this.elapsed;if(ms<remaining){this.elapsed+=ms;break;}ms-=remaining;this.elapsed=0;this.down(false);}}
 }
 globalThis.TetrisCore=Object.freeze({Game,cells,SHAPES,COLORS});
 </script>
@@ -46,10 +50,10 @@ const app={game:new TetrisCore.Game(),render(){
  const tile=(x,y,color)=>{if(y<0)return;ctx.fillStyle=color;ctx.fillRect(x*s+2,y*s+2,s-4,s-4);ctx.fillStyle='#ffffff35';ctx.fillRect(x*s+3,y*s+3,s-6,2);};
  this.game.board.forEach((row,y)=>row.forEach((c,x)=>{if(c)tile(x,y,c);}));
  if(this.game.active)TetrisCore.cells(this.game.active).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[this.game.active.type]));
- $('status').textContent=this.game.status[0].toUpperCase()+this.game.status.slice(1);$('score').textContent=this.game.score.toLocaleString();$('start').textContent=this.game.status==='ready'?'Start':'Restart';
+ $('status').textContent=({ready:'Ready',running:'Running',over:'Game over',paused:'Paused'})[this.game.status];$('score').textContent=this.game.score.toLocaleString();$('start').textContent=this.game.status==='ready'?'Start':'Restart';
 },start(){this.game.start();this.render();$('game').focus();}};
 $('start').onclick=()=>app.start();$('pause').onclick=()=>app.start();
-$('game').addEventListener('keydown',event=>{let handled=true;switch(event.code){case 'ArrowLeft':app.game.move(-1,0);break;case 'ArrowRight':app.game.move(1,0);break;case 'ArrowDown':app.game.move(0,1);break;case 'ArrowUp':case 'Space':case 'KeyX':if(!event.repeat)app.game.rotate(1);break;case 'KeyZ':if(!event.repeat)app.game.rotate(-1);break;default:handled=false;}if(handled){event.preventDefault();app.render();}});
+$('game').addEventListener('keydown',event=>{let handled=true;switch(event.code){case 'ArrowLeft':app.game.move(-1,0);break;case 'ArrowRight':app.game.move(1,0);break;case 'ArrowDown':app.game.down(true);break;case 'ArrowUp':case 'Space':case 'KeyX':if(!event.repeat)app.game.rotate(1);break;case 'KeyZ':if(!event.repeat)app.game.rotate(-1);break;default:handled=false;}if(handled){event.preventDefault();app.render();}});
 let lastFrame=performance.now();function frame(now){const elapsed=now-lastFrame;lastFrame=now;app.game.advance(elapsed);app.render();requestAnimationFrame(frame);}requestAnimationFrame(frame);app.render();
 </script>
 </body>

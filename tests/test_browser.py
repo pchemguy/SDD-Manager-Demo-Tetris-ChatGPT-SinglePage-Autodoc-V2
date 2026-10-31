@@ -26,3 +26,15 @@ def test_keyboard_moves_and_rotates(page):
     page.keyboard.press('Space')
     assert page.evaluate('app.game.active.rotation') == 1
     assert page.evaluate('window.scrollY') == 0
+
+def test_play_complete_game_and_restart(page):
+    page.locator('#start').click()
+    for _ in range(300):
+        page.keyboard.press('ArrowDown')
+        if page.evaluate('app.game.status') == 'over':
+            break
+    assert page.locator('#status').inner_text() == 'Game over'
+    assert page.evaluate('app.game.score') > 0
+    assert page.evaluate('app.game.board.flat().filter(Boolean).length') > 0
+    page.locator('#start').click()
+    assert page.evaluate('[app.game.score,app.game.lines,app.game.level]') == [0, 0, 1]

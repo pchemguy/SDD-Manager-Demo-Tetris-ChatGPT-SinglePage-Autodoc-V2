@@ -2,7 +2,7 @@
 
 A browser Tetris project targeting one HTML file with embedded application HTML, CSS and JavaScript. The intended scope includes modern rules, a penetrator ability, configurable gameplay, a session leaderboard, and manual JSON/SQLite save and restore.
 
-The project is in documentation preparation. No playable application or release has been delivered yet.
+Implementation is in progress. The classic playable core is available in `tetris.html`; no release has been published yet. Pause/help and packaging complete the first delivery phase.
 
 ## Project documents
 
@@ -12,7 +12,7 @@ Development uses [SDD Manager](SDD-MANAGER.md). See the [AI-assisted development
 
 ## Development checks
 
-Board spawning, keyboard movement/rotation and elapsed-time gravity are implemented; locking/clearing and the remaining rules follow the next tasks. Development dependencies are pinned in `requirements-dev.txt` and installed into the ignored `.dev/python` target. Production remains one HTML file.
+The classic core implements spawning, keyboard movement/rotation, gravity, legal locking, line clearing, score/level progression, game over and restart. Pause/help, releases and later capabilities follow the task plan. Development dependencies are pinned in `requirements-dev.txt` and installed into the ignored `.dev/python` target. Production remains one HTML file.
 
 On this Linux execution host the verified test command is:
 

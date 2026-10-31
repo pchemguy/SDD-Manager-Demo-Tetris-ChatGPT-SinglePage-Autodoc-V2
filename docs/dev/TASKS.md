@@ -13,7 +13,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 ## Phase 1 — Classic playable baseline
 
 - [ ] Phase 1 — Classic playable baseline
-    - [ ] Milestone 1.1 — Playable core
+    - [x] Milestone 1.1 — Playable core
         - [x] T-001 — Establish the board geometry and startable Canvas game
             Scope: tetris.html core/markup/controller; tests/test_core.py and tests/test_browser.py; development harness/dependencies.
             Depends on: none. Contracts: G1, G2, U1, A1.
@@ -22,7 +22,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C1/C3/C7/C8; focused core/browser checks.
             Depends on: T-001. Contracts: G1 basic rotation, G3 failed policy, U2.
             Evidence: Left/right/down/rotation and chronological gravity respect wall/floor/stack bounds; handled keys do not scroll the game. Keep baseline rotation without kicks and independent uniform piece selection.
-        - [ ] T-003 — Complete locking line clearing scoring and game over
+        - [x] T-003 — Complete locking line clearing scoring and game over
             Scope: tetris.html C1-C3; tests/test_core.py; relevant browser checks.
             Depends on: T-001, T-002. Contracts: G2, G3 failed policy, A1.
             Evidence: Observe single/multiple clears, score/level progression, spawn/above-top loss and exactly one game completion; demonstrate a complete playable run.
