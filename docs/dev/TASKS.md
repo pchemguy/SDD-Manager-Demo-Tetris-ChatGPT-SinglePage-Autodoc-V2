@@ -33,7 +33,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3/C7/C8; core/browser checks.
             Depends on: T-003. Contracts: G2-G3 baseline, U2, A1.
             Evidence: Pause freezes gravity; start/restart state is correct; document hiding/browser-window blur pause without automatic resume or elapsed-time catch-up. Form controls retain native keys.
-        - [ ] T-005 — Finish information controls help and readable resizing
+        - [x] T-005 — Finish information controls help and readable resizing
             Scope: tetris.html markup/style/C7; tests/test_browser.py; README.md.
             Depends on: T-004. Contracts: U1 baseline information/two buttons, U2, A1.
             Evidence: Score/lines/level/status and exact bottom gameplay buttons render and work; keyboard help/focus/Canvas scale are readable. Optional panels/toggles remain deferred.

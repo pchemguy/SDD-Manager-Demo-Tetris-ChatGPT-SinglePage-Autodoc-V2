@@ -56,3 +56,24 @@ def test_pause_buttons_keys_and_window_event(page):
 def test_frame_timestamp_older_than_restart_clock(page):
     page.locator('#start').click()
     assert page.evaluate('(()=>{const schedule=window.requestAnimationFrame;window.requestAnimationFrame=()=>0;try{lastFrame=performance.now()+100;frame(performance.now());return app.game.status;}finally{window.requestAnimationFrame=schedule;}})()') == 'running'
+
+def test_information_help_and_readable_resize(page):
+    page.locator('#start').click()
+    assert page.locator('#level').inner_text() == '1'
+    assert page.locator('#lines').inner_text() == '0'
+    assert page.locator('#help').is_visible()
+    assert page.locator('#info button').count() == 2
+    for width in [480, 640, 800, 1024, 1440, 1920]:
+        page.set_viewport_size({'width': width, 'height': 900})
+        for selector in ['#info', '#game']:
+            box = page.locator(selector).bounding_box()
+            assert box['x'] >= 0 and box['x'] + box['width'] <= width + 1
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+
+def test_canvas_device_pixel_ratio(browser, base_url):
+    context = browser.new_context(viewport={'width': 800, 'height': 900}, device_scale_factor=2)
+    page = context.new_page()
+    page.goto(base_url + '/tetris.html')
+    page.wait_for_function('Math.abs(document.querySelector("#board").width-document.querySelector("#board").getBoundingClientRect().width*devicePixelRatio)<2')
+    assert page.locator('#board').screenshot()
+    context.close()
