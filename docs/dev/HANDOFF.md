@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-026 Verify reloads live integration and persistence limitations.
+Checkpoint: T-027 Review test and report phase 4.
 
-Verified persistent settings in real HTTP browser contexts, repaired untouched raw URL preservation and unreadable-cookie startup, and documented persistence/recovery limits.
+Completed independent phase4 QC and prepared version0.4.0 persistent-settings release notes and package.
 
 ## Scope and owners
 
@@ -14,8 +14,10 @@ Working branch `phase/4-persistent-configuration`; creation parent/integration t
 
 ## Evidence and next action
 
-92 full-suite pytest checks passed in33.11s, including both browsers and packaged HTML. All-six reload/omission/default values, invalid/repeated sources, raw malformed queries and fragments, blocked cookies, recoverable partial history mutation and explicit rollback failure are covered. Cookie presence/values are compared independently of browser-controlled header order.
+........................................................................ [ 78%]
+....................                                                     [100%]
+92 passed in 35.25s; actual inline application source and selected browser/package paths exercised.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Supported persistent changes require HTTP(S) with writable cookies. Browser failures preventing rollback are reported explicitly. Managed headless browsers verified; local Firefox uses documented override, native OS focus/headed checks excluded. Phase3 release source/tag CI was observed successful.
+Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.

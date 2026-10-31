@@ -1,4 +1,4 @@
-Added six session-only game settings, dynamic midline ghost visibility and earned penetrator bonuses (up to three). White penetrators cross occupied barriers and share the lowest valid landing across gravity, ghost and hard drop; active penetrators cannot be held.
+Added independent URL/cookie/default configuration resolution for all six settings, explicit-default saving and canonical updates. Invalid or repeated sources report diagnostics; recoverable browser-write failures roll back without applying live changes.
 
 Download tetris.html directly or extract tetris-browser.zip. SHA256SUMS.txt covers the release assets.
 

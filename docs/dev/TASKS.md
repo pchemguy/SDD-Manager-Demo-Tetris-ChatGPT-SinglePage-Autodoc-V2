@@ -139,7 +139,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 4 — Persistent configuration
 
-- [ ] Phase 4 — Persistent configuration
+- [x] Phase 4 — Persistent configuration
     - [x] Milestone 4.1 — URL and cookie settings
         - [x] T-024 — Resolve settings independently from URL cookies and defaults
             Scope: tetris.html C4/C9; tests/test_settings.py.
@@ -155,8 +155,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Real HTTP(S) reloads retain every setting including explicit defaults; invalid sources fall back correctly, live timing/hold behavior survives, and blocked-cookie/direct-file limitations are accurately shown/documented.
             Milestone exit: perform the complete 4.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/4/4.1.md`.
-    - [ ] Milestone 4.2 — Phase review
-        - [ ] T-027 — Review test and report phase 4
+    - [x] Milestone 4.2 — Phase review
+        - [x] T-027 — Review test and report phase 4
             Scope: all phase 4 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-026 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.
