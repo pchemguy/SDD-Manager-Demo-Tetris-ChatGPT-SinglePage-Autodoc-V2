@@ -46,3 +46,5 @@ Session configuration increment: six settings apply immediately in memory. This 
 Penetrator increment: clearing four rows awards one bonus up to three; B spends one. White pieces cross intact stacks, cannot be held, and use their lowest fully legal landing for gravity, ghost and hard drop. The ordinary lock policy still applies.
 
 Phase 3 delivered: Added six session-only game settings, dynamic midline ghost visibility and earned penetrator bonuses (up to three). White penetrators cross occupied barriers and share the lowest valid landing across gravity, ghost and hard drop; active penetrators cannot be held.
+
+Published and verified: [v0.3.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.3.0).
