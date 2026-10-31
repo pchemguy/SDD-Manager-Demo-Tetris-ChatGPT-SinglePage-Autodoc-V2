@@ -1,0 +1,63 @@
+# Main documentation preparation record
+
+Current control and evidence for the full project. [DOCS_TASKS](DOCS_TASKS.md) owns preparation tasks; [HANDOFF](HANDOFF.md) provides checkpoint context.
+
+## Current control
+
+- Mode: autodoc/onepass, selected by the user's project-development request.
+- Scope: the complete single-page HTML Tetris target; one documentation pass with bounded implementation phases to be planned later.
+- Approval basis: the user's `K` accepted the proposed implementation approach and gameplay decisions below. It did not approve an unseen PROJECT document. PROJECT approval remains pending; subsequent document checkpoints through TASKS are preapproved by autodoc mode.
+- Tracking: enabled for documentation and implementation by root AGENTS.md. GitHub milestone 1 (`sdd-docs-main`) and DOCS-001 through DOCS-009 issues #1 through #9 were created and read back with exact bundled content and associations before target writes.
+- Publication: every owned commit must be pushed and read back before advancement.
+- Next boundary: publish initialization and close/read back DOCS-001, then publish the PROJECT proposal and stop for human approval. After approval, prepare through DOCS-008 and stop before DOCS-009 package QC or implementation.
+- Reporting: Standard, with concise progress updates.
+
+## Scope source
+
+The user's complete target comprises the classic playable baseline, modern rules, conditional ghost, penetrator, all six session-only settings followed by cookie/URL persistence, session top-ten leaderboard, JSON/SQLite manual Save/Restore, and the prescribed centered five-panel layout. The forthcoming PROJECT owns principal product scope; SPEC will own exact contracts. No later documentation passes are selected.
+
+## Accepted clarification decisions
+
+All decisions in this section were proposed in chat and accepted by the user's `K` on 2026-10-31. Exact contracts will be expressed in SPEC; this record preserves their decision basis.
+
+| Concern | Accepted direction |
+| --- | --- |
+| Application approach | One HTML file with embedded JavaScript/CSS, Canvas board and standard HTML panels. |
+| Ghost at the midline | Hide only when every projected cell is above the midline; show when any cell reaches the lower half. |
+| Grounded delay | Start when grounded; movement/rotation while still grounded does not reset it. Lifting off clears it; pause freezes remaining time. |
+| Penetrator and hold | Activation immediately spends one available bonus; repeat activation does nothing. Hold is disabled for the active penetrator. |
+| Penetrator landing | Pass through occupied cells, never lock at an invalid position; ghost and hard drop share the lowest valid landing. |
+| Invalid configuration | Report invalid URL values and fall back independently to valid cookie/default values. Reject an invalid restore atomically. |
+| Completed games | Game over records a result; restarting an unfinished game discards that run. |
+| Live settings | Apply immediately; changing locking policy while grounded starts timing afresh. |
+| Cookie verification | Verify cookies and URL persistence over HTTP(S); direct file opening may limit cookies. |
+
+No material product decision is currently unresolved for brief authoring. Detailed algorithms, defaults, keys, scoring and file-contract precision remain with the design/specification owners, within the accepted scope.
+
+## Decisions and document evidence
+
+| Task | Evidence / decision basis |
+| --- | --- |
+| DOCS-001 | All four existing root files retained unchanged against initial commit `89d088c799d0556603bc0c49b3ac0934d9bacbcc`; no copies needed. Task list instantiated from the bundled template with only DOCS-001 checked. This control record and HANDOFF complete initialization metadata. Publication and issue closure require subsequent readback. |
+| DOCS-002 | PROJECT not yet authored or approved. |
+| DOCS-003 | ARCHITECTURE not yet authored; downstream checkpoint preapproved by autodoc after PROJECT approval. |
+| DOCS-004 | DECOMPOSITION not yet authored; same scoped preapproval. |
+| DOCS-005 | SPEC and its QC not yet authored. |
+| DOCS-006 | PLAN and strategy QC not yet authored. |
+| DOCS-007 | layout and combined PLAN/layout QC not yet authored. |
+| DOCS-008 | TASKS and task-list QC not yet authored. |
+| DOCS-009 | Package QC not selected; remains beyond the autodoc stop. |
+
+## Initialization
+
+- Root files originally present and retained: `AI_DISCLOSURE.md`, `SDD-MANAGER.md`, `AGENTS.md`, `SKILL_DISCOVERY_PROTOCOL.md`.
+- Copies: none. Byte-for-byte preservation verified against the initial committed blobs.
+- Continuation: all four files were present, so no mixed-presence pause applies.
+- Manual provenance: default enabled. Two bundled assets copied unchanged to `docs/ai-logs/` on `design-docs/ai-logs`, seeded at `49ae43a07081049d31e01982002c3dced12a7052` from default base `89d088c799d0556603bc0c49b3ac0934d9bacbcc`. Explicit two-parent merge `e75c858e73168c77104e15ee97ce6b5dc3cf583c` into `main` was verified and published before `design-docs/main` was created. No conversation transcript was created.
+- Preparation branch: `design-docs/main`, created from `main` at `e75c858e73168c77104e15ee97ce6b5dc3cf583c`; integration target `main`.
+- Credentials: accepted repository token stored only in ignored, untracked `gh.tkn`; the owned `*.tkn` exclusion was included with the preliminary scaffold checkpoint.
+- Reset: none; onepass.
+
+## Pending transitions
+
+Initialization commit publication and DOCS-001 issue closure/readback must be confirmed before PROJECT authoring. All nine preparation issues and milestone were open at initial projection; later effects must be reconciled from Git/GitHub before replay.
