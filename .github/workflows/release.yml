@@ -1,0 +1,40 @@
+name: Verify release package (build only)
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing published default-branch release tag
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: .dev/python
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.dev/browsers
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: git fetch origin main
+      - run: python -m pip install --target .dev/python -r requirements-dev.txt
+      - run: python -m playwright install --with-deps --only-shell chromium firefox
+      - run: python -m pytest -q
+      - run: python tools/package.py
+      - run: python tools/package.py --check
+      - run: python tools/verify_release.py --source "$RELEASE_TAG"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-release-package
+          path: dist/

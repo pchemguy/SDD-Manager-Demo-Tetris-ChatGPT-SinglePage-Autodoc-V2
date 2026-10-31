@@ -21,3 +21,14 @@ PYTHONPATH="$PWD/.dev/python" PLAYWRIGHT_BROWSERS_PATH="$PWD/.dev/browsers" TETR
 ```
 
 The Firefox override is limited to trusted local tests on this host after its normal content processes failed with `/proc/self/uid_map: EPERM`; it is not a general browser default. Browsers are managed builds matching Playwright 1.56.0, installed in the dedicated project directory. Chromium uses the headless shell. The initial installer returned an invalid first archive, then hit a lock heartbeat failure; verified complete official fallback archives were extracted without changing host restrictions. Browser provenance/digests are retained in the T-001 report. Re-evaluate the override on other hosts and follow the repository browser policy.
+
+## Browser package
+
+Build and inspect the stable browser release assets with:
+
+```sh
+python tools/package.py
+python tools/package.py --check
+```
+
+Both commands and the packaged HTML were verified locally. The ZIP contains `tetris.html`, `LICENSE` and `INSTALL.md`; `dist/SHA256SUMS.txt` covers the standalone HTML and ZIP. See [installation](docs/INSTALL.md). The verify workflow runs tests and the independent naming gate; the manually dispatched release workflow is build-only and checks an existing release tag. SDD Manager owns release publication, followed by exact downloaded-byte/latest-link checks. No hosted release or live CI result is claimed before its observed completion.

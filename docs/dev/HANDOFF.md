@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-003 Complete locking line clearing scoring and game over.
+Checkpoint: T-006 Package and verify the single HTML baseline.
 
-Complete the playable classic core: legal lock/top-out, simultaneous line removal, score/levels/speed, soft-drop points, spawn loss and one completion event. Milestone 1.1 now demonstrates a complete keyboard-played run and restart.
+Build the versioned-source 0.1.0 browser candidate with stable HTML/ZIP/checksum names, exact archive inventory, install/license documents, direct/CI naming gates, build-only release verification workflow and hosted-download verification tooling. Complete milestone 1.2 local delivery readiness.
 
 ## Scope and owners
 
@@ -14,8 +14,8 @@ Working branch `phase/1-classic-baseline`; creation parent/integration target `m
 
 ## Evidence and next action
 
-RED: four new lock/clear/score/completion tests failed against the movement-only core (6 existing passed). GREEN: all 18 core and actual Chromium/Firefox browser checks passed in 22.62s. Native keyboard gameplay reached game over and restarted in both browsers; deterministic fixtures verified one/four-line clears, exact score/level/speed, above-top rejection and completion idempotence.
+RED: the artifact contract failed because no producer existed. GREEN: all 31 core/browser/artifact checks passed in 41.87s, including actual packaged HTML in Chromium and Firefox, inventory/checksum byte comparisons and rejection of a deliberately versioned raw HTML filename. Rebuilt/rechecked after the install-doc update; both focused artifact checks passed. Both packaging commands and Python compilation passed. Workflow trigger/input/checkout/permission/naming-gate wiring inspected; live CI and hosted release checks are pending publication.
 
 Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Pause/help/packaging and the remaining full project are still pending. Firefox uses the diagnosed trusted-local override; no full/headed/native-window compatibility is claimed.
+Limitations: The 0.1.0 candidate is locally verified but not yet released. Live CI, release commit/tag/publication and actual hosted/latest downloads follow phase review/integration. Native OS focus delivery remains unverified; Firefox local tests use the diagnosed override.
