@@ -170,7 +170,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C3/C6/C8; tests/test_core.py and test_persistence.py.
             Depends on: T-027. Contracts: G2 completion, F1, A5.
             Evidence: Generate canonical UUID/UTC/safe score records at game over only; repeated events and unfinished restarts do not add results.
-        - [ ] T-029 — Rank and retain the session top ten deterministically
+        - [x] T-029 — Rank and retain the session top ten deterministically
             Scope: tetris.html C5/C6; tests/test_persistence.py.
             Depends on: T-028. Contracts: F1, A5.
             Evidence: Score/time/ID tie ordering, zero-score entries, truncation, stable identity and empty replacement are correct; no result history uses cookies/local storage.

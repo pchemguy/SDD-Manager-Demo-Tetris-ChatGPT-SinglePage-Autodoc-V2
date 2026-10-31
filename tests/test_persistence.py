@@ -12,3 +12,9 @@ def test_completion_once_and_restart_exclusion(page):
 
 def test_result_id_and_clock_injection(core):
     assert core('TetrisCore.createResult(0,bytes=>bytes.fill(0),()=>new Date("2026-01-01T00:00:00.000Z"))')=={'id':'00000000-0000-4000-8000-000000000000','score':0,'timestamp':'2026-01-01T00:00:00.000Z'}
+
+def test_results_rank_and_truncate(core):
+    assert core('TetrisCore.rankResults(Array.from({length:12},(_,i)=>({id:String(i).padStart(2,"0"),score:i%2,timestamp:"2026-01-01T00:00:00.000Z"}))).map(r=>r.id)')==['01','03','05','07','09','11','00','02','04','06']
+
+def test_result_time_ties_and_input_stability(core):
+    assert core('(()=>{const rows=[{id:"b",score:0,timestamp:"2026-02-01"},{id:"c",score:1,timestamp:"2026-03-01"},{id:"a",score:0,timestamp:"2026-01-01"}];const before=JSON.stringify(rows);return [TetrisCore.rankResults(rows).map(r=>r.id),before===JSON.stringify(rows)];})()')==[['c','a','b'],True]
