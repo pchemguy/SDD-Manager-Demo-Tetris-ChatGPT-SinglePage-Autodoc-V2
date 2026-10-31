@@ -166,7 +166,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 5 — Portable session results
     - [ ] Milestone 5.1 — Session leaderboard
-        - [ ] T-028 — Create stable completed-game records exactly once
+        - [x] T-028 — Create stable completed-game records exactly once
             Scope: tetris.html C3/C6/C8; tests/test_core.py and test_persistence.py.
             Depends on: T-027. Contracts: G2 completion, F1, A5.
             Evidence: Generate canonical UUID/UTC/safe score records at game over only; repeated events and unfinished restarts do not add results.

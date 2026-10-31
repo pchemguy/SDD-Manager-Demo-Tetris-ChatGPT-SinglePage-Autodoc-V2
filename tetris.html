@@ -441,8 +441,14 @@
         }
         return {settings,explicit,diagnostics};
       }
+      function createResult(score,random=bytes=>crypto.getRandomValues(bytes),now=()=>new Date()) {
+        if(!Number.isSafeInteger(score)||score<0)throw Error("Invalid completed score");
+        const time=now();if(time.getUTCFullYear()<1||time.getUTCFullYear()>9999)throw Error("Completion clock year outside supported range");
+        const bytes=random(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");const id=[hex.slice(0,8),hex.slice(8,12),hex.slice(12,16),hex.slice(16,20),hex.slice(20)].join("-");return {id,score,timestamp:time.toISOString()};
+      }
       class Game {
-        constructor(random = Math.random) {
+        constructor(random = Math.random, complete = () => {}) {
+          this.onComplete=complete;
           this.random = random;
           this.board = Array.from({ length: 20 }, () => Array(10).fill(null));
           this.active = null;
@@ -588,6 +594,7 @@
           this.completion = { score: this.score };
           this.status = "over";
           this.active = null;
+          this.onComplete(this.completion);
         }
         down(soft = false) {
           if (this.status !== "running") return false;
@@ -649,14 +656,15 @@
           }
         }
       }
-      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, settingURL, resolveSettings });
+      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings, encodeSetting, decodeSetting, settingURL, resolveSettings, createResult });
     </script>
     <script>
       /** Browser controller/presentation; it renders the same pure domain tested by pytest. */
       "use strict";
       const $ = (id) => document.getElementById(id);
       const app = {
-        game: new TetrisCore.Game(),
+        results: [],
+        game: new TetrisCore.Game(Math.random, completion=>{app.results.push(TetrisCore.createResult(completion.score));}),
         render() {
           const canvas = $("board"),
             ctx = canvas.getContext("2d"),
