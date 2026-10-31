@@ -99,7 +99,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 3 — Configurable penetrator gameplay
 
-- [ ] Phase 3 — Configurable penetrator gameplay
+- [x] Phase 3 — Configurable penetrator gameplay
     - [x] Milestone 3.1 — Session configuration
         - [x] T-017 — Add the six canonical session settings and controls
             Scope: tetris.html C4/C7/C8; tests/test_settings.py.
@@ -130,8 +130,8 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Evidence: Ghost/drop/gravity agree on the lowest valid cavity, hold is excluded while active, all policy paths lock legally and successors are regular; demonstrate barrier traversal and bonus spending.
             Milestone exit: perform the complete 3.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/3/3.2.md`.
-    - [ ] Milestone 3.3 — Phase review
-        - [ ] T-023 — Review test and report phase 3
+    - [x] Milestone 3.3 — Phase review
+        - [x] T-023 — Review test and report phase 3
             Scope: all phase 3 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-019, T-022 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

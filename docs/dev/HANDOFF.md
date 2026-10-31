@@ -1,8 +1,8 @@
 # Project handoff
 
-Checkpoint: T-022 Integrate penetrator ghost drop hold and legal locking.
+Checkpoint: T-023 Review test and report phase 3.
 
-Integrated penetrator ghost/drop/gravity/hold and legal locking across all policies. Repaired live setting clock ordering found by independent review. Retained an actual white-piece/barrier visual demonstration.
+Completed independent phase3 QC and prepared the version0.3.0 configurable penetrator release.
 
 ## Scope and owners
 
@@ -14,8 +14,10 @@ Working branch `phase/3-configurable-penetrator`; creation parent/integration ta
 
 ## Evidence and next action
 
-75 full-suite pytest checks passed in26.39s, including both browser modes, actual white Canvas pixels/bonus symbols, session-only settings and packaged HTML. Before repair, hold exclusion and fresh settings deadlines failed. Source inspected to contain no cookie/query access. Visual demonstration: penetrator-demo.png; white floor piece below intact barrier with one remaining bonus.
+........................................................................ [ 96%]
+...                                                                      [100%]
+75 passed in 28.04s; actual inline application source and selected browser/package paths exercised.
 
-Publish/read back this task, close its issue and milestone, then continue the next eligible task in the authorized full range. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
+Publish/read back this task, close its issue and milestone, then integrate/verify/publish the completed phase and create/verify its release before the next phase. These later effects remain pending at this snapshot. No extra approval is required within the existing grant.
 
-Limitations: Both required managed headless browser modes verified; host-specific Firefox sandbox override and modeled lifecycle remain disclosed. Native OS focus/headed checks excluded. URL/cookie persistence and results/files remain future increments.
+Limitations: Managed Chromium headless shell and Firefox; Firefox uses the documented host-specific process-local override. Native OS focus delivery/headed browsers are not claimed.
