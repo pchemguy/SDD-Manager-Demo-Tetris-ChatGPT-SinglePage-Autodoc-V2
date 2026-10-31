@@ -125,3 +125,19 @@ def test_preview_exact_colored_spawn_mask(page):
     expected=page.evaluate('TetrisCore.SHAPES[app.game.peek()].map(([x,y])=>y*4+x).sort((a,b)=>a-b)')
     actual=page.locator('#next i').evaluate_all('(nodes)=>nodes.flatMap((n,i)=>n.style.background?[i]:[])')
     assert actual==expected
+
+def test_penetrator_white_hotkey_bonus_and_hold_browser(page):
+    page.locator('#start').click()
+    page.evaluate('app.game=new TetrisCore.Game(()=>0);app.game.start();app.game.bonuses=2;app.game.board[8]=Array(10).fill("#648aff");app.render()')
+    page.keyboard.press('KeyB')
+    assert page.locator('#bonuses').inner_text()=='⚡'
+    assert page.evaluate('(()=>{const c=$("board"),s=c.width/10;return Array.from(c.getContext("2d").getImageData(Math.floor(3.5*s),Math.floor(.5*s),1,1).data).slice(0,3)})()')==[255,255,255]
+    before=page.evaluate('JSON.stringify([app.game.held,app.game.queue])')
+    page.keyboard.press('KeyC')
+    assert page.evaluate('JSON.stringify([app.game.held,app.game.queue])')==before
+    page.keyboard.press('Enter')
+    assert page.evaluate('app.game.active.y')==18
+    assert page.evaluate('app.game.board[8].every(Boolean)')
+    from pathlib import Path
+    Path('.test-results').mkdir(exist_ok=True)
+    page.screenshot(path='.test-results/T022-penetrator-'+page.context.browser.browser_type.name+'.png',full_page=True)

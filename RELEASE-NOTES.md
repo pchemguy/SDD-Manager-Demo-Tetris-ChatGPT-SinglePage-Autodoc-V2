@@ -1,4 +1,4 @@
-Added seven-bag randomization, once-per-piece hold and shape previews, ordered wall kicks, ghost projection, keyboard hard drop and a full gravity interval of grounded lock delay. Keyboard event timing preserves fresh incoming pieces and processes elapsed time chronologically.
+Added six session-only game settings, dynamic midline ghost visibility and earned penetrator bonuses (up to three). White penetrators cross occupied barriers and share the lowest valid landing across gravity, ghost and hard drop; active penetrators cannot be held.
 
 Download tetris.html directly or extract tetris-browser.zip. SHA256SUMS.txt covers the release assets.
 

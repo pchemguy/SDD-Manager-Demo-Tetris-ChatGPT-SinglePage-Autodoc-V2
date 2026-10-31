@@ -99,39 +99,39 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 ## Phase 3 — Configurable penetrator gameplay
 
-- [ ] Phase 3 — Configurable penetrator gameplay
-    - [ ] Milestone 3.1 — Session configuration
-        - [ ] T-017 — Add the six canonical session settings and controls
+- [x] Phase 3 — Configurable penetrator gameplay
+    - [x] Milestone 3.1 — Session configuration
+        - [x] T-017 — Add the six canonical session settings and controls
             Scope: tetris.html C4/C7/C8; tests/test_settings.py.
             Depends on: T-016. Contracts: CFG1 session-only, U1.
             Evidence: Exactly six typed keys/defaults and labeled controls exist; ordinary visibility/enablement flags apply, and invalid programmatic values are rejected without coercion.
-        - [ ] T-018 — Implement dynamic ghost visibility at the midline
+        - [x] T-018 — Implement dynamic ghost visibility at the midline
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-017. Contracts: G5 dynamic mode, CFG4, A2.
             Evidence: All-above hides, any cell at/below row ten shows, and mode/movement/rotation changes re-evaluate visibility without changing landing or board.
-        - [ ] T-019 — Integrate live policy changes and session-only reload behavior
+        - [x] T-019 — Integrate live policy changes and session-only reload behavior
             Scope: tetris.html C3/C4/C8; tests/test_settings.py and browser checks; README.md.
             Depends on: T-017, T-018. Contracts: G3-G5, CFG1/CFG4, A4 session subset.
             Evidence: Exercise all six controls, hold retention, disabled actions and grounded policy timing; prove this increment neither reads nor writes configuration cookies/query parameters and reload restores defaults.
             Milestone exit: perform the complete 3.1 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/3/3.1.md`.
-    - [ ] Milestone 3.2 — Earned penetration
-        - [ ] T-020 — Award capped bonuses and render penetrator status
+    - [x] Milestone 3.2 — Earned penetration
+        - [x] T-020 — Award capped bonuses and render penetrator status
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-019. Contracts: G6 earning/cap/white display, U1, A3.
             Evidence: Four-line clear earns one, other clears earn none, cap is three and indicator updates; white is reserved for penetrator active/locked cells and ghost.
-        - [ ] T-021 — Implement activation and viable penetrating movement
+        - [x] T-021 — Implement activation and viable penetrating movement
             Scope: tetris.html C1/C3/C8; tests/test_core.py.
             Depends on: T-020. Contracts: G6 activation, G7 travel, A3.
             Evidence: One activation spends one bonus, repeated/empty activation is a no-op, barriers are traversed without erasure and proposed moves retain at least one legal eventual landing.
-        - [ ] T-022 — Integrate penetrator ghost drop hold and legal locking
+        - [x] T-022 — Integrate penetrator ghost drop hold and legal locking
             Scope: tetris.html C1/C3/C7; core/settings/browser checks; README.md.
             Depends on: T-020, T-021. Contracts: G3-G7, CFG4, A2-A3.
             Evidence: Ghost/drop/gravity agree on the lowest valid cavity, hold is excluded while active, all policy paths lock legally and successors are regular; demonstrate barrier traversal and bonus spending.
             Milestone exit: perform the complete 3.2 code review/testing/repair/report and update HANDOFF before this task closes; include all milestone exit evidence from PLAN.
             Report: `docs/dev/reports/phases/3/3.2.md`.
-    - [ ] Milestone 3.3 — Phase review
-        - [ ] T-023 — Review test and report phase 3
+    - [x] Milestone 3.3 — Phase review
+        - [x] T-023 — Review test and report phase 3
             Scope: all phase 3 implementation/milestone exits, release-ready notes/version/package, reports and HANDOFF.
             Depends on: T-019, T-022 and verified completion/closure of every delivery milestone in this phase.
             Evidence: independent code review of cross-milestone behavior, applicable PLAN/SPEC acceptance and packaged-HTML regressions, resolved blockers, explicit browser/evidence limits and release-ready source. Do not claim the later merge or hosted release already occurred.

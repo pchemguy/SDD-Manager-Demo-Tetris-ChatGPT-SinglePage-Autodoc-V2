@@ -40,3 +40,9 @@ Modern increment: a seven-bag queue, once-per-piece keyboard hold (C), and next/
 Phase 2 delivered: Added seven-bag randomization, once-per-piece hold and shape previews, ordered wall kicks, ghost projection, keyboard hard drop and a full gravity interval of grounded lock delay. Keyboard event timing preserves fresh incoming pieces and processes elapsed time chronologically.
 
 Published and verified: [v0.2.0](https://github.com/pchemguy/SDD-Manager-Demo-Tetris-ChatGPT-SinglePage-Autodoc-V2/releases/tag/v0.2.0).
+
+Session configuration increment: six settings apply immediately in memory. This phase deliberately does not read or write setting cookies/query parameters; reload restores defaults. Dynamic ghost hides only when every projected cell is above row ten.
+
+Penetrator increment: clearing four rows awards one bonus up to three; B spends one. White pieces cross intact stacks, cannot be held, and use their lowest fully legal landing for gravity, ghost and hard drop. The ordinary lock policy still applies.
+
+Phase 3 delivered: Added six session-only game settings, dynamic midline ghost visibility and earned penetrator bonuses (up to three). White penetrators cross occupied barriers and share the lowest valid landing across gravity, ghost and hard drop; active penetrators cannot be held.
