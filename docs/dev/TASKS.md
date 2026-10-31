@@ -240,7 +240,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html markup/style/C7; tests/test_browser.py.
             Depends on: T-039. Contracts: U1 panel order/geometry, A7.
             Evidence: Left-to-right order and symmetric side regions keep board centered with mandatory information visible; optional overflow never covers those mandatory regions.
-        - [ ] T-041 — Add individual panel toggles and preserve input focus
+        - [x] T-041 — Add individual panel toggles and preserve input focus
             Scope: tetris.html C7/C8; browser checks.
             Depends on: T-040. Contracts: U1 toggles/file buttons, U2 focus, A7.
             Evidence: Three toggles sit above the exact gameplay row; all eight combinations preserve state/centering, Settings hides its only Save/Restore pair, and focus/keyboard remain usable after hiding a focused panel.

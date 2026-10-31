@@ -268,6 +268,7 @@
       #leader-slot:focus-visible,.right:focus-visible {outline:2px solid var(--accent);outline-offset:3px;}
       @media(max-width:1100px) and (min-width:701px) {:root{--info-width:160px;} .layout{padding-left:12px;padding-right:12px;gap:12px;}}
       @media(max-width:700px) {:root{--board-width:min(300px,max(80px,calc(100vw - 380px)));--info-width:120px;--panel-width:156px;} .layout{padding-left:4px;padding-right:4px;gap:12px;} #info{padding:16px 12px;} #info .number{font-size:28px;} #previews{gap:4px;} #info .label{font-size:10px;letter-spacing:.05em;} #info .buttons button{font-size:10px;} }
+      #panel-toggles{display:grid;gap:6px;margin:16px 0 10px;} #panel-toggles button{padding:7px 4px;font-size:11px;}
     </style>
   </head>
   <body>
@@ -300,6 +301,7 @@
           </div>
           <div class="stats" id="previews"><div><div class="label">Hold</div><div id="held" class="stat-value">—</div></div><div><div class="label">Next</div><div id="next" class="stat-value">—</div></div></div>
           <div class="label">Penetrator bonuses</div><div id="bonuses" class="stat-value" aria-label="0 penetrator bonuses">—</div>
+          <div id="panel-toggles"><button id="toggle-leaderboard" aria-controls="leader-slot" aria-expanded="true">Hide leaderboard</button><button id="toggle-settings" aria-controls="settings" aria-expanded="true">Hide settings</button><button id="toggle-help" aria-controls="help" aria-expanded="true">Hide controls/help</button></div>
           <div class="buttons">
             <button id="start">Start</button><button id="pause">Start</button>
           </div>
@@ -9727,6 +9729,8 @@ AQBBnMAECyqoAQAAqQEAAKoBAAAAAAAAsgEAAKwBAACtAQAArgEAAK8BAACwAQAAsQEAQfjABAsDsCVR
       app.changeSettings=(value,key)=>{ if(app.busy)throw Error("A file operation is in progress");const next=TetrisCore.validateSettings(value);app.settleTime();app.writeSettings(next,key?[key]:undefined); app.game.applySettings(next); app.syncSettings(); app.render(); };
       app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
       document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value},key);$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
+      app.togglePanel=(key)=>{const target=$(key==="leaderboard"?"leader-slot":key);target.hidden=!target.hidden;const button=$("toggle-"+key);button.setAttribute("aria-expanded",String(!target.hidden));button.textContent=(target.hidden?"Show ":"Hide ")+({leaderboard:"leaderboard",settings:"settings",help:"controls/help"}[key]);const right=document.querySelector(".right"),shown=!$("settings").hidden||!$("help").hidden;right.tabIndex=shown?0:-1;right.setAttribute("aria-hidden",String(!shown));$("game").focus();};
+      for(const key of ["leaderboard","settings","help"])$("toggle-"+key).onclick=()=>app.togglePanel(key);
       $("start").onclick = () => app.start();
       $("pause").onclick = () => app.togglePause();
       $("game").addEventListener("keydown", (event) => {
