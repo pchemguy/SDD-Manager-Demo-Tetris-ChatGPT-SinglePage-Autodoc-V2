@@ -250,6 +250,7 @@
           padding: 18px 16px;
         }
       }
+      [hidden] {display:none !important;} #settings label {display:block;font-size:12px;color:var(--muted);margin:12px 0;} select {display:block;width:100%;margin-top:5px;padding:8px;background:#142338;color:var(--ink);border:1px solid #41506b;border-radius:6px;} .right {display:flex;flex-direction:column;gap:16px;}
     </style>
   </head>
   <body>
@@ -300,6 +301,14 @@
         >
       </div>
       <div class="right">
+        <section id="settings" class="panel"><h2>Settings</h2>
+          <label>Ghost piece<select data-setting="ghost"><option value="hidden">Always hide</option><option value="dynamic">Hide above midline</option><option value="visible" selected>Always show</option></select></label>
+          <label>Hard drop<select data-setting="hardDrop"><option value="1">On</option><option value="0">Off</option></select></label>
+          <label>Next-piece preview<select data-setting="nextPreview"><option value="1">On</option><option value="0">Off</option></select></label>
+          <label>Hard-drop locking<select data-setting="hardDropLock"><option value="general">General policy</option><option value="immediate">Immediate</option></select></label>
+          <label>General locking<select data-setting="lockPolicy"><option value="interval">Full gravity interval</option><option value="failed">Failed downward attempt</option></select></label>
+          <label>Hold piece<select data-setting="hold"><option value="1">On</option><option value="0">Off</option></select></label>
+        </section>
         <section id="help" class="panel">
           <h2>Controls / help</h2>
           <dl class="keys">
@@ -392,6 +401,15 @@
           return [piece.x + x, piece.y + y];
         });
       }
+      const DEFAULTS=Object.freeze({ghost:"visible",hardDrop:true,nextPreview:true,hardDropLock:"general",lockPolicy:"interval",hold:true});
+      function validateSettings(value) {
+        if (!value || typeof value!=="object" || Array.isArray(value) || Object.keys(value).sort().join()!==Object.keys(DEFAULTS).sort().join()) throw Error("Settings must contain exactly six known keys");
+        for (const key of Object.keys(DEFAULTS)) {
+          const allowed={ghost:["hidden","dynamic","visible"],hardDropLock:["general","immediate"],lockPolicy:["failed","interval"]}[key];
+          if (allowed ? !allowed.includes(value[key]) : typeof value[key]!=="boolean") throw Error("Invalid setting: "+key);
+        }
+        return {...value};
+      }
       class Game {
         constructor(random = Math.random) {
           this.random = random;
@@ -400,6 +418,7 @@
           this.status = "ready";
           this.score = 0;
           this.lockPolicy="interval";
+          this.settings={...DEFAULTS};
         }
         start() {
           this.board = Array.from({ length: 20 }, () => Array(10).fill(null));
@@ -414,6 +433,12 @@
           this.queue = [];
           this.fillQueue();
           this.spawn();
+        }
+        applySettings(value) {
+          const next=validateSettings(value);
+          this.setLockPolicy(next.lockPolicy);
+          if (next.hardDropLock!==this.settings.hardDropLock) { this.groundedTime=null; this.syncGround(); }
+          this.settings=next;
         }
         fillQueue() {
           while (this.queue.length < 1) {
@@ -441,7 +466,7 @@
           else this.syncGround();
         }
         holdPiece() {
-          if (this.status !== "running" || this.holdUsed) return false;
+          if (this.status !== "running" || this.holdUsed || !this.settings.hold) return false;
           const incoming=this.held, outgoing=this.active.type;
           this.held=outgoing;
           this.spawn(incoming,true);
@@ -489,7 +514,8 @@
           return result;
         }
         hardDrop(immediate=false) {
-          if (this.status!=="running") return false;
+          if (this.status!=="running" || !this.settings.hardDrop) return false;
+          immediate=immediate || this.settings.hardDropLock==="immediate";
           const target=this.landing(), distance=target.y-this.active.y;
           this.active=target;
           this.syncGround();
@@ -571,7 +597,7 @@
           }
         }
       }
-      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS });
+      globalThis.TetrisCore = Object.freeze({ Game, cells, SHAPES, COLORS, DEFAULTS, validateSettings });
     </script>
     <script>
       /** Browser controller/presentation; it renders the same pure domain tested by pytest. */
@@ -612,13 +638,14 @@
             }),
           );
           const ghost=this.game.landing();
-          if (ghost && ghost.y!==this.game.active.y) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
+          if (ghost && this.game.settings.ghost!=="hidden" && ghost.y!==this.game.active.y) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
           if (this.game.active)
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, TetrisCore.COLORS[this.game.active.type]),
             );
           const preview=(id,type)=>{ const node=$(id); node.replaceChildren(); if(type) { const grid=document.createElement("span"); grid.style.cssText="display:inline-grid;grid-template-columns:repeat(4,10px);grid-template-rows:repeat(4,10px);gap:2px"; for(let y=0;y<4;y++)for(let x=0;x<4;x++){const cell=document.createElement("i");if(TetrisCore.SHAPES[type].some(([cx,cy])=>cx===x&&cy===y))cell.style.background=TetrisCore.COLORS[type];grid.append(cell);}node.append(grid); } else node.textContent="—"; node.setAttribute("aria-label",id+" piece "+(type||"empty")); };
           preview("held",this.game.held); preview("next",this.game.peek());
+          $("held").parentElement.hidden=!this.game.settings.hold; $("next").parentElement.hidden=!this.game.settings.nextPreview;
           $("status").textContent = {
             ready: "Ready",
             running: "Running",
@@ -661,6 +688,9 @@
         },
       };
       app.settleTime=()=>{const now=performance.now();app.game.advance(Math.max(0,now-lastFrame));lastFrame=Math.max(lastFrame,now);};
+      app.changeSettings=(value)=>{ app.game.applySettings(value); app.syncSettings(); app.render(); };
+      app.syncSettings=()=>document.querySelectorAll("[data-setting]").forEach(node=>{const v=app.game.settings[node.dataset.setting];node.value=typeof v==="boolean" ? (v?"1":"0") : v;});
+      document.querySelectorAll("[data-setting]").forEach(node=>node.addEventListener("change",()=>{const key=node.dataset.setting;const value=typeof TetrisCore.DEFAULTS[key]==="boolean" ? node.value==="1" : node.value;try{app.changeSettings({...app.game.settings,[key]:value});$("message").textContent="";}catch(error){app.syncSettings();$("message").textContent=error.message;}}));
       $("start").onclick = () => app.start();
       $("pause").onclick = () => app.togglePause();
       $("game").addEventListener("keydown", (event) => {

@@ -74,3 +74,7 @@ def test_coincident_deadline_and_repeated_failed_attempts(core):
 
 def test_grounded_spawn_and_hold_start_full_timing(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.board[1][3]="red";g.spawn("I");const initial=g.groundedTime;g.advance(999);const before=g.board.flat().filter(Boolean).length;g.advance(1);const locked=g.board.flat().filter(Boolean).length;const h=new TetrisCore.Game(()=>0);h.start();h.board[1][3]="red";h.holdPiece();h.advance(999);const state=h.status;h.advance(1);return [initial,before,locked,state,h.status];})()')==[0,1,5,'running','over']
+
+def test_settings_exact_and_disabled_actions(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.applySettings({...TetrisCore.DEFAULTS,hold:false,hardDrop:false});const before=JSON.stringify([g.active,g.queue,g.held]);return [g.holdPiece(),g.hardDrop(),before===JSON.stringify([g.active,g.queue,g.held]),Object.keys(g.settings).length]})()')==[False,False,True,6]
+    assert core('(()=>{try{TetrisCore.validateSettings({...TetrisCore.DEFAULTS,hold:1});return false;}catch{return true;}})()')

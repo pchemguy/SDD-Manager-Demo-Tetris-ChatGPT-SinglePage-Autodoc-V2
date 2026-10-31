@@ -101,7 +101,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
 
 - [ ] Phase 3 — Configurable penetrator gameplay
     - [ ] Milestone 3.1 — Session configuration
-        - [ ] T-017 — Add the six canonical session settings and controls
+        - [x] T-017 — Add the six canonical session settings and controls
             Scope: tetris.html C4/C7/C8; tests/test_settings.py.
             Depends on: T-016. Contracts: CFG1 session-only, U1.
             Evidence: Exactly six typed keys/defaults and labeled controls exist; ordinary visibility/enablement flags apply, and invalid programmatic values are rejected without coercion.
