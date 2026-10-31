@@ -105,7 +105,7 @@ A milestone boundary includes capability-wide code review, focused/regression ch
             Scope: tetris.html C4/C7/C8; tests/test_settings.py.
             Depends on: T-016. Contracts: CFG1 session-only, U1.
             Evidence: Exactly six typed keys/defaults and labeled controls exist; ordinary visibility/enablement flags apply, and invalid programmatic values are rejected without coercion.
-        - [ ] T-018 — Implement dynamic ghost visibility at the midline
+        - [x] T-018 — Implement dynamic ghost visibility at the midline
             Scope: tetris.html C3/C7; core/browser checks.
             Depends on: T-017. Contracts: G5 dynamic mode, CFG4, A2.
             Evidence: All-above hides, any cell at/below row ten shows, and mode/movement/rotation changes re-evaluate visibility without changing landing or board.

@@ -513,6 +513,10 @@
           while (this.valid({...result,y:result.y+1})) result.y++;
           return result;
         }
+        ghostVisible() {
+          const target=this.landing();
+          return !!target && target.y!==this.active.y && this.settings.ghost!=="hidden" && (this.settings.ghost!=="dynamic" || cells(target).some(([,y])=>y>=10));
+        }
         hardDrop(immediate=false) {
           if (this.status!=="running" || !this.settings.hardDrop) return false;
           immediate=immediate || this.settings.hardDropLock==="immediate";
@@ -638,7 +642,7 @@
             }),
           );
           const ghost=this.game.landing();
-          if (ghost && this.game.settings.ghost!=="hidden" && ghost.y!==this.game.active.y) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
+          if (ghost && this.game.ghostVisible()) { ctx.globalAlpha=.28; TetrisCore.cells(ghost).forEach(([x,y])=>tile(x,y,TetrisCore.COLORS[ghost.type])); ctx.globalAlpha=1; }
           if (this.game.active)
             TetrisCore.cells(this.game.active).forEach(([x, y]) =>
               tile(x, y, TetrisCore.COLORS[this.game.active.type]),

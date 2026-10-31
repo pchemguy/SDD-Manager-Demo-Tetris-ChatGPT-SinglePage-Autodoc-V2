@@ -78,3 +78,6 @@ def test_grounded_spawn_and_hold_start_full_timing(core):
 def test_settings_exact_and_disabled_actions(core):
     assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.applySettings({...TetrisCore.DEFAULTS,hold:false,hardDrop:false});const before=JSON.stringify([g.active,g.queue,g.held]);return [g.holdPiece(),g.hardDrop(),before===JSON.stringify([g.active,g.queue,g.held]),Object.keys(g.settings).length]})()')==[False,False,True,6]
     assert core('(()=>{try{TetrisCore.validateSettings({...TetrisCore.DEFAULTS,hold:1});return false;}catch{return true;}})()')
+
+def test_dynamic_ghost_all_above_and_straddling(core):
+    assert core('(()=>{const g=new TetrisCore.Game(()=>0);g.start();g.active={type:"I",x:3,y:-1,rotation:1};g.applySettings({...g.settings,ghost:"dynamic"});g.board[10][5]="red";const above=g.ghostVisible();g.board[10][5]=null;g.board[11][5]="red";const straddle=g.ghostVisible();g.hardDrop();return [above,straddle,g.ghostVisible()]})()')==[False,True,False]
